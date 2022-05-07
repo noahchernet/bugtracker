@@ -14,13 +14,13 @@ test().catch((err) => console.log(err));
 
 async function main() {
   await mongoose.connect(process.env.CONNECTION_TESTDB_URL);
-    const john = new User({
-      username: "john1212",
-      password: "bvavsk13asdfkljndfs24341238",
-      firstName: "John",
-      lastName: "Doe",
-      devType: "Junior",
-    });
+  const john = new User({
+    username: "john1212",
+    password: "bvavsk13asdfkljndfs24341238",
+    firstName: "John",
+    lastName: "Doe",
+    devType: "Junior",
+  });
   console.log(john.username);
   // await john.save();
   console.log("Saved");
@@ -28,7 +28,7 @@ async function main() {
 
   const ticket_1 = new Ticket({
     title: "Ticket 1",
-    postedByUser: ,
+    postedByUser: await User.findOne(),
     description: "It ain't working. pls hlp",
     severity: 1,
     taggedUsers: ["Bekele", "Ambasel"],
@@ -80,10 +80,10 @@ async function test() {
 
   console.log("/// Comment ///");
   console.log(await Comment.find());
-  const userFromComment = await User.findById( comment_1.postedByUser );
+  const userFromComment = await User.findById(comment_1.postedByUser);
   console.log("/// Comment Posted By:");
   console.log(userFromComment);
-  const ticketFromComment = await Ticket.findById( comment_1.ticketId );
+  const ticketFromComment = await Ticket.findById(comment_1.ticketId);
   console.log("/// Ticket from Comment:");
   console.log(ticketFromComment);
 }

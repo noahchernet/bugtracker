@@ -1,11 +1,9 @@
 import mongoose from "mongoose";
 
-const commentSchema = mongoose.Schema({
-  ticketId: String,
-  postedByUser: String,
+export const commentSchema = mongoose.Schema({
+  ticketId: mongoose.Types.ObjectId,
+  postedByUser: mongoose.Types.ObjectId,
   description: String,
 });
 
-let Comment = mongoose.model("Comment", commentSchema);
-
-module.exports = { commentSchema, Comment };
+export const Comment = mongoose.model("Comment", commentSchema);

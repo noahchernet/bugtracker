@@ -1,2 +1,6 @@
 client/node_modules/*
 server/node_modules/*
+.vscode/
+
+server/.env.local
+server/tests/.env

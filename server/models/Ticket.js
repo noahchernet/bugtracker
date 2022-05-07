@@ -1,20 +1,16 @@
 import mongoose from "mongoose";
-const { v4 } = require("uuid");
+import { commentSchema } from "./Comment.js";
 
 const ticketSchema = mongoose.Schema({
-  ticketId: {
-    type: String,
-    default: v4(),
-  },
   title: String,
-  postedByUser: String,
+  postedByUser: mongoose.Types.ObjectId,
   description: String,
   severity: Number,
-  taggedUsers: [String],
+  taggedUsers: [mongoose.Types.ObjectId],
   comments: [commentSchema],
   solved: Boolean,
   attachments: [],
-  solution: commentSchema,
+  solution: mongoose.Types.ObjectId,
   due: Date,
 });
 

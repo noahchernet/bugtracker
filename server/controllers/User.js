@@ -28,6 +28,47 @@ export const getUser = async (req, res) => {
     })
     .catch((err) => {
       console.log(err);
-      res.status(402).send({ message: err.message });
+      res.status(500).send({ message: err.message });
+    });
+};
+
+/**
+ * Creates a user if the username is unique and all fields are provided in the
+ * request body.
+ * @param {*} req contains info about the new user
+ * @param {*} res 403 if username is not unique or all fields are not provided,
+ * 200 if the user is created successfully
+ */
+export const createUser = async (req, res) => {
+  const { username, password, firstName, lastName, devType } = req.body;
+  const userData = { username, password, firstName, lastName, devType };
+
+  // Check if all fields are valid and non-empty.
+  for (const [key, value] of Object.entries(userData)) {
+    if (value === null || value === undefined || value === "") {
+      return res.status(403).send({ message: key + " is not set." });
+    }
+
+    if (typeof value !== "string") {
+      return res.status(403).send({ message: key + " is not a string." });
+    }
+  }
+
+  // Check if the username is taken already.
+  const foundUser = await User.findOne({ username: username });
+  if (foundUser) {
+    return res.status(403).send({ message: "username already in use" });
+  }
+
+  // Add the new user to the database
+  User.create({ username, password, firstName, lastName, devType })
+    .then((user) => {
+      res.status(201).send({
+        message: "User " + user.firstName + " " + user.lastName + " created.",
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).send({ message: err.message });
     });
 };

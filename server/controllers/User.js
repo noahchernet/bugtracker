@@ -72,3 +72,42 @@ export const createUser = async (req, res) => {
       res.status(500).send({ message: err.message });
     });
 };
+
+/**
+ * Updates the properties of a user, excluding the username
+ * @param {*} req contains the data to be updated, and the username of the user
+ * @param {*} res the new properties of the user, 403 if none of the properties
+ * are updated
+ */
+export const updateUser = async (req, res) => {
+  const { username, password, firstName, lastName, devType } = req.body;
+  const newUserData = { password, firstName, lastName, devType };
+  let allNull = true;
+
+  // Make sure username is provided
+  if (!username)
+    res.status(403).send({ message: "Username has to be provided." });
+
+  // Return 403 if none of the fields are updated
+  for (const [key, value] of Object.entries(newUserData)) {
+    if (value !== null || value !== undefined || value !== "") {
+      allNull = false;
+      break;
+    } else newUserData[key];
+  }
+
+  if (allNull) {
+    res.status(403).send({ message: "At least one field has to be updated." });
+  }
+
+  // Check if all non-empty fields are string, if not respond with 403
+  // because all fields need to be string
+  for (const [key, value] of Object.entries(newUserData)) {
+    if (typeof value !== "string") {
+      res.status(403).send({ message: key + " has to be a string." });
+    }
+  }
+
+  // Update the user with the new user data
+  User.find({ username: username }).then((user) => {});
+};

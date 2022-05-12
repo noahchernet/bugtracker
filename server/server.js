@@ -13,11 +13,11 @@ app.use(express.json());
 
 app.use("/users", userRouter);
 
-const CONNECTION_URL = process.env.CONNECTION_URL;
+const DB_CONNECTION_URL = process.env.CONNECTION_URL;
 const PORT = process.env.PORT || 5000;
 
 mongoose
-  .connect(CONNECTION_URL)
+  .connect(DB_CONNECTION_URL)
   .then(() =>
     app.listen(PORT, () =>
       console.log(`Server Running on Port: http://localhost:${PORT}`)

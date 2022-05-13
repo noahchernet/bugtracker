@@ -1,12 +1,10 @@
-import express from "express";
-import mongoose from "mongoose";
-import cors from "cors";
-import { config } from "dotenv-flow";
+const express = require("express");
+const mongoose = require("mongoose");
+const cors = require("cors");
+const userRouter = require("./routes/User");
+const ticketRouter = require("./routes/Ticket");
+require("dotenv-flow").config();
 
-import userRouter from "./routes/User.js";
-import ticketRouter from "./routes/Ticket.js";
-
-config();
 const app = express();
 
 app.use(cors());

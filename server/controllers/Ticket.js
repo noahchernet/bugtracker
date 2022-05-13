@@ -1,6 +1,6 @@
-import Ticket from "../models/Ticket.js";
+const Ticket = require("../models/Ticket.js");
 
-export const getTickets = (req, res) => {
+exports.getTickets = (req, res) => {
   const { title, severity, solved } = req.query;
   const conditions = {};
   if (title) {
@@ -30,7 +30,7 @@ export const getTickets = (req, res) => {
     );
 };
 
-export const createTicket = async (req, res) => {
+exports.createTicket = async (req, res) => {
   if (!req.auth) return res.status(401).json({ message: "Unauthorized." });
 
   if (!req.body.title || !req.body.description || !req.body.severity) {

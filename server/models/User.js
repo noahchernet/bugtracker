@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 /**
  * Defines what a User's attributes are in the mongo database.
@@ -14,4 +14,4 @@ const userSchema = mongoose.Schema({
 
 let User = mongoose.model("User", userSchema);
 
-export default User;
+module.exports = User;

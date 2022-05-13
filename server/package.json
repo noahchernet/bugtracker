@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "Express server to process REST API requests for the Bugtracker",
   "main": "index.js",
-  "type": "module",
   "scripts": {
+    "test": "jest",
     "dev": "nodemon -w server.js -w ./models -w ./middleware -w ./controllers -w ./routes server.js"
   },
   "repository": {
@@ -26,5 +26,9 @@
     "mongo": "^0.1.0",
     "mongoose": "^6.3.2",
     "nodemon": "^2.0.16"
+  },
+  "devDependencies": {
+    "jest": "^28.1.0",
+    "supertest": "^6.2.3"
   }
 }

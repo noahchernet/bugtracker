@@ -1,10 +1,10 @@
-import express from "express";
-import { createTicket, getTickets } from "../controllers/Ticket.js";
-import jwtCheck from "../middleware/jwtCheck.js";
+const express = require("express");
+const ticketController = require("../controllers/Ticket.js");
+const jwtCheck = require("../middleware/jwtCheck.js");
 
 const router = express.Router();
 
-router.get("/", getTickets);
-router.post("/", jwtCheck, createTicket);
+router.get("/", ticketController.getTickets);
+router.post("/", jwtCheck, ticketController.createTicket);
 
-export default router;
+module.exports = router;

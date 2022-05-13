@@ -1,6 +1,6 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
-export const commentSchema = mongoose.Schema(
+const commentSchema = mongoose.Schema(
   {
     ticketId: { type: mongoose.Types.ObjectId, required: true },
     postedByUser: { type: mongoose.Types.ObjectId, required: true },
@@ -9,4 +9,5 @@ export const commentSchema = mongoose.Schema(
   { timestamps: true }
 );
 
-export const Comment = mongoose.model("Comment", commentSchema);
+const Comment = mongoose.model("Comment", commentSchema);
+module.exports = { Comment, commentSchema };

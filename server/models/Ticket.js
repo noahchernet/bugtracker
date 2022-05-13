@@ -1,5 +1,5 @@
-import mongoose from "mongoose";
-import { commentSchema } from "./Comment.js";
+const mongoose = require("mongoose");
+const commentSchema = require("./Comment").commentSchema;
 
 const ticketSchema = mongoose.Schema(
   {
@@ -19,4 +19,4 @@ const ticketSchema = mongoose.Schema(
 
 let Ticket = mongoose.model("Ticket", ticketSchema);
 
-export default Ticket;
+module.exports = Ticket;

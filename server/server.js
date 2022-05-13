@@ -1,12 +1,12 @@
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
-import dotenv from "dotenv-flow";
+import { config } from "dotenv-flow";
 
 import userRouter from "./routes/User.js";
 import ticketRouter from "./routes/Ticket.js";
 
-dotenv.config();
+config();
 const app = express();
 
 app.use(cors());

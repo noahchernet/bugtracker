@@ -13,9 +13,6 @@ export const getTickets = (req, res) => {
     conditions["solved"] = solved;
   }
 
-  console.log("Condition:");
-  console.log(conditions);
-
   Ticket.find(conditions)
     .then((tickets) => {
       if (!tickets)
@@ -34,7 +31,7 @@ export const getTickets = (req, res) => {
 };
 
 export const createTicket = async (req, res) => {
-  // if (!req.auth) return res.status(401).json({ message: "Unauthorized." });
+  if (!req.auth) return res.status(401).json({ message: "Unauthorized." });
 
   if (!req.body.title || !req.body.description || !req.body.severity) {
     return res
@@ -51,7 +48,7 @@ export const createTicket = async (req, res) => {
 
   const ticket = new Ticket({
     title: req.body.title,
-    postedByUser: req.body.email,
+    postedByUser: req.auth.email,
     description: req.body.description,
     severity: req.body.severity,
     taggedUsers: req.body.taggedUsers,

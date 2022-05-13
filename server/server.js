@@ -16,11 +16,17 @@ app.use("/tickets", ticketRouter);
 const DB_CONNECTION_URL = process.env.DB_CONNECTION_URL;
 const PORT = process.env.PORT || 5000;
 
-mongoose
-  .connect(DB_CONNECTION_URL)
-  .then(() =>
-    app.listen(PORT, () =>
-      console.log(`Server Running on Port: http://localhost:${PORT}`)
+// Check if Jest is running the server, if not
+// connect to the MongoDB server provided in the environment
+if (process.env.JEST_WORKER_ID === undefined) {
+  mongoose
+    .connect(DB_CONNECTION_URL)
+    .then(() =>
+      app.listen(PORT, () =>
+        console.log(`Server Running on Port: http://localhost:${PORT}`)
+      )
     )
-  )
-  .catch((err) => console.log(err));
+    .catch((err) => console.log(err));
+}
+
+module.exports = app;

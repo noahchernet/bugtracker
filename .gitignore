@@ -6,3 +6,4 @@ server/.env.local
 server/tests/.env
 server/sum.js
 server/tests/sometest
+.env

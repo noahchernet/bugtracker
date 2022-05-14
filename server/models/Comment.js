@@ -6,7 +6,7 @@ const commentSchema = mongoose.Schema(
     postedByUser: { type: mongoose.Types.ObjectId, required: true },
     description: { type: String, required: true },
   },
-  { timestamps: true }
+  { autoCreate: false, timestamps: true }
 );
 
 const Comment = mongoose.model("Comment", commentSchema);

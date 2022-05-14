@@ -1,4 +1,5 @@
-const Ticket = require("../models/Ticket.js");
+const Ticket = require("../models/Ticket");
+const RemovedTicket = require("../models/RemovedTicket");
 const mongoose = require("mongoose");
 const _ = require("lodash");
 
@@ -134,5 +135,51 @@ exports.updateTicket = async (req, res) => {
         message: err.message ?? "Could not update the ticket id = " + id,
       });
       return;
+    });
+};
+
+/**
+ * Puts a ticket into the removedtickets collection
+ * @param {*} req has the id of the ticket to be removed
+ * @param {*} res upon successfull removal, 200 is returned, 400 otherwise
+ */
+exports.delete = async (req, res) => {
+  if (!req.auth) return res.status(401).json({ message: "Unauthorized." });
+
+  const { id } = req.params;
+
+  // If the id is not a valid ObjectId, return 404
+  try {
+    mongoose.Types.ObjectId(id);
+  } catch (err) {
+    return res.status(404).json({
+      message: "id is invalid.",
+    });
+  }
+
+  const ticketToRemove = await Ticket.findById(id);
+  if (!ticketToRemove) {
+    return res
+      .status(404)
+      .json({ message: "Could not find ticket with id = " + id });
+  }
+
+  await Ticket.findByIdAndDelete(id);
+
+  const removedTicket = new RemovedTicket(
+    JSON.parse(JSON.stringify(ticketToRemove))
+  );
+  removedTicket
+    .save()
+    .then((removedTicket) => {
+      if (removedTicket)
+        return res
+          .status(200)
+          .json({ message: "Ticket " + id + " removed successfully" });
+    })
+    .catch((error) => {
+      return res
+        .status(500)
+        .json({ message: error.message ?? "Could not remove ticket" });
     });
 };

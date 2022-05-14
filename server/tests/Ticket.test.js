@@ -2,6 +2,7 @@ const request = require("supertest");
 const app = require("../server");
 const db = require("./config/db");
 const Ticket = require("../models/Ticket");
+const RemovedTicket = require("../models/RemovedTicket");
 require("dotenv").config({ override: true });
 
 const agent = request.agent(app);
@@ -220,5 +221,70 @@ describe("Update ticket", () => {
         "A ticket with the same title already exists, please change the title",
     });
     expect(res_update.statusCode).toBe(400);
+  });
+});
+
+describe("Remove ticket", () => {
+  test("deleting without authentication", async () => {
+    const { id } = await Ticket.findOne({});
+
+    const res = await agent.delete("/tickets/" + id);
+
+    // Authentication token cleared in afterEach function,
+    // so the request should be denied
+    expect(res.statusCode).toBe(401);
+  });
+
+  test("remove an existing ticket", async () => {
+    agent.set(auth);
+
+    let ticketToRemove = await Ticket.findOne({});
+    const id = ticketToRemove.id;
+
+    const res = await agent.delete("/tickets/" + id);
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toMatchObject({
+      message: "Ticket " + id + " removed successfully",
+    });
+    expect(await Ticket.find({ _id: id })).toMatchObject({});
+
+    // Deleted ticket should end up in the removedtickets collection
+    let removedTicket = await RemovedTicket.findById(id);
+
+    // Convert to JSON string and back to make their updatedAt properties modifiable
+    ticketToRemove = JSON.parse(JSON.stringify(ticketToRemove));
+    removedTicket = JSON.parse(JSON.stringify(removedTicket));
+
+    // Removing both objects' updatedAt property since they have only a millisecond
+    // of difference
+    delete ticketToRemove.updatedAt;
+    delete removedTicket.updatedAt;
+
+    expect(removedTicket).toMatchObject(ticketToRemove);
+  });
+
+  test("delete a ticket with invalid id", async () => {
+    agent.set(auth);
+    const id = 1234;
+
+    const res = await agent.delete("/tickets/" + id);
+
+    expect(res.statusCode).toBe(404);
+    expect(res.body).toMatchObject({
+      message: "id is invalid.",
+    });
+  });
+
+  test("delete a non-existing ticket", async () => {
+    agent.set(auth);
+    const id = "127d4fc90cb4e91b8fb4536d";
+
+    const res = await agent.delete("/tickets/" + id);
+
+    expect(res.body).toMatchObject({
+      message: "Could not find ticket with id = " + id,
+    });
+    expect(res.statusCode).toBe(404);
   });
 });

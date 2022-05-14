@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const userRouter = require("./routes/User");
 const ticketRouter = require("./routes/Ticket");
-require("dotenv-flow").config();
+require("dotenv").config({ override: true });
 
 const app = express();
 

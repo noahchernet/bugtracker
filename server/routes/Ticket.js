@@ -6,5 +6,6 @@ const router = express.Router();
 
 router.get("/", ticketController.getTickets);
 router.post("/", jwtCheck, ticketController.createTicket);
+router.put("/:id", jwtCheck, ticketController.updateTicket);
 
 module.exports = router;

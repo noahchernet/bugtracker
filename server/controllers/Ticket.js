@@ -1,4 +1,6 @@
 const Ticket = require("../models/Ticket.js");
+const mongoose = require("mongoose");
+const _ = require("lodash");
 
 /**
  * Get all or some tickets based on the query parameters
@@ -77,7 +79,7 @@ exports.createTicket = async (req, res) => {
     })
     .catch((err) => {
       res
-        .status(400)
+        .status(500)
         .send(err ?? "An error has occurred when creating the ticket.");
     });
 };
@@ -90,27 +92,47 @@ exports.createTicket = async (req, res) => {
 exports.updateTicket = async (req, res) => {
   if (!req.auth) return res.status(401).json({ message: "Unauthorized." });
 
-  const ticketToUpdate = await Ticket.findById(res.body._id);
+  const { id } = req.params;
 
-  // Return 404 if the ticket could not be found
-  if (!ticketToUpdate)
-    return res.status(400).json({ message: "Ticket not found." });
+  // If the id is not a valid ObjectId, return 404
+  try {
+    mongoose.Types.ObjectId(id);
+  } catch (err) {
+    return res.status(404).json({
+      message: "id is invalid.",
+    });
+  }
+
+  // If the request body has a title field but it's an empty string, return 404
+  if (req.body.title !== undefined && req.body.title === "")
+    return res.status(400).json({ message: "The title cannot be empty." });
+
+  const ticketWithReqTitle = await Ticket.findOne({
+    title: req.body.title,
+  });
+  const ticketToUpdate = await Ticket.findById(id);
 
   // If the ticket is using a title that exists in the database already, return 400
-  Ticket.find({ title: res.body.title })
-    .then((ticket) => {
-      if (ticket) {
-        return res.status(400).json({
-          message:
-            "Ticket with the same title exists, please use a different title.",
-        });
-      }
-    })
-    .catch((err) => {
-      return res
-        .status(500)
-        .json({ message: err.message ?? "Could not update the ticket" });
+  if (ticketWithReqTitle && !_.isEqual(ticketWithReqTitle, ticketToUpdate))
+    return res.status(400).json({
+      message:
+        "A ticket with the same title already exists, please change the title",
     });
 
-  await Ticket.findOneAndUpdate({ _id: ticketToUpdate._id }, {$set: {req.body}});
+  // Update the ticket
+  Ticket.findByIdAndUpdate(id, { ...req.body })
+    .then(async (ticket) => {
+      if (ticket) {
+        return res.status(200).json(await Ticket.findById(id));
+      }
+      return res
+        .status(404)
+        .json({ message: "Could not find ticket with id = " + id });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        message: err.message ?? "Could not update the ticket id = " + id,
+      });
+      return;
+    });
 };

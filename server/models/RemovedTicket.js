@@ -7,7 +7,6 @@ const ticketSchema = mongoose.Schema(
     postedByUser: { type: String, required: true }, // user's email
     description: { type: String, required: true },
     severity: { type: Number, required: true },
-    taggedUsers: { type: [String] }, // emails of tagged users
     comments: { type: [commentSchema] },
     solved: { type: Boolean, required: true },
     attachments: { type: [] },

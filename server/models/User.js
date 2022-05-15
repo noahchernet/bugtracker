@@ -5,11 +5,10 @@ const mongoose = require("mongoose");
  * devType: junior, mid-level, senior, tech lead, etc.
  */
 const userSchema = mongoose.Schema({
-  username: String,
-  password: String,
+  email: String,
   firstName: String,
   lastName: String,
-  devType: String,
+  picture: String, // url to image
 });
 
 let User = mongoose.model("User", userSchema);

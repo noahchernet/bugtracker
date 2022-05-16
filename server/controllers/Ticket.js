@@ -1,5 +1,6 @@
 const Ticket = require("../models/Ticket");
 const RemovedTicket = require("../models/RemovedTicket");
+const userFromAuth = require("../models/User").userFromAuth;
 const mongoose = require("mongoose");
 const _ = require("lodash");
 
@@ -62,10 +63,9 @@ exports.createTicket = async (req, res) => {
 
   const ticket = new Ticket({
     title: req.body.title,
-    postedByUser: req.auth.email,
+    postedByUser: userFromAuth(req),
     description: req.body.description,
     severity: req.body.severity,
-    taggedUsers: req.body.taggedUsers,
     comments: [],
     solved: false,
     attachments: req.body.attachments,
@@ -131,10 +131,9 @@ exports.updateTicket = async (req, res) => {
         .json({ message: "Could not find ticket with id = " + id });
     })
     .catch((err) => {
-      res.status(500).json({
+      return res.status(500).json({
         message: err.message ?? "Could not update the ticket id = " + id,
       });
-      return;
     });
 };
 

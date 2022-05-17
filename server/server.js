@@ -3,12 +3,13 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const userRouter = require("./routes/User");
 const ticketRouter = require("./routes/Ticket");
+const formidableMiddleware = require("express-formidable");
 require("dotenv").config({ override: true });
 
 const app = express();
 
 app.use(cors());
-app.use(express.json());
+app.use(formidableMiddleware());
 
 app.use("/users", userRouter);
 app.use("/tickets", ticketRouter);

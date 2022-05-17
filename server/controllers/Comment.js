@@ -5,6 +5,13 @@ const userFromAuth = require("../models/User").userFromAuth;
 const mongoose = require("mongoose");
 const cloudinary = require("cloudinary");
 
+/**
+ * Add a comment to a ticket
+ * @param {*} req contains the user who added the comment (in auth header) and
+ * the contents of it
+ * @param {*} res the newly added comment
+ * @returns the newly added comment or an error
+ */
 exports.addCommentToTicket = async (req, res) => {
   if (!req.auth) return res.status(401).json({ message: "Unauthorized." });
 
@@ -67,4 +74,36 @@ exports.addCommentToTicket = async (req, res) => {
     });
 };
 
-exports.getTicketComments = (req, res) => {};
+/**
+ * Gets all the commments of a ticket
+ * @param {*} req contains the id of the ticket
+ * @param {*} res list of comments of the ticket
+ */
+exports.getTicketComments = async (req, res) => {
+  const { id } = req.params;
+
+  // If the id is not a valid ObjectId, return 404
+  try {
+    mongoose.Types.ObjectId(id);
+  } catch (err) {
+    return res.status(404).json({
+      message: "id is invalid.",
+    });
+  }
+
+  const ticket = await Ticket.findById(id);
+  if (!ticket)
+    return res.status(404).json({ message: "Ticket could not be found" });
+
+  const comments = [];
+  console.log(ticket.comments[0]);
+  console.log(ticket.comments[1]);
+  console.log(ticket.comments);
+
+  for (let i = 0; i < ticket.comments.length; i++) {
+    const comment = await Comment.findById(ticket.comments[i].toString());
+    if (comment) comments.push(comment);
+  }
+
+  return res.status(200).json(comments);
+};

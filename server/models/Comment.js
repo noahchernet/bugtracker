@@ -1,9 +1,13 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
-export const commentSchema = mongoose.Schema({
-  ticketId: mongoose.Types.ObjectId,
-  postedByUser: mongoose.Types.ObjectId,
-  description: String,
-});
+const commentSchema = mongoose.Schema(
+  {
+    ticketId: { type: mongoose.Types.ObjectId, required: true },
+    postedByUser: { type: mongoose.Types.ObjectId, required: true },
+    description: { type: String, required: true },
+  },
+  { autoCreate: false, timestamps: true }
+);
 
-export const Comment = mongoose.model("Comment", commentSchema);
+const Comment = mongoose.model("Comment", commentSchema);
+module.exports = { Comment, commentSchema };

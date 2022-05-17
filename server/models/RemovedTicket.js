@@ -17,6 +17,6 @@ const ticketSchema = mongoose.Schema(
   { timestamps: true }
 );
 
-let Ticket = mongoose.model("Ticket", ticketSchema);
+let removedTicket = mongoose.model("RemovedTicket", ticketSchema);
 
-module.exports = Ticket;
+module.exports = removedTicket;

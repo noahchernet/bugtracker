@@ -8,7 +8,7 @@ const ticketSchema = mongoose.Schema(
     postedByUser: { type: userSchema, required: true },
     description: { type: String, required: true },
     severity: { type: Number, required: true },
-    comments: { type: [commentSchema] },
+    comments: { type: [mongoose.Types.ObjectId] },
     solved: { type: Boolean, required: true },
     attachments: { type: String },
     solution: { type: [mongoose.Types.ObjectId] },

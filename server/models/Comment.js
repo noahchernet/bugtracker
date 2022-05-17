@@ -5,8 +5,9 @@ const commentSchema = mongoose.Schema(
     ticketId: { type: mongoose.Types.ObjectId, required: true },
     postedByUser: { type: mongoose.Types.ObjectId, required: true },
     description: { type: String, required: true },
+    attachments: { type: String },
   },
-  { autoCreate: false, timestamps: true }
+  { timestamps: true }
 );
 
 const Comment = mongoose.model("Comment", commentSchema);

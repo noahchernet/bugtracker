@@ -3,6 +3,7 @@ const RemovedTicket = require("../models/RemovedTicket");
 const userFromAuth = require("../models/User").userFromAuth;
 const mongoose = require("mongoose");
 const _ = require("lodash");
+const cloudinary = require("cloudinary");
 
 /**
  * Get all or some tickets based on the query parameters
@@ -48,29 +49,44 @@ exports.getTickets = (req, res) => {
 exports.createTicket = async (req, res) => {
   if (!req.auth) return res.status(401).json({ message: "Unauthorized." });
 
-  if (!req.body.title || !req.body.description || !req.body.severity) {
+  if (!req.fields.title || !req.fields.description || !req.fields.severity) {
     return res
       .status(400)
       .json({ message: "Full ticket information has to be provided." });
   }
 
   // Don't add the ticket if there's another ticket with the same title
-  if (await Ticket.findOne({ title: req.body.title }))
+  if (await Ticket.findOne({ title: req.fields.title }))
     return res.status(400).json({
       message:
         "Post with the same title exists, please use a different title.",
     });
 
+  // Configure cloudinary
+  cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+  });
+  let imgUrl = "";
+
+  // If an image is included in the request, post it to Cloudinary and get the
+  // image's URL to put in attachments
+  if (Object.keys(req.files).length !== 0) {
+    const result = await cloudinary.uploader.upload(req.files.image.path);
+    imgUrl = result.url;
+  }
+
   const ticket = new Ticket({
-    title: req.body.title,
+    title: req.fields.title,
     postedByUser: userFromAuth(req),
-    description: req.body.description,
-    severity: req.body.severity,
+    description: req.fields.description,
+    severity: req.fields.severity,
     comments: [],
     solved: false,
-    attachments: req.body.attachments,
+    attachments: imgUrl,
     solution: null,
-    due: req.body.dueDate,
+    due: req.fields.dueDate,
   });
 
   ticket
@@ -105,11 +121,11 @@ exports.updateTicket = async (req, res) => {
   }
 
   // If the request body has a title field but it's an empty string, return 404
-  if (req.body.title !== undefined && req.body.title === "")
+  if (req.fields.title !== undefined && req.fields.title === "")
     return res.status(400).json({ message: "The title cannot be empty." });
 
   const ticketWithReqTitle = await Ticket.findOne({
-    title: req.body.title,
+    title: req.fields.title,
   });
   const ticketToUpdate = await Ticket.findById(id);
 
@@ -120,8 +136,23 @@ exports.updateTicket = async (req, res) => {
         "A ticket with the same title already exists, please change the title",
     });
 
+  // Configure cloudinary
+  cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+  });
+  let imgUrl = "";
+
+  // If an image is included in the request, post it to Cloudinary and get the
+  // image's URL to put in attachments
+  if (Object.keys(req.files).length !== 0) {
+    const result = await cloudinary.uploader.upload(req.files.image.path);
+    imgUrl = result.url;
+  }
+
   // Update the ticket
-  Ticket.findByIdAndUpdate(id, { ...req.body })
+  Ticket.findByIdAndUpdate(id, { ...req.fields, attachments: imgUrl })
     .then(async (ticket) => {
       if (ticket) {
         return res.status(200).json(await Ticket.findById(id));

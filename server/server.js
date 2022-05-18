@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const userRouter = require("./routes/User");
 const ticketRouter = require("./routes/Ticket");
+const commentRouter = require("./routes/Comment");
 const formidableMiddleware = require("express-formidable");
 require("dotenv").config({ override: true });
 
@@ -13,6 +14,7 @@ app.use(formidableMiddleware());
 
 app.use("/users", userRouter);
 app.use("/tickets", ticketRouter);
+app.use("/comments", commentRouter);
 
 const DB_CONNECTION_URL = process.env.DB_CONNECTION_URL;
 const PORT = process.env.PORT || 5000;

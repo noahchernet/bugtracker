@@ -3,9 +3,6 @@
 @tailwind utilities;
 
 @layer components {
-  .log-in-out-button {
-    @apply m-2 p-4 bg-blue-600 rounded-lg text-white font-semibold;
-  }
 }
 /* html,
 body {

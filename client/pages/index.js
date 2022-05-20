@@ -1,16 +1,18 @@
+import { Header } from "../components/Layout/Header";
 import { useState, useEffect } from "react";
-import LogInLogOutButton from "../components/LogInLogOutButton";
 import { useUser } from "@auth0/nextjs-auth0";
-import TicketOverview from "../components/TicketOverview";
+import TicketOverview from "../components/Index/TicketOverview";
 import axios from "axios";
 import MoonLoader from "react-spinners/MoonLoader";
-import AddTicketButton from "../components/AddTicketButton";
+import AddTicketButton from "../components/Index/AddTicketButton";
 import { motion } from "framer-motion";
+import NewTicketModal from "../components/Index/NewTicketModal";
 
 export default function Home() {
   const { user } = useUser();
   const [loading, setLoading] = useState(true);
   const [allTickets, setAllTickets] = useState([]);
+  const [addTicketModalOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     axios
@@ -22,12 +24,7 @@ export default function Home() {
 
   return (
     <div className=" m-5">
-      <div className="flex justify-between bg-">
-        <h1 className="my-2 p-3 text-4xl font-serif font-semi-bold">
-          Avalon Bugtracker
-        </h1>
-        <LogInLogOutButton />
-      </div>
+      <Header />
       {loading ? (
         <div className="flex justify-center mt-24">
           <MoonLoader color="#007ACB" size="2rem" />
@@ -37,14 +34,23 @@ export default function Home() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1, transition: { staggerChildren: 0.5 } }}
         >
-          <motion.li initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+          <motion.li
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
             {allTickets.map((ticket, index) => (
-              <TicketOverview ticket={ticket} key={index} />
+              <TicketOverview
+                ticket={ticket}
+                key={index}
+                onClick={() => console.log("Helloads;fklj")}
+              />
             ))}
           </motion.li>
         </motion.ul>
       )}
-      <AddTicketButton />
+      <AddTicketButton setIsOpen={setIsOpen} />
+      {addTicketModalOpen && <NewTicketModal setIsOpen={setIsOpen} />}
     </div>
   );
 }

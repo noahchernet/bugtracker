@@ -13,7 +13,11 @@ const LogInLogOutButton = () => {
   if (user) {
     return (
       <motion.a
-        className="pb-0 my-2 mt-4 p-3 rounded-lg  border-2 border-blue-400 font-semibold hover:bg-blue-600 hover:text-white hover:border-blue-600 transition delay-10"
+        className="my-auto p-2 lg:p-3 rounded-lg
+        border-2 border-blue-400 font-semibold 
+        hover:bg-blue-600 hover:text-white hover:border-blue-600
+        transition delay-10
+        text-xs lg:text-sm"
         href="/api/auth/logout"
         whileTap={{ scale: 0.95 }}
       >
@@ -23,7 +27,7 @@ const LogInLogOutButton = () => {
   } else {
     return (
       <motion.a
-        className="my-2 mt-4 p-3 bg-blue-600 rounded-lg text-white font-semibold"
+        className="my-auto p-2 lg:p-3 bg-blue-600 rounded-lg text-white font-semibold text-xs lg:text-sm"
         href="/api/auth/login"
         whileTap={{ scale: 0.95 }}
       >

@@ -12,7 +12,7 @@ export default function Home() {
   const { user } = useUser();
   const [loading, setLoading] = useState(true);
   const [allTickets, setAllTickets] = useState([]);
-  const [addTicketModalOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     axios
@@ -30,27 +30,25 @@ export default function Home() {
           <MoonLoader color="#007ACB" size="2rem" />
         </div>
       ) : (
-        <motion.ul
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1, transition: { staggerChildren: 0.5 } }}
-        >
-          <motion.li
+        <>
+          <motion.ul
             initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+            animate={{ opacity: 1, transition: { staggerChildren: 0.5 } }}
           >
-            {allTickets.map((ticket, index) => (
-              <TicketOverview
-                ticket={ticket}
-                key={index}
-                onClick={() => console.log("Helloads;fklj")}
-              />
-            ))}
-          </motion.li>
-        </motion.ul>
+            <motion.li
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
+              {allTickets.map((ticket, index) => (
+                <TicketOverview ticket={ticket} key={index} />
+              ))}
+            </motion.li>
+          </motion.ul>
+          <NewTicketModal open={isOpen} close={() => setIsOpen(false)} />
+          <AddTicketButton setIsOpen={setIsOpen} />
+        </>
       )}
-      <AddTicketButton setIsOpen={setIsOpen} />
-      {addTicketModalOpen && <NewTicketModal setIsOpen={setIsOpen} />}
     </div>
   );
 }

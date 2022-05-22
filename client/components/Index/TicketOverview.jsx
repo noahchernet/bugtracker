@@ -14,7 +14,7 @@ const TicketOverview = ({ ticket }) => {
       shadow-md shadow-gray-100
       cursor-pointer"
       whileHover={{ scale: 1.02 }}
-      whileTap={{ scale: 0.98 }}
+      whileTap={{ scale: 1.005 }}
     >
       <h2 className="">{ticket.title}</h2>
       <div className="mt-5 md:float-none md:mt-0 lg:ml-2 flex flex-col lg:flex-row">

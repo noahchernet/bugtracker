@@ -1,12 +1,13 @@
+import { Loading } from "./../components/Loading";
 import { Header } from "../components/Layout/Header";
 import { useState, useEffect } from "react";
 import { useUser } from "@auth0/nextjs-auth0";
 import TicketOverview from "../components/Index/TicketOverview";
 import axios from "axios";
-import MoonLoader from "react-spinners/MoonLoader";
 import AddTicketButton from "../components/Index/AddTicketButton";
 import { motion } from "framer-motion";
 import NewTicketModal from "../components/Index/NewTicketModal";
+import Link from "next/link";
 
 export default function Home() {
   const { user } = useUser();
@@ -24,11 +25,9 @@ export default function Home() {
 
   return (
     <div className=" m-5">
-      <Header />
+      {/* <Header /> */}
       {loading ? (
-        <div className="flex justify-center mt-24">
-          <MoonLoader color="#007ACB" size="2rem" />
-        </div>
+        <Loading />
       ) : (
         <>
           <motion.ul
@@ -41,7 +40,9 @@ export default function Home() {
               exit={{ opacity: 0 }}
             >
               {allTickets.map((ticket, index) => (
-                <TicketOverview ticket={ticket} key={index} />
+                <Link href={`/ticket/${ticket._id}`} key={index} passHref>
+                  <TicketOverview ticket={ticket} key={index} />
+                </Link>
               ))}
             </motion.li>
           </motion.ul>

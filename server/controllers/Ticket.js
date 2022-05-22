@@ -41,6 +41,34 @@ exports.getTickets = (req, res) => {
 };
 
 /**
+ * Get a ticket by id
+ * @param {*} req contains ticket
+ * @param {*} res
+ */
+exports.getTicketById = (req, res) => {
+  const { id } = req.params;
+
+  // If the id is not a valid ObjectId, return 404
+  try {
+    mongoose.Types.ObjectId(id);
+  } catch (err) {
+    return res.status(404).json({
+      message: "id is invalid.",
+    });
+  }
+
+  Ticket.findById(id)
+    .then((ticket) => {
+      if (!ticket)
+        return res
+          .status(404)
+          .json({ message: `Ticket with id ${id} not found` });
+      return res.status(200).json(ticket);
+    })
+    .catch((err) => res.status(500).json(err));
+};
+
+/**
  * Create a new ticket.
  * @param {*} req Contians the title, description and severity of the ticket
  * @param {*} res If the ticket is  created successfully, the body of res

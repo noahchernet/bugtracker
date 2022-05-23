@@ -6,13 +6,11 @@ import axios from "axios";
 
 import "react-datepicker/dist/react-datepicker.css";
 
-const NewTicketModal = ({ open, close }) => {
+const NewTicketModal = ({ open, close, setIsTicketListLoading }) => {
   if (!open) return null;
   const [ticket, setTicket] = useState({ severity: 1 });
 
   const handleInputChange = ({ name, value }) => {
-    console.log("Name: ", name, " Value: ", value);
-    console.log("Ticket:", ticket);
     if (name === "severity") setTicket({ ...ticket, [name]: Number(value) });
     else setTicket({ ...ticket, [name]: value });
   };
@@ -23,14 +21,13 @@ const NewTicketModal = ({ open, close }) => {
     axios
       .post(
         "http://localhost:5000/tickets",
-        {
-          ...ticket,
-        },
+        { ...ticket },
         { headers: { Authorization: "Bearer " + token.data.token } }
       )
       .then((res) => {
         alert("Ticket added successfully");
         close();
+        setIsTicketListLoading(false);
       })
       .catch((err) => alert(err.response.data.message));
   };

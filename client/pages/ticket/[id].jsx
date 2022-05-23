@@ -1,11 +1,14 @@
+import { useUser } from "@auth0/nextjs-auth0";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { Loading } from "../../components/Loading";
 import axios from "axios";
 import Image from "next/image";
+import { Loading } from "../../components/Loading";
 import Comment from "../../components/Ticket/Comment";
+import AddCommentDialog from "../../components/Ticket/AddCommentDialog";
 
 const Title = () => {
+  const { user } = useUser();
   const router = useRouter();
   const { id } = router.query;
   const [ticket, setTicket] = useState({});
@@ -13,6 +16,8 @@ const Title = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    console.log("User:", user);
+    console.log("Query:", router.query);
     axios
       .get("http://localhost:5000/tickets/" + id)
       .then(async (res) => {
@@ -63,8 +68,9 @@ const Title = () => {
           {/* Comments */}
           <div className="mx-96">
             {Object.keys(comments).map((key, index) => (
-              <Comment comment={comments[key]} key={index} />
+              <Comment comment_={comments[key]} key={index} />
             ))}
+            <AddCommentDialog ticketId={id} />
           </div>
         </>
       )}

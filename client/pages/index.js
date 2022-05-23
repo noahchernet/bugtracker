@@ -1,5 +1,4 @@
 import { Loading } from "./../components/Loading";
-import { Header } from "../components/Layout/Header";
 import { useState, useEffect } from "react";
 import { useUser } from "@auth0/nextjs-auth0";
 import TicketOverview from "../components/Index/TicketOverview";
@@ -21,7 +20,7 @@ export default function Home() {
       .then((response) => setAllTickets(response.data))
       .catch((err) => console.log("Error fetching data\n", err))
       .finally(setLoading(false));
-  }, []);
+  }, [loading]);
 
   return (
     <div className=" m-5">
@@ -34,19 +33,25 @@ export default function Home() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1, transition: { staggerChildren: 0.5 } }}
           >
-            <motion.li
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-            >
-              {allTickets.map((ticket, index) => (
+            {allTickets.map((ticket, index) => (
+              <motion.li
+                initial={{ opacity: 0, y: -40 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                transition={{ delay: index * 0.15 }}
+                key={index}
+              >
                 <Link href={`/ticket/${ticket._id}`} key={index} passHref>
                   <TicketOverview ticket={ticket} key={index} />
                 </Link>
-              ))}
-            </motion.li>
+              </motion.li>
+            ))}
           </motion.ul>
-          <NewTicketModal open={isOpen} close={() => setIsOpen(false)} />
+          <NewTicketModal
+            open={isOpen}
+            close={() => setIsOpen(false)}
+            setIsTicketListLoading={setLoading}
+          />
           <AddTicketButton setIsOpen={setIsOpen} />
         </>
       )}

@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { useUser } from "@auth0/nextjs-auth0";
 import DatePicker from "react-datepicker";
 import axios from "axios";
+import Router from "next/router";
 
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -27,6 +28,7 @@ const NewTicketModal = ({ open, close, setIsTicketListLoading }) => {
       .then((res) => {
         alert("Ticket added successfully");
         close();
+        Router.reload(window.location.pathname);
         setIsTicketListLoading(false);
       })
       .catch((err) => alert(err.response.data.message));

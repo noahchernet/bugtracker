@@ -10,6 +10,7 @@ const userSchema = mongoose.Schema(
     firstName: String,
     lastName: String,
     picture: String, // url to image
+    sub: String, // Unique identifier for each user
   },
   { autoCreate: false }
 );
@@ -27,6 +28,7 @@ const userFromAuth = (req) => {
     firstName: req.auth.given_name,
     lastName: req.auth.family_name,
     picture: req.auth.picture,
+    sub: req.auth.sub,
   });
 };
 

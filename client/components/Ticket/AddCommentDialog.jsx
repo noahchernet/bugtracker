@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import Router from "next/router";
 
 const AddCommentDialog = ({ ticketId }) => {
   const [comment, setComment] = useState({});
@@ -16,8 +17,12 @@ const AddCommentDialog = ({ ticketId }) => {
       )
       .then((res) => {
         console.log("Comment added");
+        Router.reload(window.location.pathname);
       })
-      .catch((err) => alert(err.response.data.message));
+      .catch((err) => {
+        console.log("id:", ticketId);
+        alert(err.response.data.message);
+      });
   };
   return (
     <div className="flex">

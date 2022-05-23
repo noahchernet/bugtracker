@@ -27,7 +27,6 @@ const Comment = ({ comment_ }) => {
         console.log(`Comment ${comment._id} updated`);
       })
       .catch((err) => alert(err.response.data.message));
-    comment.description;
   };
 
   const deleteComment = async () => {

@@ -8,6 +8,10 @@ const AddTicketButton = ({ setIsOpen }) => {
   return (
     <motion.button
       className="fixed bottom-10 right-10 "
+      initial={{ scale: 0 }}
+      animate={{ scale: 1 }}
+      exit={{ scale: 0 }}
+      transition={{ duration: 0.25 }}
       whileTap={{ scale: 0.9 }}
       onClick={() => {
         setIsOpen(true);

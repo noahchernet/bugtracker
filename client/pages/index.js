@@ -38,7 +38,7 @@ export default function Home() {
                 initial={{ opacity: 0, y: -40 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0 }}
-                transition={{ delay: index * 0.15 }}
+                transition={{ delay: index * 0.05 }}
                 key={index}
               >
                 <Link href={`/ticket/${ticket._id}`} key={index} passHref>

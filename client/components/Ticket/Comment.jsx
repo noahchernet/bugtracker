@@ -16,14 +16,24 @@ const Comment = ({ comment_ }) => {
 
   const saveComment = async () => {
     const token = await axios.get("http://localhost:3000/api/getToken");
+
+    const form = new FormData();
+    if (updatedComment.description !== undefined)
+      form.append("description", updatedComment.description);
+    if (updatedComment.description !== undefined)
+      form.append("attachments", updatedComment.attachments);
+
+    console.log("Form data:");
+    for (const [key, value] of form) {
+      console.log(`\t${key} = ${value}`);
+    }
     axios
-      .put(
-        "http://localhost:5000/comments/" + comment._id,
-        { ...updatedComment },
-        { headers: { Authorization: "Bearer " + token.data.token } }
-      )
-      .then(() => {
-        setComment(updatedComment);
+      .put("http://localhost:5000/comments/" + comment._id, form, {
+        headers: { Authorization: "Bearer " + token.data.token },
+      })
+      .then((res) => {
+        console.log("Updated comm:", res.data);
+        setComment(res.data.comment);
         console.log(`Comment ${comment._id} updated`);
       })
       .catch((err) => alert(err.response.data.message));
@@ -53,14 +63,18 @@ const Comment = ({ comment_ }) => {
     <>
       {commentExists ? (
         <div className="flex mb-8 border-b-2 border-solid border-gray-200 py-4">
-          <div className="flex-col mr-5">
+          <div className="flex-col mr-5 text-center">
             <Image
               src={comment.postedByUser.picture}
               width={"50px"}
               height={"50px"}
               className="rounded-full"
             />
-            <p className="text-center">{comment.postedByUser.firstName}</p>
+            <div className="w-20">
+              <p className="text-center text-sm max-w-2 break-words ">
+                {comment.postedByUser.firstName || comment.postedByUser.email}
+              </p>
+            </div>
           </div>
           {editing ? (
             <form>
@@ -76,9 +90,31 @@ const Comment = ({ comment_ }) => {
                   })
                 }
               />
+
+              <input
+                type="file"
+                name="attachments"
+                onChange={(e) =>
+                  handleInputChange({
+                    name: e.target.name,
+                    value: e.target.files[0],
+                  })
+                }
+              />
             </form>
           ) : (
-            <p>{comment.description}</p>
+            <div className="flex-col">
+              <p>{comment.description}</p>
+              {comment.attachments ? (
+                <div className="relative w-56 h-56 m-4 bg-purple-500">
+                  <Image
+                    src={comment.attachments}
+                    alt="comment_image"
+                    layout="fill"
+                  />
+                </div>
+              ) : null}
+            </div>
           )}
           {user.sub === comment.postedByUser.sub && (
             <>

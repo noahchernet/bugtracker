@@ -9,6 +9,8 @@ import AddCommentDialog from "../../components/Ticket/AddCommentDialog";
 import DatePicker from "react-datepicker";
 import Router from "next/router";
 
+import "react-datepicker/dist/react-datepicker.css";
+
 const Title = () => {
   const { user } = useUser();
   const router = useRouter();
@@ -28,14 +30,25 @@ const Title = () => {
 
   const saveTicket = async () => {
     const token = await axios.get("http://localhost:3000/api/getToken");
+
+    const form = new FormData();
+    console.log("Final ticket: ", updatedTicket);
+    if (updatedTicket.title !== undefined)
+      form.append("title", updatedTicket.title);
+    if (updatedTicket.description !== undefined)
+      form.append("description", updatedTicket.description);
+    if (updatedTicket.severity !== undefined)
+      form.append("severity", updatedTicket.severity);
+    if (updatedTicket.attachments !== undefined)
+      form.append("attachments", updatedTicket.attachments);
+    if (updatedTicket.due !== undefined) form.append("due", updatedTicket.due);
+
     axios
-      .put(
-        "http://localhost:5000/tickets/" + ticket._id,
-        { ...updatedTicket },
-        { headers: { Authorization: "Bearer " + token.data.token } }
-      )
-      .then(() => {
-        setTicket(updatedTicket);
+      .put("http://localhost:5000/tickets/" + ticket._id, form, {
+        headers: { Authorization: "Bearer " + token.data.token },
+      })
+      .then((res) => {
+        setTicket(res.data);
         console.log(`Ticket ${ticket._id} updated`);
       })
       .catch((err) => alert(err));
@@ -96,11 +109,15 @@ const Title = () => {
                 <h2 className="text-xl font-bold mb-10">{ticket.title}</h2>
                 <p>{ticket.description}</p>
                 {ticket.attachments ? (
-                  // <div className="w-1/2 h-1/2 m-4 bg-purple-500">
-                  //   <Image src={ticket.attachments} alt="ImG" layout="fill" />
-                  // </div>
-                  <h1>Some tiext</h1>
-                ) : null}
+                  <div className="relative w-56 h-56 m-4 bg-purple-500">
+                    <Image
+                      src={ticket.attachments}
+                      alt="ticket_image"
+                      layout="fill"
+                    />
+                  </div>
+                ) : // <h1>Some tiext</h1>
+                null}
               </>
             )}
 
@@ -159,13 +176,13 @@ const Title = () => {
                       <input
                         type="file"
                         name="attachments"
-                        value={updatedTicket.attachments}
-                        onChange={(e) =>
+                        onChange={(e) => {
+                          console.log("File:", e.target.files);
                           handleInputChange({
                             name: e.target.name,
-                            value: e.target.value,
-                          })
-                        }
+                            value: e.target.files[0],
+                          });
+                        }}
                       />
 
                       <label className="mr-8">Due: </label>

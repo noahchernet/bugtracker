@@ -18,13 +18,27 @@ const NewTicketModal = ({ open, close, setIsTicketListLoading }) => {
 
   const addTicketToDB = async () => {
     const token = await axios.get("http://localhost:3000/api/getToken");
-    console.log(token.data.token);
+
+    const form = new FormData();
+    console.log("Final ticket: ", ticket);
+    if (ticket.title !== undefined) form.append("title", ticket.title);
+    if (ticket.description !== undefined)
+      form.append("description", ticket.description);
+    if (ticket.severity !== undefined)
+      form.append("severity", ticket.severity);
+    if (ticket.attachments !== undefined)
+      form.append("attachments", ticket.attachments);
+    if (ticket.due !== undefined) form.append("due", ticket.due);
+
+    // console.log("Form data:");
+    // for (const [key, value] of form) {
+    //   console.log(`\t${key} = ${value}`);
+    // }
+
     axios
-      .post(
-        "http://localhost:5000/tickets",
-        { ...ticket },
-        { headers: { Authorization: "Bearer " + token.data.token } }
-      )
+      .post("http://localhost:5000/tickets", form, {
+        headers: { Authorization: "Bearer " + token.data.token },
+      })
       .then((res) => {
         alert("Ticket added successfully");
         close();
@@ -100,7 +114,10 @@ const NewTicketModal = ({ open, close, setIsTicketListLoading }) => {
             name="attachments"
             value={ticket.desc}
             onChange={(e) =>
-              handleInputChange({ name: e.target.name, value: e.target.value })
+              handleInputChange({
+                name: e.target.name,
+                value: e.target.files[0],
+              })
             }
           />
 

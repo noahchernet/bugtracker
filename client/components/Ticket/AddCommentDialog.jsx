@@ -9,12 +9,15 @@ const AddCommentDialog = ({ ticketId }) => {
   };
   const handleSubmit = async () => {
     const token = await axios.get("http://localhost:3000/api/getToken");
+    const form = new FormData();
+    if (comment.description !== undefined)
+      form.append("description", comment.description);
+    if (comment.description !== undefined)
+      form.append("attachments", comment.attachments);
     axios
-      .post(
-        "http://localhost:5000/comments/" + ticketId,
-        { ...comment },
-        { headers: { Authorization: "Bearer " + token.data.token } }
-      )
+      .post("http://localhost:5000/comments/" + ticketId, form, {
+        headers: { Authorization: "Bearer " + token.data.token },
+      })
       .then((res) => {
         console.log("Comment added");
         Router.reload(window.location.pathname);
@@ -40,9 +43,11 @@ const AddCommentDialog = ({ ticketId }) => {
         <input
           type="file"
           name="attachments"
-          value={comment.attachments}
           onChange={(e) =>
-            handleInputChange({ name: e.target.name, value: e.target.value })
+            handleInputChange({
+              name: e.target.name,
+              value: e.target.files[0],
+            })
           }
         />
       </form>

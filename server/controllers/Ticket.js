@@ -101,7 +101,9 @@ exports.createTicket = async (req, res) => {
   // If an image is included in the request, post it to Cloudinary and get the
   // image's URL to put in attachments
   if (Object.keys(req.files).length !== 0) {
-    const result = await cloudinary.uploader.upload(req.files.image.path);
+    const result = await cloudinary.uploader.upload(
+      req.files.attachments.path
+    );
     imgUrl = result.url;
   }
 
@@ -175,7 +177,9 @@ exports.updateTicket = async (req, res) => {
   // If an image is included in the request, post it to Cloudinary and get the
   // image's URL to put in attachments
   if (Object.keys(req.files).length !== 0) {
-    const result = await cloudinary.uploader.upload(req.files.image.path);
+    const result = await cloudinary.uploader.upload(
+      req.files.attachments.path
+    );
     imgUrl = result.url;
   }
 

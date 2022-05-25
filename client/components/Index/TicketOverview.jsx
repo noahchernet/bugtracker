@@ -11,7 +11,7 @@ const TicketOverview = React.forwardRef(({ onClick, href, ticket }, ref) => {
   return (
     <a href={href} onClick={onClick} ref={ref}>
       <motion.div
-        className="flex flex-col p-5 px-10 my-6 lg:mx-80 md:flex-row justify-between
+        className="flex flex-col p-5 px-10  my-6 md:flex-row justify-between
       border-solid border-gray-100 border-2 rounded
       shadow-md shadow-gray-100
       cursor-pointer"

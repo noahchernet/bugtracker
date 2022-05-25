@@ -41,6 +41,34 @@ exports.getTickets = (req, res) => {
 };
 
 /**
+ * Get a ticket by id
+ * @param {*} req contains ticket
+ * @param {*} res
+ */
+exports.getTicketById = (req, res) => {
+  const { id } = req.params;
+
+  // If the id is not a valid ObjectId, return 404
+  try {
+    mongoose.Types.ObjectId(id);
+  } catch (err) {
+    return res.status(404).json({
+      message: "id is invalid.",
+    });
+  }
+
+  Ticket.findById(id)
+    .then((ticket) => {
+      if (!ticket)
+        return res
+          .status(404)
+          .json({ message: `Ticket with id ${id} not found` });
+      return res.status(200).json(ticket);
+    })
+    .catch((err) => res.status(500).json(err));
+};
+
+/**
  * Create a new ticket.
  * @param {*} req Contians the title, description and severity of the ticket
  * @param {*} res If the ticket is  created successfully, the body of res
@@ -73,7 +101,9 @@ exports.createTicket = async (req, res) => {
   // If an image is included in the request, post it to Cloudinary and get the
   // image's URL to put in attachments
   if (Object.keys(req.files).length !== 0) {
-    const result = await cloudinary.uploader.upload(req.files.image.path);
+    const result = await cloudinary.uploader.upload(
+      req.files.attachments.path
+    );
     imgUrl = result.url;
   }
 
@@ -147,7 +177,9 @@ exports.updateTicket = async (req, res) => {
   // If an image is included in the request, post it to Cloudinary and get the
   // image's URL to put in attachments
   if (Object.keys(req.files).length !== 0) {
-    const result = await cloudinary.uploader.upload(req.files.image.path);
+    const result = await cloudinary.uploader.upload(
+      req.files.attachments.path
+    );
     imgUrl = result.url;
   }
 

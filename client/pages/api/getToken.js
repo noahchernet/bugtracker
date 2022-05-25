@@ -5,9 +5,6 @@ const getToken = async (req, res) => {
     const session = await getSession(req, res, {
       audience: process.env.AUTH0_ISSUER_AUDIENCE,
     });
-    console.log("Running...");
-
-    // console.log("TOKENNNNN: " + session.idToken)
     res.status(200).json({ token: session.idToken });
   } catch (err) {
     console.log(err);

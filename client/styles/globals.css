@@ -2,6 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: "galano-gortesque";
+  src: url("../public/fonts/galano-gortesque-md.otf");
+}
+
+@font-face {
+  font-family: "cartogothic";
+  src: url("../public/fonts/CartoGothicStdBook.otf");
+}
+
+@font-face {
+  font-family: "cartogothic-bold";
+  src: url("../public/fonts/CartoGothicStdBold.otf");
+}
 @layer components {
 }
 /* html,

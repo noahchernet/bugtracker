@@ -104,7 +104,7 @@ const Comment = ({ comment_ }) => {
             </form>
           ) : (
             <div className="flex-col">
-              <p>{comment.description}</p>
+              <p className="font-cartogothic">{comment.description}</p>
               {comment.attachments ? (
                 <div className="relative w-56 h-56 m-4 bg-purple-500">
                   <Image

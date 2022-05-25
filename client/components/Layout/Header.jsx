@@ -13,7 +13,7 @@ export function Header() {
     >
       <Image className="w-2 h-2" src={logo} width={60} height={60} />
       <h1
-        className="my-2 mr-auto p-3 font-serif font-semi-bold
+        className="my-2 mr-auto p-3 font-galano_gortesque font-semi-bold
         text-lg font-bold lg:text-4xl"
       >
         Avalon Bugtracker

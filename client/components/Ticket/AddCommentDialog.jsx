@@ -37,7 +37,7 @@ const AddCommentDialog = ({ ticketId }) => {
           onChange={(e) =>
             handleInputChange({ name: e.target.name, value: e.target.value })
           }
-          className="rounded-sm border-black border-2"
+          className="rounded-sm border-black border-2 w-full"
         />
 
         <input

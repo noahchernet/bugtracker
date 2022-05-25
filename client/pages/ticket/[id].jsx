@@ -8,6 +8,7 @@ import Comment from "../../components/Ticket/Comment";
 import AddCommentDialog from "../../components/Ticket/AddCommentDialog";
 import DatePicker from "react-datepicker";
 import Router from "next/router";
+import { motion } from "framer-motion";
 
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -101,13 +102,19 @@ const Title = () => {
       ) : (
         <>
           {/* Ticket's Details, if editing is true, it will edit the ticket */}
-          <div className=" m-24 mx-96 p-6 border-black border-2 rounded block">
+          <motion.div
+            className=" m-24 mx-96 p-6 border-black border-2 rounded block"
+            initial={{ y: 30, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+          >
             {editing ? (
               <div></div>
             ) : (
               <>
-                <h2 className="text-xl font-bold mb-10">{ticket.title}</h2>
-                <p>{ticket.description}</p>
+                <h2 className="text-2xl font-cartogothic_bold mb-5">
+                  {ticket.title}
+                </h2>
+                <p className="font-cartogothic">{ticket.description}</p>
                 {ticket.attachments ? (
                   <div className="relative w-56 h-56 m-4 bg-purple-500">
                     <Image
@@ -244,14 +251,20 @@ const Title = () => {
                 <p>{ticket.postedByUser.email}</p>
               </div>
             </div>
-          </div>
+          </motion.div>
           {/* Comments */}
-          <div className="mx-96">
+          <motion.ul className="mx-96">
             {Object.keys(comments).map((key, index) => (
-              <Comment comment_={comments[key]} key={index} />
+              <motion.li
+                initial={{ y: -10, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.05 }}
+              >
+                <Comment comment_={comments[key]} key={index} />
+              </motion.li>
             ))}
             {idIsReady ? <AddCommentDialog ticketId={id} /> : null}
-          </div>
+          </motion.ul>
         </>
       )}
     </div>

@@ -70,7 +70,7 @@ const NewTicketModal = ({ open, close, setIsTicketListLoading }) => {
       >
         <h1 className="mb-5 text-center font-bold">Add a new Ticket</h1>
 
-        <form className="mb-12 flex flex-col mx-12" onSubmit={addTicketToDB}>
+        <form className=" flex flex-col my-5" onSubmit={addTicketToDB}>
           <label className="mr-8">Title</label>
           <input
             type="text"
@@ -128,22 +128,23 @@ const NewTicketModal = ({ open, close, setIsTicketListLoading }) => {
               handleInputChange({ name: "due", value: date })
             }
           />
+          <div>
+            <input
+              type="submit"
+              value="Add Ticket"
+              onClick={addTicketToDB}
+              className="py-2 px-3 font-bold text-white bg-blue-600  rounded-md float-left rounded-r-none cursor-pointer w-1/2"
+            />
+            <button
+              onClick={() => {
+                close();
+              }}
+              className="p-2 px-4 font-bold text-white bg-black float-right rounded-md rounded-l-none w-1/2"
+            >
+              Close
+            </button>
+          </div>
         </form>
-
-        <input
-          type="submit"
-          value="Add Ticket"
-          onClick={addTicketToDB}
-          className="py-2 px-3 font-bold text-white bg-blue-600  rounded-md float-left rounded-r-none cursor-pointer"
-        />
-        <button
-          onClick={() => {
-            close();
-          }}
-          className="p-2 px-4 font-bold text-white bg-black float-right rounded-md rounded-l-none"
-        >
-          Close
-        </button>
       </motion.div>
     </>
   );

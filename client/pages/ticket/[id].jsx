@@ -100,10 +100,10 @@ const Title = () => {
       {loading ? (
         <Loading />
       ) : (
-        <>
+        <div className="mt-8 mb-20">
           {/* Ticket's Details, if editing is true, it will edit the ticket */}
           <motion.div
-            className=" m-24 mx-96 p-6 border-black border-2 rounded block"
+            className="mx-96 p-6 border-black border-2 rounded block"
             initial={{ y: 30, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
           >
@@ -265,7 +265,7 @@ const Title = () => {
             ))}
             {idIsReady ? <AddCommentDialog ticketId={id} /> : null}
           </motion.ul>
-        </>
+        </div>
       )}
     </div>
   );

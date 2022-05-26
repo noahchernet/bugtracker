@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import axios from "axios";
 import Router from "next/router";
+import { motion } from "framer-motion";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faComment } from "@fortawesome/free-solid-svg-icons";
+import { faFileCirclePlus } from "@fortawesome/free-solid-svg-icons";
 
 const AddCommentDialog = ({ ticketId }) => {
   const [comment, setComment] = useState({});
@@ -28,7 +32,11 @@ const AddCommentDialog = ({ ticketId }) => {
       });
   };
   return (
-    <div className="flex">
+    <motion.div
+      // className="flex"
+      initial={{ y: -20, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+    >
       <form>
         <textarea
           name="description"
@@ -37,27 +45,36 @@ const AddCommentDialog = ({ ticketId }) => {
           onChange={(e) =>
             handleInputChange({ name: e.target.name, value: e.target.value })
           }
-          className="rounded-sm border-black border-2 w-full"
+          className="rounded-sm border-black border-2 w-5/6 inline-block"
         />
-
-        <input
-          type="file"
-          name="attachments"
-          onChange={(e) =>
-            handleInputChange({
-              name: e.target.name,
-              value: e.target.files[0],
-            })
-          }
-        />
+        <div className="w-1/6 inline-block">
+          <label htmlFor="filePicker">
+            <FontAwesomeIcon
+              className="border-2 bg-blue-600 mx-2 p-4 text-white rounded-full text-xl cursor-pointer "
+              icon={faFileCirclePlus}
+            />
+          </label>
+          <input
+            id="filePicker"
+            type="file"
+            name="attachments"
+            className="hidden"
+            onChange={(e) =>
+              handleInputChange({
+                name: e.target.name,
+                value: e.target.files[0],
+              })
+            }
+          />
+          <button onClick={handleSubmit}>
+            <FontAwesomeIcon
+              className="border-2 bg-blue-600  p-4 text-white rounded-full text-xl"
+              icon={faComment}
+            />
+          </button>
+        </div>
       </form>
-      <button
-        className="border-2 bg-blue-600 m-2 p-2 text-white rounded-xl "
-        onClick={handleSubmit}
-      >
-        Comment
-      </button>
-    </div>
+    </motion.div>
   );
 };
 

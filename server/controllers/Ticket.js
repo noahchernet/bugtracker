@@ -1,4 +1,5 @@
 const Ticket = require("../models/Ticket");
+const Comment = require("../models/Comment").Comment;
 const RemovedTicket = require("../models/RemovedTicket");
 const userFromAuth = require("../models/User").userFromAuth;
 const mongoose = require("mongoose");
@@ -172,7 +173,7 @@ exports.updateTicket = async (req, res) => {
     api_key: process.env.CLOUDINARY_API_KEY,
     api_secret: process.env.CLOUDINARY_API_SECRET,
   });
-  let imgUrl = "";
+  let imgUrl = ticketToUpdate.attachments;
 
   // If an image is included in the request, post it to Cloudinary and get the
   // image's URL to put in attachments
@@ -182,6 +183,34 @@ exports.updateTicket = async (req, res) => {
     );
     imgUrl = result.url;
   }
+
+  // Set the comment if the comment's id is provided
+  if (
+    req.fields.solution !== undefined ||
+    // req.fields.solution !== "" ||
+    req.fields.solution !== null
+  ) {
+    // If the solution's comment id is not a valid ObjectId, return 404
+    try {
+      const comment = await Comment.findById(req.fields.solution);
+
+      // Flag all of the comments as not the solution to the ticket
+      await Comment.updateMany({ tiketId: id }, { solutionToTicket: false });
+      await Comment.updateOne(
+        { _id: req.fields.solution },
+        { solutionToTicket: true }
+      );
+      req.fields.solved = true;
+    } catch (err) {
+      // Unmark any solution if solution is set empty or an invalid comment id
+      // is set
+      await Comment.updateMany({ tiketId: id }, { solutionToTicket: false });
+      req.fields.solved = false;
+      req.fields.solution = null;
+    }
+  }
+
+  console.log("Handling solution done");
 
   // Update the ticket
   Ticket.findByIdAndUpdate(id, { ...req.fields, attachments: imgUrl })

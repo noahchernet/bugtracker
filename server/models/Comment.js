@@ -7,6 +7,7 @@ const commentSchema = mongoose.Schema(
     postedByUser: { type: userSchema, required: true },
     description: { type: String, required: true },
     attachments: { type: String },
+    solutionToTicket: {type: Boolean}
   },
   { timestamps: true }
 );

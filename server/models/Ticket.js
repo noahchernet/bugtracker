@@ -11,7 +11,7 @@ const ticketSchema = mongoose.Schema(
     comments: { type: [mongoose.Types.ObjectId] },
     solved: { type: Boolean, required: true },
     attachments: { type: String },
-    solution: { type: [mongoose.Types.ObjectId] },
+    solution: { type: mongoose.Types.ObjectId },
     due: { type: Date },
   },
   { timestamps: true }

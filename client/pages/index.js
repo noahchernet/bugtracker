@@ -97,18 +97,20 @@ export default function Home() {
                 className="block"
               >
                 <input
-                  className="border-black border-2 w-5/6 rounded-2xl inline-block px-5"
+                  type="text"
+                  className="w-full py-2 pl-10 pr-4 text-gray-700 bg-white border rounded-md  focus:border-blue-300 focus:outline-none focus:ring focus:ring-opacity-40 focus:ring-blue-300"
+                  placeholder="Search ticket"
                   value={params.title}
                   onChange={(e) => {
                     setParams({ ...params, title: e.target.value });
                   }}
+                  onKeyDown={(keyPress) => {
+                    if (keyPress.which === 13) {
+                      console.log("Pressed key:", keyPress);
+                      setLoading(true);
+                    }
+                  }}
                 />
-                <button
-                  className="bg-blue-600 border-2 p-1 text-white font-bold rounded-3xl  w-1/6 inline-block"
-                  onClick={() => setLoading(true)}
-                >
-                  Search
-                </button>
               </motion.form>
               <motion.ul
                 initial={{ opacity: 0 }}

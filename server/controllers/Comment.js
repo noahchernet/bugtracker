@@ -189,6 +189,16 @@ exports.deleteComment = async (req, res) => {
       .json({ message: "Could not find comment with id = " + comment_id });
   }
 
+  // If the comment is the solution to the parent ticket,
+  // make the ticket unsolved
+  if (commentToRemove.solutionToTicket) {
+    const parentTicket = await Ticket.findById(commentToRemove.ticketId);
+    parentTicket.solution = null;
+    parentTicket.solved = false;
+    commentToRemove.solutionToTicket = false;
+    await parentTicket.save();
+    await commentToRemove.save();
+  }
   await Comment.findByIdAndDelete(comment_id);
 
   const removedComment = new RemovedComment(

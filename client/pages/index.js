@@ -105,8 +105,7 @@ export default function Home() {
                     setParams({ ...params, title: e.target.value });
                   }}
                   onKeyDown={(keyPress) => {
-                    if (keyPress.which === 13) {
-                      console.log("Pressed key:", keyPress);
+                    if (keyPress.key === "Enter") {
                       setLoading(true);
                     }
                   }}

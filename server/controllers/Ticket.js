@@ -204,7 +204,10 @@ exports.updateTicket = async (req, res) => {
     } catch (err) {
       // Unmark any solution if solution is set empty or an invalid comment id
       // is set
-      await Comment.updateMany({ tiketId: id }, { solutionToTicket: false });
+      await Comment.updateOne(
+        { _id: ticketToUpdate.solution },
+        { solutionToTicket: false }
+      );
       req.fields.solved = false;
       req.fields.solution = null;
     }

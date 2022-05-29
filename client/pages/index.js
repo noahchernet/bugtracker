@@ -56,6 +56,19 @@ export default function Home() {
                     <option value="2">Medium</option>
                     <option value="3">High</option>
                   </select>
+                  <br />
+                  <label>Status</label>
+                  <select
+                    name="solved"
+                    value={params.solved}
+                    onChange={(e) => {
+                      setParams({ ...params, solved: e.target.value });
+                    }}
+                  >
+                    <option value="">Unfiltered</option>
+                    <option value="true">Sovled</option>
+                    <option value="false">Unsovled</option>
+                  </select>
                 </form>
                 <button
                   className="border-2 border-black m-2 rounded px-2"

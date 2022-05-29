@@ -2,8 +2,9 @@ import { useUser } from "@auth0/nextjs-auth0";
 import Image from "next/image";
 import React, { useState } from "react";
 import axios from "axios";
+import Router from "next/router";
 
-const Comment = ({ comment_ }) => {
+const Comment = ({ comment_, ticket }) => {
   const [comment, setComment] = useState(comment_);
   const [editing, setEditing] = useState(false);
   const [updatedComment, setUpdatedComment] = useState(comment_);
@@ -44,7 +45,6 @@ const Comment = ({ comment_ }) => {
     const confirmDelete = confirm(
       "Are you sure you want to delete this comment?"
     );
-    console.log("Confirmatin:", confirmDelete);
 
     if (confirmDelete) {
       axios
@@ -59,10 +59,53 @@ const Comment = ({ comment_ }) => {
     }
   };
 
+  const markCommentAsSolution = async () => {
+    console.log("marking...");
+    const token = await axios.get("http://localhost:3000/api/getToken");
+    axios
+      .put(
+        "http://localhost:5000/tickets/" + ticket._id,
+        { solution: comment._id },
+        {
+          headers: { Authorization: "Bearer " + token.data.token },
+        }
+      )
+      .then((res) => {
+        console.log(res);
+        Router.reload(window.location.pathname);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const unmarkCommentAsSolution = async () => {
+    console.log("unmarking...");
+    const token = await axios.get("http://localhost:3000/api/getToken");
+    axios
+      .put(
+        "http://localhost:5000/tickets/" + ticket._id,
+        { solution: "" },
+        {
+          headers: { Authorization: "Bearer " + token.data.token },
+        }
+      )
+      .then((res) => {
+        console.log(res);
+        Router.reload(window.location.pathname);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   return (
     <>
       {commentExists ? (
-        <div className="flex mb-8 border-b-2 border-solid border-gray-200 py-4">
+        <div
+          className={`flex mb-8 border-b-2 border-solid border-gray-200 py-4 ${
+            comment.solutionToTicket && "bg-lime-500"
+          }`}
+        >
           <div className="flex-col mr-5 text-center">
             <Image
               src={comment.postedByUser.picture}
@@ -116,7 +159,7 @@ const Comment = ({ comment_ }) => {
               ) : null}
             </div>
           )}
-          {user.sub === comment.postedByUser.sub && (
+          {user && user.sub === comment.postedByUser.sub && (
             <>
               {editing ? (
                 <>
@@ -151,6 +194,25 @@ const Comment = ({ comment_ }) => {
                     Delete
                   </button>
                 </>
+              )}
+            </>
+          )}
+          {user && user.sub === ticket.postedByUser.sub && (
+            <>
+              {comment.solutionToTicket ? (
+                <button
+                  className="my-auto p-2 border-2 rounded"
+                  onClick={() => unmarkCommentAsSolution()}
+                >
+                  Unmark solution
+                </button>
+              ) : (
+                <button
+                  className="my-auto p-2 border-2 rounded"
+                  onClick={() => markCommentAsSolution()}
+                >
+                  Mark as Solution
+                </button>
               )}
             </>
           )}

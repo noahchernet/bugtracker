@@ -59,7 +59,6 @@ const Title = () => {
     const confirmDelete = confirm(
       "Are you sure you want to delete this ticket?"
     );
-    console.log("Confirmatin:", confirmDelete);
 
     if (confirmDelete) {
       axios
@@ -128,7 +127,7 @@ const Title = () => {
               </>
             )}
 
-            {user.sub === ticket.postedByUser.sub && (
+            {user && user.sub === ticket.postedByUser.sub && (
               <>
                 {editing ? (
                   <>
@@ -260,7 +259,11 @@ const Title = () => {
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.05 }}
               >
-                <Comment comment_={comments[key]} key={index} />
+                <Comment
+                  comment_={comments[key]}
+                  ticket={ticket}
+                  key={index}
+                />
               </motion.li>
             ))}
             {idIsReady ? <AddCommentDialog ticketId={id} /> : null}

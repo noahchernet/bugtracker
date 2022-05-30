@@ -26,70 +26,10 @@ export default function Home() {
   return (
     <AnimatePresence>
       <div className=" m-5">
-        {/* <Header /> */}
         {loading ? (
           <Loading />
         ) : (
           <div className="">
-            {/*Filter */}
-            <AnimatePresence>
-              <motion.div
-                className="rounded border-2 border-black text-center lg:float-left lg:px-10"
-                initial={{ x: -40, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                exit={{ x: -40, opacity: 0 }}
-              >
-                <h1 className="-ml-5">Filter Tickets</h1>
-                <form>
-                  <label>Severity</label>
-                  <select
-                    name="severity"
-                    required
-                    value={params.severity}
-                    onChange={(e) => {
-                      setParams({ ...params, severity: e.target.value });
-                      console.log("Params", params);
-                    }}
-                  >
-                    <option value="">None</option>
-                    <option value="1">Low</option>
-                    <option value="2">Medium</option>
-                    <option value="3">High</option>
-                  </select>
-                  <br />
-                  <label>Status</label>
-                  <select
-                    name="solved"
-                    value={params.solved}
-                    onChange={(e) => {
-                      setParams({ ...params, solved: e.target.value });
-                    }}
-                  >
-                    <option value="">Unfiltered</option>
-                    <option value="true">Sovled</option>
-                    <option value="false">Unsovled</option>
-                  </select>
-                </form>
-                <button
-                  className="border-2 border-black m-2 rounded px-2"
-                  onClick={() => {
-                    console.log("On search params:", params);
-                    setLoading(true);
-                  }}
-                >
-                  Search
-                </button>
-                <button
-                  className="border-2 border-black m-2 rounded px-2"
-                  onClick={() => {
-                    setParams({});
-                    setLoading(true);
-                  }}
-                >
-                  Clear
-                </button>
-              </motion.div>
-            </AnimatePresence>
             <div className="lg:mx-96">
               <motion.form
                 initial={{ y: -20, opacity: 0 }}
@@ -98,7 +38,7 @@ export default function Home() {
               >
                 <input
                   type="text"
-                  className="w-full py-2 pl-10 pr-4 text-gray-700 bg-white border rounded-md  focus:border-blue-300 focus:outline-none focus:ring focus:ring-opacity-40 focus:ring-blue-300"
+                  className="my-3 w-full py-2 pl-10 pr-4 text-gray-700 bg-white border rounded-md  focus:border-blue-300 focus:outline-none focus:ring focus:ring-opacity-40 focus:ring-blue-300"
                   placeholder="Search ticket"
                   value={params.title}
                   onChange={(e) => {
@@ -113,47 +53,45 @@ export default function Home() {
               </motion.form>
               <motion.div>
                 {/* Filter tickets accordion */}
-                <article className="border-gray-400 border-b hover:bg-gray-300">
+                <article className="border-gray-400 border-b hover:bg-gray-300 transition-all duration-200">
                   <div
                     onClick={() => {
                       filterOpen ? setFilterOpen(false) : setFilterOpen(true);
                     }}
                     className={`${
                       filterOpen ? "bg-gray-200" : ""
-                    } flex justify-between items-center p-5 pl-8 pr-8 cursor-pointer select-none`}
+                    } flex justify-between items-center p-2 pl-8 pr-8 cursor-pointer select-none`}
                   >
-                    <h3 className="font-semibold text-xl text-gray-800">
-                      Filter tickets
-                    </h3>
-                    {/*Arrow */}
+                    <h3 className=" text-xl text-gray-800">Filter tickets</h3>
+                    {/*Arrow SVG*/}
                     <div className="rounded-full border w-7 h-7 flex items-center justify-center hover:bg-gray-200">
                       {filterOpen ? (
                         <div className="rounded-full text-gray-500 w-7 h-7 flex items-center justify-center">
                           <svg
-                            class="w-6 h-6"
+                            className="w-6 h-6"
                             fill="currentColor"
                             viewBox="0 0 20 20"
                             xmlns="http://www.w3.org/2000/svg"
                           >
                             <path
-                              fill-rule="evenodd"
+                              fillRule="evenodd"
                               d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                              clip-rule="evenodd"
+                              clipRule="evenodd"
                             ></path>
                           </svg>
                         </div>
                       ) : (
                         <div className="rounded-full text-gray-500 w-7 h-7 flex items-center justify-center">
                           <svg
-                            class="w-6 h-6"
+                            className="w-6 h-6"
                             fill="currentColor"
                             viewBox="0 0 20 20"
                             xmlns="http://www.w3.org/2000/svg"
                           >
                             <path
-                              fill-rule="evenodd"
+                              fillRule="evenodd"
                               d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                              clip-rule="evenodd"
+                              clipRule="evenodd"
                             ></path>
                           </svg>
                         </div>
@@ -161,52 +99,118 @@ export default function Home() {
                     </div>
                   </div>
                   {filterOpen ? (
-                    <div className="pl-8 pr-8 py-5 bg-gray-100 text-gray-700">
-                      <form className="flex justify-between">
-                        <label>Severity</label>
-                        <div>
-                          <input
-                            type="radio"
-                            id="low"
-                            value="1"
-                            checked={params.severity === 1}
-                            onChange={() =>
-                              setParams({ ...params, severity: 1 })
-                            }
-                            className="mr-1"
-                          />
-                          <label for="low" className="mr-3">
-                            Low
-                          </label>
-                          <input
-                            type="radio"
-                            id="med"
-                            value="2"
-                            checked={params.severity === 2}
-                            onChange={() =>
-                              setParams({ ...params, severity: 2 })
-                            }
-                            className="mr-1"
-                          />
-                          <label for="med" className="mr-3">
-                            Medium
-                          </label>
-                          <input
-                            type="radio"
-                            id="high"
-                            value="3"
-                            checked={params.severity === 3}
-                            onChange={() =>
-                              setParams({ ...params, severity: 3 })
-                            }
-                            className="mr-1"
-                          />
-                          <label for="high" className="mr-3">
-                            High
-                          </label>
-                        </div>
-                      </form>
-                    </div>
+                    <AnimatePresence>
+                      <motion.div
+                        className="pl-8 pr-8 py-5 bg-gray-100 text-gray-700"
+                        initial={{ opacity: 0, x: 40 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: 40 }}
+                      >
+                        <form>
+                          <div className="flex justify-between mb-2">
+                            <label>Severity</label>
+                            <div>
+                              <input
+                                type="radio"
+                                id="low"
+                                value="1"
+                                checked={params.severity === 1}
+                                onChange={() =>
+                                  setParams({ ...params, severity: 1 })
+                                }
+                                className="mr-1"
+                              />
+                              <label htmlFor="low" className="mr-3">
+                                Low
+                              </label>
+                              <input
+                                type="radio"
+                                id="med"
+                                value="2"
+                                checked={params.severity === 2}
+                                onChange={() =>
+                                  setParams({ ...params, severity: 2 })
+                                }
+                                className="mr-1"
+                              />
+                              <label htmlFor="med" className="mr-3">
+                                Medium
+                              </label>
+                              <input
+                                type="radio"
+                                id="high"
+                                value="3"
+                                checked={params.severity === 3}
+                                onChange={() =>
+                                  setParams({ ...params, severity: 3 })
+                                }
+                                className="mr-1"
+                              />
+                              <label htmlFor="high" className="mr-3">
+                                High
+                              </label>
+                            </div>
+                          </div>
+
+                          <div className="flex justify-between">
+                            <label>Status</label>
+                            <div>
+                              <input
+                                type="radio"
+                                id="solved"
+                                checked={params.solved === true}
+                                onChange={() =>
+                                  setParams({ ...params, solved: true })
+                                }
+                                className="mr-1"
+                              />
+                              <label htmlFor="solved" className="mr-3">
+                                Solved
+                              </label>
+                              <input
+                                type="radio"
+                                id="unsolved"
+                                checked={params.solved === false}
+                                onChange={() =>
+                                  setParams({ ...params, solved: false })
+                                }
+                                className="mr-1"
+                              />
+                              <label htmlFor="unsolved" className="mr-3">
+                                Unsolved
+                              </label>
+                            </div>
+                          </div>
+                        </form>
+                        {Object.keys(params).length !== 0 ? (
+                          <motion.div
+                            className="flex flex-row-reverse "
+                            initial={{ opacity: 0, x: 40 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            exit={{ opacity: 0, x: 40 }}
+                          >
+                            <button
+                              className="border-2 bg-blue-600 text-white m-2 mb-0 rounded-lg px-2 py-1 "
+                              onClick={() => {
+                                console.log("On search params:", params);
+                                setLoading(true);
+                              }}
+                            >
+                              Search
+                            </button>
+                            <button
+                              className="border-2 bg-red-600 text-white m-2 mb-0 rounded-lg px-2 py-1 "
+                              onClick={() => {
+                                setParams({});
+                                setLoading(true);
+                              }}
+                            >
+                              Clear
+                            </button>
+                          </motion.div>
+                        ) : null}
+                      </motion.div>
+                    </AnimatePresence>
                   ) : null}
                 </article>
               </motion.div>

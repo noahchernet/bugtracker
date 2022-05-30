@@ -112,6 +112,7 @@ export default function Home() {
                 />
               </motion.form>
               <motion.div>
+                {/* Filter tickets accordion */}
                 <article className="border-gray-400 border-b hover:bg-gray-300">
                   <div
                     onClick={() => {
@@ -160,14 +161,52 @@ export default function Home() {
                     </div>
                   </div>
                   {filterOpen ? (
-                    <motion.div
-                      className="pl-8 pr-8 py-5 bg-gray-100 text-gray-700"
-                      initial={{ scaleY: 0 }}
-                      animate={{ scaleY: 1 }}
-                      exit={{ scaleY: 0 }}
-                    >
-                      <p>Text</p>
-                    </motion.div>
+                    <div className="pl-8 pr-8 py-5 bg-gray-100 text-gray-700">
+                      <form className="flex justify-between">
+                        <label>Severity</label>
+                        <div>
+                          <input
+                            type="radio"
+                            id="low"
+                            value="1"
+                            checked={params.severity === 1}
+                            onChange={() =>
+                              setParams({ ...params, severity: 1 })
+                            }
+                            className="mr-1"
+                          />
+                          <label for="low" className="mr-3">
+                            Low
+                          </label>
+                          <input
+                            type="radio"
+                            id="med"
+                            value="2"
+                            checked={params.severity === 2}
+                            onChange={() =>
+                              setParams({ ...params, severity: 2 })
+                            }
+                            className="mr-1"
+                          />
+                          <label for="med" className="mr-3">
+                            Medium
+                          </label>
+                          <input
+                            type="radio"
+                            id="high"
+                            value="3"
+                            checked={params.severity === 3}
+                            onChange={() =>
+                              setParams({ ...params, severity: 3 })
+                            }
+                            className="mr-1"
+                          />
+                          <label for="high" className="mr-3">
+                            High
+                          </label>
+                        </div>
+                      </form>
+                    </div>
                   ) : null}
                 </article>
               </motion.div>

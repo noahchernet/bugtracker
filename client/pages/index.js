@@ -9,7 +9,7 @@ import NewTicketModal from "../components/Index/NewTicketModal";
 import Link from "next/link";
 
 export default function Home() {
-  const { user } = useUser();
+  const [filterOpen, setFilterOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [allTickets, setAllTickets] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
@@ -111,6 +111,66 @@ export default function Home() {
                   }}
                 />
               </motion.form>
+              <motion.div>
+                <article className="border-gray-400 border-b hover:bg-gray-300">
+                  <div
+                    onClick={() => {
+                      filterOpen ? setFilterOpen(false) : setFilterOpen(true);
+                    }}
+                    className={`${
+                      filterOpen ? "bg-gray-200" : ""
+                    } flex justify-between items-center p-5 pl-8 pr-8 cursor-pointer select-none`}
+                  >
+                    <h3 className="font-semibold text-xl text-gray-800">
+                      Filter tickets
+                    </h3>
+                    {/*Arrow */}
+                    <div className="rounded-full border w-7 h-7 flex items-center justify-center hover:bg-gray-200">
+                      {filterOpen ? (
+                        <div className="rounded-full text-gray-500 w-7 h-7 flex items-center justify-center">
+                          <svg
+                            class="w-6 h-6"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              fill-rule="evenodd"
+                              d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                              clip-rule="evenodd"
+                            ></path>
+                          </svg>
+                        </div>
+                      ) : (
+                        <div className="rounded-full text-gray-500 w-7 h-7 flex items-center justify-center">
+                          <svg
+                            class="w-6 h-6"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              fill-rule="evenodd"
+                              d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                              clip-rule="evenodd"
+                            ></path>
+                          </svg>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  {filterOpen ? (
+                    <motion.div
+                      className="pl-8 pr-8 py-5 bg-gray-100 text-gray-700"
+                      initial={{ scaleY: 0 }}
+                      animate={{ scaleY: 1 }}
+                      exit={{ scaleY: 0 }}
+                    >
+                      <p>Text</p>
+                    </motion.div>
+                  ) : null}
+                </article>
+              </motion.div>
               <motion.ul
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1, transition: { staggerChildren: 0.5 } }}

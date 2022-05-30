@@ -61,7 +61,7 @@ const NewTicketModal = ({ open, close, setIsTicketListLoading }) => {
       <motion.div
         className="fixed  top-1/2 left-1/2
         -translate-x-1/2 -translate-y-1/2 
-        bg-white p-8 z-30
+        bg-white p-2 z-30 py-6
         rounded-lg"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -128,22 +128,23 @@ const NewTicketModal = ({ open, close, setIsTicketListLoading }) => {
               handleInputChange({ name: "due", value: date })
             }
           />
+          <div className="inline-block">
+            <input
+              type="submit"
+              value="Add Ticket"
+              onClick={addTicketToDB}
+              className="py-2 px-3 font-bold text-white bg-blue-600  rounded-md float-left rounded-r-none cursor-pointer w-1/2"
+            />
+            <button
+              onClick={() => {
+                close();
+              }}
+              className="p-2 px-4 font-bold text-white bg-black float-right rounded-md rounded-l-none w-1/2"
+            >
+              Close
+            </button>
+          </div>
         </form>
-
-        <input
-          type="submit"
-          value="Add Ticket"
-          onClick={addTicketToDB}
-          className="py-2 px-3 font-bold text-white bg-blue-600  rounded-md float-left rounded-r-none cursor-pointer"
-        />
-        <button
-          onClick={() => {
-            close();
-          }}
-          className="p-2 px-4 font-bold text-white bg-black float-right rounded-md rounded-l-none"
-        >
-          Close
-        </button>
       </motion.div>
     </>
   );

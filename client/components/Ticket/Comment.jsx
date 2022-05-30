@@ -102,8 +102,8 @@ const Comment = ({ comment_, ticket }) => {
     <>
       {commentExists ? (
         <div
-          className={`flex mb-8 border-b-2 border-solid border-gray-200 py-4 ${
-            comment.solutionToTicket && "bg-lime-500"
+          className={`flex mb-8 border-b-2 border-solid border-gray-200 py-4 px-1 ${
+            comment.solutionToTicket && "border-2 border-lime-500 rounded"
           }`}
         >
           <div className="flex-col mr-5 text-center">

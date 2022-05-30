@@ -7,7 +7,7 @@ import "@fortawesome/fontawesome-svg-core/styles.css";
 const AddTicketButton = ({ setIsOpen }) => {
   return (
     <motion.button
-      className="fixed bottom-10 right-10 "
+      className="fixed bottom-16 right-10 "
       initial={{ scale: 0 }}
       animate={{ scale: 1 }}
       exit={{ scale: 0 }}

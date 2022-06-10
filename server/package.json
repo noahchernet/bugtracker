@@ -27,7 +27,7 @@
     "jwks-rsa": "^2.1.2",
     "lodash": "^4.17.21",
     "mongo": "^0.1.0",
-    "mongoose": "^6.3.2",
+    "mongoose": "^6.3.4",
     "nodemon": "^2.0.16"
   },
   "devDependencies": {

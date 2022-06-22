@@ -27,7 +27,6 @@ const AddTicketButton = ({ setIsOpen }) => {
         icon={faPenToSquare}
         size="2x"
       />
-      {/* <h1>A</h1> */}
     </motion.button>
   );
 };

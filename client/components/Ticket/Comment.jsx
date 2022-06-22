@@ -119,8 +119,10 @@ const Comment = ({ comment_, ticket }) => {
             </p>
           ) : null}
           <div
-            className={`inline-block relative flex-col p-4 mb-8 border rounded-lg bg-white shadow-lg ${
-              comment.solutionToTicket ? "border-l-green border-l-8" : ""
+            className={` relative flex-col p-4 mb-8 border rounded-lg bg-white shadow-lg ${
+              comment.solutionToTicket
+                ? "border-l-green border-l-8 inline-block"
+                : ""
             }`}
           >
             <div className="relative flex gap-4 mb-4">

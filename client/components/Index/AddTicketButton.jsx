@@ -3,8 +3,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import { motion } from "framer-motion";
 import "@fortawesome/fontawesome-svg-core/styles.css";
+import { useUser } from "@auth0/nextjs-auth0";
 
 const AddTicketButton = ({ setIsOpen }) => {
+  const { user } = useUser();
   return (
     <motion.button
       className="fixed bottom-16 right-10 "
@@ -15,6 +17,9 @@ const AddTicketButton = ({ setIsOpen }) => {
       whileTap={{ scale: 0.9 }}
       onClick={() => {
         setIsOpen(true);
+        console.log("User: ", user);
+        if (user) setIsOpen(true);
+        else alert("Please login to create a ticket");
       }}
     >
       <FontAwesomeIcon

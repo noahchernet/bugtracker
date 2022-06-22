@@ -102,9 +102,9 @@ export default function Home() {
                     <AnimatePresence>
                       <motion.div
                         className="pl-8 pr-8 py-5 bg-gray-100 text-gray-700"
-                        initial={{ opacity: 0, x: 40 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: 40 }}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
                       >
                         <form>
                           <div className="flex justify-between mb-2">

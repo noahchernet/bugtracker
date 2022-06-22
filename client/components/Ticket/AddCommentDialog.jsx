@@ -1,13 +1,19 @@
 import React, { useState } from "react";
 import axios from "axios";
 import Router from "next/router";
+import { useUser } from "@auth0/nextjs-auth0";
 
 const AddCommentDialog = ({ ticketId }) => {
   const [comment, setComment] = useState({});
+  const { user } = useUser();
   const handleInputChange = ({ name, value }) => {
     setComment({ ...comment, [name]: value });
   };
   const handleSubmit = async () => {
+    if (!user) {
+      alert("You must be logged in to comment on this.");
+      return;
+    }
     const token = await axios.get("http://localhost:3000/api/getToken");
     const form = new FormData();
     if (comment.description !== undefined)

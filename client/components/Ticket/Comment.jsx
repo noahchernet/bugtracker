@@ -1,8 +1,15 @@
 import { useUser } from "@auth0/nextjs-auth0";
-import Image from "next/image";
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import axios from "axios";
 import Router from "next/router";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faPen,
+  faXmark,
+  faTrash,
+  faCheck,
+} from "@fortawesome/free-solid-svg-icons";
+import { DateTime } from "luxon";
 
 const Comment = ({ comment_, ticket }) => {
   const [comment, setComment] = useState(comment_);
@@ -24,7 +31,6 @@ const Comment = ({ comment_, ticket }) => {
     if (updatedComment.description !== undefined)
       form.append("attachments", updatedComment.attachments);
 
-    console.log("Form data:");
     for (const [key, value] of form) {
       console.log(`\t${key} = ${value}`);
     }
@@ -33,9 +39,8 @@ const Comment = ({ comment_, ticket }) => {
         headers: { Authorization: "Bearer " + token.data.token },
       })
       .then((res) => {
-        console.log("Updated comm:", res.data);
         setComment(res.data.comment);
-        console.log(`Comment ${comment._id} updated`);
+        console.log(comment);
       })
       .catch((err) => alert(err.response.data.message));
   };
@@ -98,122 +103,190 @@ const Comment = ({ comment_, ticket }) => {
         console.log(err);
       });
   };
+
   return (
     <>
       {commentExists ? (
         <div
-          className={`flex mb-8 border-b-2 border-solid border-gray-200 py-4 px-1 ${
-            comment.solutionToTicket && "border-2 border-lime-500 rounded"
+          className={`relative flex-col p-4 mb-8 border rounded-lg bg-white shadow-lg ${
+            comment.solutionToTicket ? "border-l-green border-l-8" : ""
           }`}
         >
-          <div className="flex-col mr-5 text-center">
-            <Image
+          <div className="relative flex gap-4 mb-4">
+            <img
               src={comment.postedByUser.picture}
-              width={"50px"}
-              height={"50px"}
-              className="rounded-full"
+              className="relative rounded-lg -top-8 -mb-4 bg-white border h-20 w-20"
+              alt=""
             />
-            <div className="w-20">
-              <p className="text-center text-sm max-w-2 break-words ">
-                {comment.postedByUser.firstName || comment.postedByUser.email}
+            <div className="flex flex-col w-full">
+              <div className="flex flex-row justify-between">
+                <p className="relative text-xl whitespace-nowrap truncate overflow-hidden">
+                  {comment.postedByUser.firstName ||
+                    comment.postedByUser.email}
+                </p>
+                {user && user.sub === ticket.postedByUser.sub && (
+                  <>
+                    {comment.solutionToTicket ? (
+                      <FontAwesomeIcon
+                        className="absolute top-1/2 -right-8 my-auto p-2 px-3 border rounded-full cursor-pointer bg-white
+                        hover:bg-orange-900 hover:text-white
+                        transition ease-in-out
+                        "
+                        icon={faXmark}
+                        title="Unmark the solution"
+                        onClick={() => unmarkCommentAsSolution()}
+                      >
+                        Unmark solution
+                      </FontAwesomeIcon>
+                    ) : (
+                      <FontAwesomeIcon
+                        className="absolute top-1/2 -right-8 my-auto py-[0.5rem] px-[0.6rem] border rounded-full cursor-pointer bg-white
+                        hover:bg-green hover:text-white
+                        transition ease-in-out
+                        "
+                        title="Mark this comment as the solution"
+                        icon={faCheck}
+                        onClick={() => markCommentAsSolution()}
+                      >
+                        Mark as Solution
+                      </FontAwesomeIcon>
+                    )}
+                  </>
+                )}
+              </div>
+              <p className="text-gray-400 text-sm">
+                {DateTime.fromISO(comment.createdAt)
+                  .toJSDate()
+                  .toString()
+                  .slice(0, 3) +
+                  ", " +
+                  DateTime.fromISO(comment.createdAt)
+                    .toJSDate()
+                    .toString()
+                    .slice(4, 15) +
+                  " at " +
+                  DateTime.fromISO(comment.createdAt)
+                    .toJSDate()
+                    .toString()
+                    .slice(16, 21)}
+                {comment.createdAt !== comment.updatedAt ? (
+                  <>
+                    {", edited " +
+                      DateTime.fromISO(comment.updatedAt)
+                        .toJSDate()
+                        .toString()
+                        .slice(0, 3) +
+                      ", " +
+                      DateTime.fromISO(comment.updatedAt)
+                        .toJSDate()
+                        .toString()
+                        .slice(4, 15) +
+                      " at " +
+                      DateTime.fromISO(comment.updatedAt)
+                        .toJSDate()
+                        .toString()
+                        .slice(16, 21)}
+                  </>
+                ) : null}
               </p>
             </div>
           </div>
-          {editing ? (
-            <form>
-              <textarea
-                className="border-gray-300 border-2"
-                cols="80"
-                name="description"
-                value={updatedComment.description}
-                onChange={(e) =>
-                  handleInputChange({
-                    name: e.target.name,
-                    value: e.target.value,
-                  })
-                }
-              />
 
-              <input
-                type="file"
-                name="attachments"
-                onChange={(e) =>
-                  handleInputChange({
-                    name: e.target.name,
-                    value: e.target.files[0],
-                  })
-                }
-              />
-            </form>
-          ) : (
-            <div className="flex-col">
-              <p className="font-cartogothic">{comment.description}</p>
+          {!editing ? (
+            // Comment viewing mode
+            <>
+              <p className="-mt-4 text-gray-500 mb-4">{comment.description}</p>
+              {/* Show the attached image if there's one */}
               {comment.attachments ? (
-                <div className="relative w-56 h-56 m-4 bg-purple-500">
-                  <Image
-                    src={comment.attachments}
-                    alt="comment_image"
-                    layout="fill"
+                <img className="rounded-md mb-4" src={comment.attachments} />
+              ) : null}
+
+              {user && user.sub === comment.postedByUser.sub && (
+                <div className="float-right">
+                  <FontAwesomeIcon
+                    className="rounded-full mr-3 p-2 border-2 border-gray-50 bg-gray-50 shadow-xl text-blue-600
+              hover:bg-blue-600 hover:text-white hover:border-blue-600
+              transition-all cursor-pointer"
+                    icon={faPen}
+                    title="Edit comment"
+                    onClick={() => {
+                      setEditing(true);
+                    }}
+                  />
+                  <FontAwesomeIcon
+                    className="rounded-full p-2 px-3 border-2 border-gray-50 bg-gray-50 shadow-xl text-red-600
+              hover:bg-red-600 hover:text-white hover:border-red-600
+              transition-all cursor-pointer"
+                    icon={faTrash}
+                    title="Delete comment"
+                    onClick={() => {
+                      deleteComment();
+                    }}
                   />
                 </div>
-              ) : null}
-            </div>
-          )}
-          {user && user.sub === comment.postedByUser.sub && (
-            <>
-              {editing ? (
-                <>
-                  <button
-                    className="ml-auto my-auto rounded p-2 border-2"
-                    onClick={() => {
-                      saveComment();
-                      setEditing(false);
-                    }}
-                  >
-                    Save
-                  </button>
-                  <button
-                    className="ml-auto rounded my-auto p-2 border-2"
-                    onClick={() => setEditing(false)}
-                  >
-                    Cancel
-                  </button>
-                </>
-              ) : (
-                <>
-                  <button
-                    className="ml-auto rounded my-auto p-2 border-2"
-                    onClick={() => setEditing(true)}
-                  >
-                    Edit
-                  </button>
-                  <button
-                    className="ml-auto rounded my-auto p-2 border-2"
-                    onClick={() => deleteComment()}
-                  >
-                    Delete
-                  </button>
-                </>
               )}
             </>
-          )}
-          {user && user.sub === ticket.postedByUser.sub && (
+          ) : (
+            // Comment editing mode
             <>
-              {comment.solutionToTicket ? (
-                <button
-                  className="my-auto p-2 border-2 rounded"
-                  onClick={() => unmarkCommentAsSolution()}
-                >
-                  Unmark solution
-                </button>
-              ) : (
-                <button
-                  className="my-auto p-2 border-2 rounded"
-                  onClick={() => markCommentAsSolution()}
-                >
-                  Mark as Solution
-                </button>
-              )}
+              <form>
+                <textarea
+                  className={`
+                   border-[0.1rem] border-solid border-gray-300
+                   transition ease-in-out
+                   rounded p-1 px-2 w-full 
+                   focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none`}
+                  cols="80"
+                  rows={updatedComment.description.split("\n").length}
+                  name="description"
+                  value={updatedComment.description}
+                  onChange={(e) =>
+                    handleInputChange({
+                      name: e.target.name,
+                      value: e.target.value,
+                    })
+                  }
+                />
+                <input
+                  type="file"
+                  name="attachments"
+                  onChange={(e) =>
+                    handleInputChange({
+                      name: e.target.name,
+                      value: e.target.files[0],
+                    })
+                  }
+                  class="mt-4 block w-full text-sm text-slate-500
+                      file:mr-4 file:py-2 file:px-4
+                      file:rounded-full file:border-0
+                      file:text-sm file:font-semibold
+                    file:bg-blue-50 file:text-blue-700
+                    hover:file:bg-blue-100"
+                />
+              </form>
+              <div className="float-right">
+                <FontAwesomeIcon
+                  className="rounded-full mr-3 p-2 border-2 border-gray-50 bg-gray-50 shadow-xl text-blue-600
+              hover:bg-blue-600 hover:text-white hover:border-blue-600
+              transition-all cursor-pointer"
+                  icon={faCheck}
+                  title="Save changes"
+                  onClick={() => {
+                    saveComment();
+                    setEditing(false);
+                  }}
+                />
+                <FontAwesomeIcon
+                  className="rounded-full p-2 px-3 border-2 border-gray-50 bg-gray-50 shadow-xl text-red-600
+              hover:bg-red-600 hover:text-white hover:border-red-600
+              transition-all cursor-pointer"
+                  icon={faXmark}
+                  title="Discard changes"
+                  onClick={() => {
+                    setEditing(false);
+                  }}
+                />
+              </div>
             </>
           )}
         </div>

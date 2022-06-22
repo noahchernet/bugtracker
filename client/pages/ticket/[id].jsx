@@ -12,7 +12,7 @@ import { motion } from "framer-motion";
 
 import "react-datepicker/dist/react-datepicker.css";
 
-const Title = () => {
+const DetailedTicket = () => {
   const { user } = useUser();
   const router = useRouter();
   const [id, setId] = useState("");
@@ -102,7 +102,7 @@ const Title = () => {
         <>
           {/* Ticket's Details, if editing is true, it will edit the ticket */}
           <motion.div
-            className=" m-24 mx-96 p-6 border-black border-2 rounded block"
+            className=" m-24 md:mx-12 lg:mx-96 p-6 border-black border-2 rounded block"
             initial={{ y: 30, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
           >
@@ -122,8 +122,7 @@ const Title = () => {
                       layout="fill"
                     />
                   </div>
-                ) : // <h1>Some tiext</h1>
-                null}
+                ) : null}
               </>
             )}
 
@@ -242,17 +241,22 @@ const Title = () => {
                 className="rounded-full"
               />
               <div className="ml-3 flex-col">
-                <p>
-                  {ticket.postedByUser.firstName +
-                    " " +
-                    ticket.postedByUser.lastName}
-                </p>
-                <p>{ticket.postedByUser.email}</p>
+                {ticket.postedByUser.firstName ? (
+                  <p>
+                    {ticket.postedByUser.firstName +
+                      " " +
+                      ticket.postedByUser.lastName}{" "}
+                    <br />
+                    {ticket.postedByUser.email}
+                  </p>
+                ) : (
+                  <p>{ticket.postedByUser.email}</p>
+                )}
               </div>
             </div>
           </motion.div>
           {/* Comments */}
-          <motion.ul className="mx-96">
+          <motion.ul className="mx-4 md:mx-12 lg:mx-96">
             {Object.keys(comments).map((key, index) => (
               <motion.li
                 initial={{ y: -10, opacity: 0 }}
@@ -274,4 +278,4 @@ const Title = () => {
   );
 };
 
-export default Title;
+export default DetailedTicket;

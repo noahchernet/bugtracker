@@ -71,7 +71,7 @@ const AddCommentDialog = ({ ticketId }) => {
           />
           <button
             className="bg-blue-600 text-white box-border font-semibold
-             rounded-full px-4 my-2 border-0 text-sm
+             rounded-full px-4 border-0 mt-4 text-sm
              cursor-pointer hover:bg-blue-700
              transition-all"
             onClick={handleSubmit}

@@ -5,7 +5,7 @@ import { Header } from "./Header";
 const DefaultLayout = (props) => {
   return (
     <div>
-      <div className="pb-20">
+      <div className="pb-36 lg:pb-20">
         <Header />
         {props.children}
       </div>

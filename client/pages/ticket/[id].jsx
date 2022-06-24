@@ -102,7 +102,7 @@ const DetailedTicket = () => {
         <>
           {/* Ticket's Details, if editing is true, it will edit the ticket */}
           <motion.div
-            className=" m-24 md:mx-12 lg:mx-96 p-6 border-black border-2 rounded block"
+            className="m-24 md:mx-12 lg:mx-96 p-6 border-black border-2 rounded block"
             initial={{ y: 30, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
           >
@@ -270,7 +270,11 @@ const DetailedTicket = () => {
                 />
               </motion.li>
             ))}
-            {idIsReady ? <AddCommentDialog ticketId={id} /> : null}
+            {idIsReady ? (
+              <div className="mt-20">
+                <AddCommentDialog ticketId={id} />
+              </div>
+            ) : null}
           </motion.ul>
         </>
       )}

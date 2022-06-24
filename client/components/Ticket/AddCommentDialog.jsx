@@ -34,35 +34,51 @@ const AddCommentDialog = ({ ticketId }) => {
       });
   };
   return (
-    <div className="flex">
+    <div className="">
       <form>
         <textarea
+          className={`
+          border-[0.1rem] border-solid border-gray-300
+          transition ease-in-out
+          rounded p-1 px-2 w-full 
+        focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none`}
           name="description"
           required
           value={comment.desc}
           onChange={(e) =>
             handleInputChange({ name: e.target.name, value: e.target.value })
           }
-          className="rounded-sm border-black border-2 w-full"
+          // className="rounded-sm border-black border-2 w-full"
         />
 
-        <input
-          type="file"
-          name="attachments"
-          onChange={(e) =>
-            handleInputChange({
-              name: e.target.name,
-              value: e.target.files[0],
-            })
-          }
-        />
+        <div className="flex">
+          <input
+            type="file"
+            name="attachments"
+            onChange={(e) =>
+              handleInputChange({
+                name: e.target.name,
+                value: e.target.files[0],
+              })
+            }
+            class="mt-4 w-full text-sm text-slate-500
+                file:mr-4 file:py-2 file:px-4
+                file:rounded-full file:border-0
+                file:text-sm file:font-semibold
+              file:bg-blue-50 file:text-blue-700
+              hover:file:bg-blue-100"
+          />
+          <button
+            className="bg-blue-600 text-white box-border font-semibold
+             rounded-full px-4 my-2 border-0 text-sm
+             cursor-pointer hover:bg-blue-700
+             transition-all"
+            onClick={handleSubmit}
+          >
+            Comment
+          </button>
+        </div>
       </form>
-      <button
-        className="border-2 bg-blue-600 m-2 p-2 text-white rounded-xl "
-        onClick={handleSubmit}
-      >
-        Comment
-      </button>
     </div>
   );
 };

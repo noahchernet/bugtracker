@@ -10,7 +10,7 @@ const Footer = () => {
       initial={{ opacity: 0, y: -20 }}
       whileInView={{ opacity: 1, y: 0 }}
     >
-      <h1 className="font-galano_gortesque text-2xl text-[#E3B505] text-center my-3">
+      <h1 className="text-sm font-galano_gortesque md:text-2xl text-[#E3B505] text-center my-1 md:my-3">
         Made with ❤️ &{" "}
         <div className="inline-flex items-baseline cursor-pointer">
           <a
@@ -19,7 +19,7 @@ const Footer = () => {
             rel="noopener noreferrer"
           >
             <svg
-              className="w-6 items-baseline"
+              className="w-3 md:w-5 items-baseline"
               viewBox="0 0 256 250"
               xmlns="http://www.w3.org/2000/svg"
             >

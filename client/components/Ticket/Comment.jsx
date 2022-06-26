@@ -242,7 +242,9 @@ const Comment = ({ comment_, ticket }) => {
                 )}
               </>
             ) : (
-              // Comment editing mode
+              /*
+               * Comment editing mode
+               */
               <>
                 <form>
                   <textarea

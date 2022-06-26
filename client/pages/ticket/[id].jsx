@@ -32,8 +32,8 @@ const DetailedTicket = () => {
 
   const handleInputChange = ({ name, value }) => {
     if (name === "severity")
-      setUpdatedTicket({ ...ticket, [name]: Number(value) });
-    else setUpdatedTicket({ ...ticket, [name]: value });
+      setUpdatedTicket({ ...updatedTicket, [name]: Number(value) });
+    else setUpdatedTicket({ ...updatedTicket, [name]: value });
   };
 
   const saveTicket = async () => {
@@ -123,13 +123,7 @@ const DetailedTicket = () => {
                 </h2>
                 <p className="font-cartogothic">{ticket.description}</p>
                 {ticket.attachments ? (
-                  <div className="relative w-56 h-56 m-4 bg-purple-500">
-                    <Image
-                      src={ticket.attachments}
-                      alt="ticket_image"
-                      layout="fill"
-                    />
-                  </div>
+                  <img src={ticket.attachments} alt="ticket_image" />
                 ) : null}
               </>
             )}
@@ -151,7 +145,11 @@ const DetailedTicket = () => {
                             value: e.target.value,
                           })
                         }
-                        className="rounded border-gray-500 border-2"
+                        className={`
+                          border-[0.1rem] border-solid border-gray-300
+                          transition ease-in-out
+                          rounded p-1 px-2 w-full 
+                        focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none`}
                       />
 
                       <label className="mr-8">Description</label>
@@ -159,18 +157,27 @@ const DetailedTicket = () => {
                         name="description"
                         required
                         value={updatedTicket.description}
+                        cols="80"
+                        rows={updatedTicket.description.split("\n").length}
                         onChange={(e) =>
                           handleInputChange({
                             name: e.target.name,
                             value: e.target.value,
                           })
                         }
-                        className="rounded border-gray-500 border-2"
+                        className={`
+                          border-[0.1rem] border-solid border-gray-300
+                          transition ease-in-out
+                          rounded p-1 px-2 w-full 
+                        focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none`}
                       />
 
-                      <label className="mr-8">Severity</label>
+                      <label className="mt-4 mr-8">Severity</label>
                       <select
                         name="severity"
+                        className="float-right border-[0.1rem] border-gray-300
+                           rounded-lg
+                          "
                         required
                         value={updatedTicket.severity}
                         onChange={(e) =>
@@ -185,8 +192,15 @@ const DetailedTicket = () => {
                         <option value="3">High</option>
                       </select>
 
-                      <label className="mr-8">Add screenshot: </label>
+                      <label className="mt-4 mr-8">Add screenshot: </label>
                       <input
+                        className="mt-4 w-full text-sm text-slate-500
+                                     file:mr-4 file:py-2 file:px-4
+                                     file:rounded-full file:border-0
+                                     file:text-sm file:font-semibold
+                                   file:bg-blue-50 file:text-blue-700
+                                   hover:file:bg-blue-100
+                                     file:transition-all"
                         type="file"
                         name="attachments"
                         onChange={(e) => {
@@ -198,29 +212,55 @@ const DetailedTicket = () => {
                         }}
                       />
 
-                      <label className="mr-8">Due: </label>
+                      <label className="mt-4 mr-8">Due: </label>
                       <DatePicker
+                        className="border-[0.1rem] border-gray-300
+                           rounded-lg
+                          "
                         selected={new Date()}
                         onChange={(date) =>
                           handleInputChange({ name: "due", value: date })
                         }
                       />
+                      <div className="mt-2 ml-80">
+                        <FontAwesomeIcon
+                          className="rounded-full mr-3 p-2 border-2 border-gray-50 bg-gray-50 shadow-xl text-blue-600
+              hover:bg-blue-600 hover:text-white hover:border-blue-600
+              transition-all cursor-pointer"
+                          icon={faCheck}
+                          title="Save changes"
+                          onClick={() => {
+                            saveTicket();
+                            setEditing(false);
+                          }}
+                        />
+                        <FontAwesomeIcon
+                          className="rounded-full p-2 px-3 border-2 border-gray-50 bg-gray-50 shadow-xl text-red-600
+              hover:bg-red-600 hover:text-white hover:border-red-600
+              transition-all cursor-pointer"
+                          icon={faXmark}
+                          title="Discard changes"
+                          onClick={() => {
+                            setEditing(false);
+                          }}
+                        />
+                        {/* <button
+                          className="ml-auto my-auto rounded p-2 border-2"
+                          onClick={() => {
+                            saveTicket();
+                            setEditing(false);
+                          }}
+                        >
+                          Save
+                        </button> */}
+                        {/* <button
+                          className="ml-auto rounded my-auto p-2 border-2"
+                          onClick={() => setEditing(false)}
+                        >
+                          Cancel
+                        </button> */}
+                      </div>
                     </form>
-                    <button
-                      className="ml-auto my-auto rounded p-2 border-2"
-                      onClick={() => {
-                        saveTicket();
-                        setEditing(false);
-                      }}
-                    >
-                      Save
-                    </button>
-                    <button
-                      className="ml-auto rounded my-auto p-2 border-2"
-                      onClick={() => setEditing(false)}
-                    >
-                      Cancel
-                    </button>
                   </>
                 ) : (
                   <div className="float-right mt-16">

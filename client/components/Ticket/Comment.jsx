@@ -1,5 +1,5 @@
 import { useUser } from "@auth0/nextjs-auth0";
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import Router from "next/router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -112,7 +112,7 @@ const Comment = ({ comment_, ticket }) => {
             <p
               className={`bg-green text-white inline-block text-center p-1`}
               style={{
-                "writing-mode": "vertical-rl",
+                writingMode: "vertical-rl",
               }}
             >
               Solution
@@ -271,7 +271,7 @@ const Comment = ({ comment_, ticket }) => {
                         value: e.target.files[0],
                       })
                     }
-                    class="mt-4 block w-full text-sm text-slate-500
+                    className="mt-4 block w-full text-sm text-slate-500
                       file:mr-4 file:py-2 file:px-4
                       file:rounded-full file:border-0
                       file:text-sm file:font-semibold

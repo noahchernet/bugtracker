@@ -9,6 +9,13 @@ import AddCommentDialog from "../../components/Ticket/AddCommentDialog";
 import DatePicker from "react-datepicker";
 import Router from "next/router";
 import { motion } from "framer-motion";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faPen,
+  faXmark,
+  faTrash,
+  faCheck,
+} from "@fortawesome/free-solid-svg-icons";
 
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -76,7 +83,6 @@ const DetailedTicket = () => {
   useEffect(() => {
     id = router.query.id;
     setId(router.query.id);
-    console.log("ID::", id);
     setIdIsReady(true);
     axios
       .get("http://localhost:5000/tickets/" + id)
@@ -102,7 +108,9 @@ const DetailedTicket = () => {
         <>
           {/* Ticket's Details, if editing is true, it will edit the ticket */}
           <motion.div
-            className="m-24 mx-8 lg:mx-56 xl:mx-96 p-6 border-black border-2 rounded block"
+            className="m-24 mx-8 lg:mx-56 xl:mx-96 p-6 relative 
+            flex-col mb-16 border rounded-md 
+            border-gray-700 bg-white shadow-lg"
             initial={{ y: 30, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
           >
@@ -215,24 +223,33 @@ const DetailedTicket = () => {
                     </button>
                   </>
                 ) : (
-                  <>
-                    <button
-                      className="ml-auto rounded my-auto p-2 border-2"
-                      onClick={() => setEditing(true)}
-                    >
-                      Edit
-                    </button>
-                    <button
-                      className="ml-auto rounded my-auto p-2 border-2"
-                      onClick={() => deleteTicket()}
-                    >
-                      Delete
-                    </button>
-                  </>
+                  <div className="float-right mt-16">
+                    <FontAwesomeIcon
+                      className="rounded-full mr-3 p-2 border-2 border-gray-50 bg-gray-50 shadow-xl text-blue-600
+              hover:bg-blue-600 hover:text-white hover:border-blue-600
+              transition-all cursor-pointer"
+                      icon={faPen}
+                      title="Edit ticket"
+                      onClick={() => {
+                        setEditing(true);
+                      }}
+                    />
+                    <FontAwesomeIcon />
+                    <FontAwesomeIcon
+                      className="rounded-full p-2 px-3 border-2 border-gray-50 bg-gray-50 shadow-xl text-red-600
+              hover:bg-red-600 hover:text-white hover:border-red-600
+              transition-all cursor-pointer"
+                      icon={faTrash}
+                      title="Delete ticket"
+                      onClick={() => {
+                        deleteTicket();
+                      }}
+                    />
+                  </div>
                 )}
               </>
             )}
-            <p className="border-b-2 border-gray-200 border-solid my-2"></p>
+            <p className="border-b-[0.1rem] border-gray-200 border-solid my-2"></p>
             <div className="flex ">
               <Image
                 src={ticket.postedByUser.picture}
@@ -246,7 +263,7 @@ const DetailedTicket = () => {
                     {ticket.postedByUser.firstName +
                       " " +
                       ticket.postedByUser.lastName}{" "}
-                    <br />
+                    <br className="" />
                     {ticket.postedByUser.email}
                   </p>
                 ) : (
@@ -257,18 +274,16 @@ const DetailedTicket = () => {
           </motion.div>
           {/* Comments */}
           <motion.ul className="mx-4 md:mx-12 lg:mx-96">
-            {Object.keys(comments).map((key, index) => (
-              <motion.li
-                initial={{ y: -10, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.05 }}
-              >
-                <Comment
-                  comment_={comments[key]}
-                  ticket={ticket}
-                  key={index}
-                />
-              </motion.li>
+            {comments.map((comment) => (
+              <div key={comment._id}>
+                <motion.li
+                  initial={{ y: -10, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 0.05 }}
+                >
+                  <Comment comment_={comment} ticket={ticket} />
+                </motion.li>
+              </div>
             ))}
             {idIsReady ? (
               <div className="mt-20">

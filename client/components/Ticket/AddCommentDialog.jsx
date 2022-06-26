@@ -61,7 +61,7 @@ const AddCommentDialog = ({ ticketId }) => {
                 value: e.target.files[0],
               })
             }
-            class="mt-4 w-full text-sm text-slate-500
+            className="mt-4 w-full text-sm text-slate-500
                 file:mr-4 file:py-2 file:px-4
                 file:rounded-full file:border-0
                 file:text-sm file:font-semibold

@@ -37,7 +37,9 @@ const DetailedTicket = () => {
   };
 
   const saveTicket = async () => {
-    const token = await axios.get("http://localhost:3000/api/getToken");
+    const token = await axios.get(
+      `${process.env.NEXT_PUBLIC_WEB_SERVER}/api/getToken`
+    );
 
     const form = new FormData();
     console.log("Final ticket: ", updatedTicket);
@@ -52,9 +54,13 @@ const DetailedTicket = () => {
     if (updatedTicket.due !== undefined) form.append("due", updatedTicket.due);
 
     axios
-      .put("http://localhost:5000/tickets/" + ticket._id, form, {
-        headers: { Authorization: "Bearer " + token.data.token },
-      })
+      .put(
+        `${process.env.NEXT_PUBLIC_WEB_SERVER}/tickets/` + ticket._id,
+        form,
+        {
+          headers: { Authorization: "Bearer " + token.data.token },
+        }
+      )
       .then((res) => {
         setTicket(res.data);
         console.log(`Ticket ${ticket._id} updated`);
@@ -62,16 +68,21 @@ const DetailedTicket = () => {
       .catch((err) => alert(err));
   };
   const deleteTicket = async () => {
-    const token = await axios.get("http://localhost:3000/api/getToken");
+    const token = await axios.get(
+      `${process.env.NEXT_PUBLIC_WEB_SERVER}/api/getToken`
+    );
     const confirmDelete = confirm(
       "Are you sure you want to delete this ticket?"
     );
 
     if (confirmDelete) {
       axios
-        .delete("http://localhost:5000/tickets/" + ticket._id, {
-          headers: { Authorization: "Bearer " + token.data.token },
-        })
+        .delete(
+          `${process.env.NEXT_PUBLIC_WEB_SERVER}/tickets/` + ticket._id,
+          {
+            headers: { Authorization: "Bearer " + token.data.token },
+          }
+        )
         .then((res) => {
           console.log(res.data);
           Router.push("/");
@@ -85,10 +96,10 @@ const DetailedTicket = () => {
     setId(router.query.id);
     setIdIsReady(true);
     axios
-      .get("http://localhost:5000/tickets/" + id)
+      .get(`${process.env.NEXT_PUBLIC_WEB_SERVER}/tickets/` + id)
       .then(async (res) => {
         const ticketComments = await axios.get(
-          "http://localhost:5000/comments/" + id
+          `${process.env.NEXT_PUBLIC_WEB_SERVER}/comments/` + id
         );
         setComments(ticketComments.data);
         setTicket(res.data);

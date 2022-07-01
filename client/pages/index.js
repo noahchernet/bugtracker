@@ -17,7 +17,7 @@ export default function Home() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/tickets", { params: params })
+      .get(`${process.env.NEXT_PUBLIC_WEB_SERVER}/tickets`, { params: params })
       .then((response) => setAllTickets(response.data))
       .catch((err) => console.log("Error fetching data\n", err))
       .finally(setLoading(false));

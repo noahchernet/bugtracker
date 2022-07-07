@@ -9,12 +9,27 @@ require("dotenv").config({ override: true });
 
 const app = express();
 
+const whitelist = [
+  "http://localhost:3000",
+  "https://avalon-bugtracker.vercel.app/",
+];
+
 app.use(
   cors({
-    origin: "*",
-    credentials: true,
+    origin: function (origin, callback) {
+      // allow requests with no origin
+      if (!origin) return callback(null, true);
+      if (whitelist.indexOf(origin) === -1) {
+        var message =
+          "The CORS policy for this origin doesn't " +
+          "allow access from the particular origin.";
+        return callback(new Error(message), false);
+      }
+      return callback(null, true);
+    },
   })
 );
+// app.use(cors());
 app.use(formidableMiddleware());
 
 app.use("/users", userRouter);

@@ -12,6 +12,7 @@ const app = express();
 const whitelist = [
   "http://localhost:3000",
   "https://avalon-bugtracker.vercel.app/",
+  "https://avalon-bugtracker-server.herokuapp.com/",
 ];
 
 app.use(

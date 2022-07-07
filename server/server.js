@@ -23,7 +23,7 @@ const app = express();
 //   );
 //   next();
 // });
-app.use(cors());
+app.use(cors({ origin: "*", credentials: true }));
 app.use(formidableMiddleware());
 
 app.use("/users", userRouter);

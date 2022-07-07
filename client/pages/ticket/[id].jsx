@@ -38,7 +38,7 @@ const DetailedTicket = () => {
 
   const saveTicket = async () => {
     const token = await axios.get(
-      `${process.env.NEXT_PUBLIC_WEB_SERVER}/api/getToken`
+      `${process.env.NEXT_PUBLIC_CLIENT}/api/getToken`
     );
 
     const form = new FormData();
@@ -69,7 +69,7 @@ const DetailedTicket = () => {
   };
   const deleteTicket = async () => {
     const token = await axios.get(
-      `${process.env.NEXT_PUBLIC_WEB_SERVER}/api/getToken`
+      `${process.env.NEXT_PUBLIC_CLIENT}/api/getToken`
     );
     const confirmDelete = confirm(
       "Are you sure you want to delete this ticket?"

@@ -14,16 +14,22 @@ const AddCommentDialog = ({ ticketId }) => {
       alert("You must be logged in to comment on this.");
       return;
     }
-    const token = await axios.get("http://localhost:3000/api/getToken");
+    const token = await axios.get(
+      `${process.env.NEXT_PUBLIC_CLIENT}/api/getToken`
+    );
     const form = new FormData();
     if (comment.description !== undefined)
       form.append("description", comment.description);
     if (comment.description !== undefined)
       form.append("attachments", comment.attachments);
     axios
-      .post("http://localhost:5000/comments/" + ticketId, form, {
-        headers: { Authorization: "Bearer " + token.data.token },
-      })
+      .post(
+        `${process.env.NEXT_PUBLIC_WEB_SERVER}/comments/` + ticketId,
+        form,
+        {
+          headers: { Authorization: "Bearer " + token.data.token },
+        }
+      )
       .then((res) => {
         console.log("Comment added");
         Router.reload(window.location.pathname);

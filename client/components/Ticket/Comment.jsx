@@ -23,7 +23,9 @@ const Comment = ({ comment_, ticket }) => {
   };
 
   const saveComment = async () => {
-    const token = await axios.get("http://localhost:3000/api/getToken");
+    const token = await axios.get(
+      `${process.env.NEXT_PUBLIC_CLIENT}/api/getToken`
+    );
 
     const form = new FormData();
     if (updatedComment.description !== undefined)
@@ -35,9 +37,13 @@ const Comment = ({ comment_, ticket }) => {
       console.log(`\t${key} = ${value}`);
     }
     axios
-      .put("http://localhost:5000/comments/" + comment._id, form, {
-        headers: { Authorization: "Bearer " + token.data.token },
-      })
+      .put(
+        `${process.env.NEXT_PUBLIC_WEB_SERVER}/comments/` + comment._id,
+        form,
+        {
+          headers: { Authorization: "Bearer " + token.data.token },
+        }
+      )
       .then((res) => {
         setComment(res.data.comment);
         console.log(comment);
@@ -46,16 +52,21 @@ const Comment = ({ comment_, ticket }) => {
   };
 
   const deleteComment = async () => {
-    const token = await axios.get("http://localhost:3000/api/getToken");
+    const token = await axios.get(
+      `${process.env.NEXT_PUBLIC_CLIENT}/api/getToken`
+    );
     const confirmDelete = confirm(
       "Are you sure you want to delete this comment?"
     );
 
     if (confirmDelete) {
       axios
-        .delete("http://localhost:5000/comments/" + comment._id, {
-          headers: { Authorization: "Bearer " + token.data.token },
-        })
+        .delete(
+          `${process.env.NEXT_PUBLIC_WEB_SERVER}/comments/` + comment._id,
+          {
+            headers: { Authorization: "Bearer " + token.data.token },
+          }
+        )
         .then((res) => {
           console.log(res.data);
           setCommentExists(false);
@@ -66,10 +77,12 @@ const Comment = ({ comment_, ticket }) => {
 
   const markCommentAsSolution = async () => {
     console.log("marking...");
-    const token = await axios.get("http://localhost:3000/api/getToken");
+    const token = await axios.get(
+      `${process.env.NEXT_PUBLIC_CLIENT}/api/getToken`
+    );
     axios
       .put(
-        "http://localhost:5000/tickets/" + ticket._id,
+        `${process.env.NEXT_PUBLIC_WEB_SERVER}/tickets/` + ticket._id,
         { solution: comment._id },
         {
           headers: { Authorization: "Bearer " + token.data.token },
@@ -86,10 +99,12 @@ const Comment = ({ comment_, ticket }) => {
 
   const unmarkCommentAsSolution = async () => {
     console.log("unmarking...");
-    const token = await axios.get("http://localhost:3000/api/getToken");
+    const token = await axios.get(
+      `${process.env.NEXT_PUBLIC_CLIENT}/api/getToken`
+    );
     axios
       .put(
-        "http://localhost:5000/tickets/" + ticket._id,
+        `${process.env.NEXT_PUBLIC_WEB_SERVER}/tickets/` + ticket._id,
         { solution: "" },
         {
           headers: { Authorization: "Bearer " + token.data.token },

@@ -18,7 +18,9 @@ const NewTicketModal = ({ open, close, setIsTicketListLoading }) => {
   };
 
   const addTicketToDB = async () => {
-    const token = await axios.get("http://localhost:3000/api/getToken");
+    const token = await axios.get(
+      `${process.env.NEXT_PUBLIC_CLIENT}/api/getToken`
+    );
 
     const form = new FormData();
     console.log("Final ticket: ", ticket);
@@ -32,7 +34,7 @@ const NewTicketModal = ({ open, close, setIsTicketListLoading }) => {
     if (ticket.due !== undefined) form.append("due", ticket.due);
 
     axios
-      .post("http://localhost:5000/tickets", form, {
+      .post(`${process.env.NEXT_PUBLIC_WEB_SERVER}/tickets`, form, {
         headers: { Authorization: "Bearer " + token.data.token },
       })
       .then((res) => {

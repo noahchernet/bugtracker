@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Box, Text, HStack, Badge } from "@chakra-ui/react";
 import readableDate from "../services/readableDate";
+import { motion } from "framer-motion";
+import Link from "next/link";
 
 export default function TicketBrief({ ticket }) {
   const [severity, setSeverity] = useState({});
@@ -19,29 +21,35 @@ export default function TicketBrief({ ticket }) {
   }, []);
 
   return (
-    <Box
-      borderWidth="0.1rem"
-      minWidth="40rem"
-      p="1rem"
-      borderColor="gray.200"
-      bg="gray.50"
-    >
-      <HStack justify="space-between">
-        <Text as="h2" fontSize="2xl">
-          {ticket.title}
-        </Text>
-        {ticket.solved ? (
-          <Badge colorScheme={solved.badgeColor}>{solved.status}</Badge>
-        ) : (
-          <Badge colorScheme={severity.badgeColor}>{severity.status}</Badge>
-        )}
-      </HStack>
-      <HStack justify="space-between">
-        <Text fontSize="xs">{readableDate(ticket.updatedAt)}</Text>
-        <Text fontSize="xs">
-          By: {ticket.postedByUser.firstName || ticket.postedByUser.email}
-        </Text>
-      </HStack>
-    </Box>
+    <Link href={`/ticket/${ticket._id}`}>
+      <Box
+        as={motion.div}
+        borderWidth="0.1rem"
+        minWidth="40rem"
+        p="1rem"
+        borderColor="gray.200"
+        bg="gray.50"
+        cursor="pointer"
+        whileHover={{ scale: 1.017 }}
+        whileTap={{ scale: 1.009 }}
+      >
+        <HStack justify="space-between">
+          <Text as="h2" fontSize="2xl">
+            {ticket.title}
+          </Text>
+          {ticket.solved ? (
+            <Badge colorScheme={solved.badgeColor}>{solved.status}</Badge>
+          ) : (
+            <Badge colorScheme={severity.badgeColor}>{severity.status}</Badge>
+          )}
+        </HStack>
+        <HStack justify="space-between">
+          <Text fontSize="xs">{readableDate(ticket.updatedAt)}</Text>
+          <Text fontSize="xs">
+            By: {ticket.postedByUser.firstName || ticket.postedByUser.email}
+          </Text>
+        </HStack>
+      </Box>
+    </Link>
   );
 }

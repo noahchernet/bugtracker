@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { Box, VStack } from "@chakra-ui/react";
-import { getAllTickets } from "../services/ticket";
 import Loading from "../components/Loading";
 import axios from "axios";
 import TicketBrief from "../components/TicketBrief";

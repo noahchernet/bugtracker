@@ -14,6 +14,7 @@ import {
 } from "@chakra-ui/react";
 import { AddIcon, HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import { useUser } from "@auth0/nextjs-auth0";
+import NextLink from "next/link";
 import NewTicket from "../components/NewTicket";
 
 const Links = ["Dashboard", "About", "Contact Us"];
@@ -92,10 +93,16 @@ export default function NavBar() {
             onClick={isOpen ? onClose : onOpen}
           />
           <HStack spacing={8} alignItems={"center"}>
-            <Image boxSize="3rem" src="android-chrome-192x192.png" />
-            <Heading as="h2" size="md">
-              Avalon Bugtracker
-            </Heading>
+            <NextLink href="/" passHref>
+              <Link>
+                <HStack spacing={"1rem"}>
+                  <Image boxSize="3rem" src="android-chrome-192x192.png" />
+                  <Heading as="h2" size="md">
+                    Avalon Bugtracker
+                  </Heading>
+                </HStack>
+              </Link>
+            </NextLink>
             <HStack
               as={"nav"}
               spacing={4}

@@ -6,14 +6,15 @@ import {
   LinkOverlay,
   IconButton,
   Button,
-  useDisclosure,
   useColorModeValue,
   Stack,
   Image,
   Heading,
+  useDisclosure,
 } from "@chakra-ui/react";
-import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
+import { AddIcon, HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import { useUser } from "@auth0/nextjs-auth0";
+import NewTicket from "../components/NewTicket";
 
 const Links = ["Dashboard", "About", "Contact Us"];
 
@@ -33,11 +34,12 @@ const NavLink = ({ children }) => (
 );
 
 /**
- * Returns a login button if user isn't signed in,
+ * Returns a login button and an "Add Ticket" button if user isn't signed in,
  * a logout button if user is signed in.
  */
-const UserButton = () => {
+const AuthButton = () => {
   const { user } = useUser();
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   if (!user) {
     return (
@@ -49,15 +51,31 @@ const UserButton = () => {
     );
   } else
     return (
-      <Button color={"white"} bg={"blue.400"} _hover={{ bg: "blue.300" }}>
-        <LinkOverlay href="/api/auth/logout" textDecoration={"none"}>
-          Sign Out
-        </LinkOverlay>
-      </Button>
+      <HStack>
+        <Button
+          rightIcon={<AddIcon />}
+          color={"white"}
+          bg={"green.400"}
+          _hover={{ bg: "green.300" }}
+          onClick={onOpen}
+        >
+          New Ticket
+        </Button>
+        <Button
+          _hover={{ bg: "gray.300" }}
+          variant={"outline"}
+          borderColor={"gray.300"}
+        >
+          <LinkOverlay href="/api/auth/logout" textDecoration={"none"}>
+            Sign Out
+          </LinkOverlay>
+        </Button>
+        <NewTicket isModalOpen={isOpen} onModalClose={onClose} />
+      </HStack>
     );
 };
 
-export default function Header() {
+export default function NavBar() {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
@@ -86,7 +104,7 @@ export default function Header() {
               ))}
             </HStack>
           </HStack>
-          <UserButton />
+          <AuthButton />
         </Flex>
 
         {isOpen ? (

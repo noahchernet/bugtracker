@@ -2,7 +2,9 @@ import { UserProvider } from "@auth0/nextjs-auth0";
 import Head from "next/head";
 import { ChakraProvider } from "@chakra-ui/react";
 import "../styles/globals.css";
-import DefaultLayout from "../components/layout/DefaultLayout";
+import DefaultLayout from "../layout/DefaultLayout";
+// import { store } from "./app/store";
+import { Provider } from "react-redux";
 
 function MyApp({ Component, pageProps }) {
   return (

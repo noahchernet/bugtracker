@@ -39,7 +39,7 @@ const NavLink = ({ children }) => (
  */
 const AuthButton = () => {
   const { user } = useUser();
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen, onOpen, onClose } = useDisclosure(); // For the "Create new Ticket" modal
 
   if (!user) {
     return (
@@ -70,7 +70,9 @@ const AuthButton = () => {
             Sign Out
           </LinkOverlay>
         </Button>
-        <NewTicket isModalOpen={isOpen} onModalClose={onClose} />
+        {isOpen ? (
+          <NewTicket isModalOpen={isOpen} onModalClose={onClose} />
+        ) : null}
       </HStack>
     );
 };

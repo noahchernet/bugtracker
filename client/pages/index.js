@@ -4,10 +4,17 @@ import { getAllTickets } from "../services/ticket";
 import Loading from "../components/Loading";
 import axios from "axios";
 import TicketBrief from "../components/TicketBrief";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  setLoading,
+  unsetLoading,
+} from "../features/ticketListLoading/ticketListLoadingSlice";
 
 export default function Home() {
   const [allTickets, setAllTickets] = useState([]);
-  const [loading, setLoading] = useState(true);
+  // const [loading, setLoading] = useState(true);
+  const loading = useSelector((state) => state.ticketListLoading.value);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     axios
@@ -17,7 +24,7 @@ export default function Home() {
         // console.log(allTickets);
       })
       .catch((err) => console.log("Error fetching data\n", err))
-      .finally(setLoading(false));
+      .finally(dispatch(unsetLoading()));
   }, [loading]);
 
   return (

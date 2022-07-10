@@ -20,6 +20,8 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import Alert from "./Alert";
+import { useDispatch } from "react-redux";
+import { setLoading } from "../features/ticketListLoading/ticketListLoadingSlice";
 
 export default function NewTicket({ isModalOpen, onModalClose }) {
   const initialRef = useRef(null);
@@ -33,7 +35,8 @@ export default function NewTicket({ isModalOpen, onModalClose }) {
     onOpen: onAlertOpen,
     onClose: onAlertClose,
   } = useDisclosure();
-  const [errorMessage, setErrorMessage] = useState("");
+  const [alertInfo, setAlertInfo] = useState({ title: "", message: "" });
+  const dispatch = useDispatch();
 
   const handleInputChange = ({ name, value }) => {
     if (name === "severity") setTicket({ ...ticket, [name]: Number(value) });
@@ -61,12 +64,22 @@ export default function NewTicket({ isModalOpen, onModalClose }) {
       .post(`${process.env.NEXT_PUBLIC_WEB_SERVER}/tickets`, form, {
         headers: { Authorization: "Bearer " + token.data.token },
       })
-      .then((res) => {
-        alert("Ticket added successfully");
+      .then(() => {
+        setAlertInfo({
+          title: "Ticket created successfully!",
+          message: "You and your collaborators can now comment on it.",
+        });
+        onAlertOpen();
+        dispatch(setLoading());
+        onModalClose();
       })
       .catch((err) => {
         console.log(err);
-        setErrorMessage(err.response.data.message);
+
+        setAlertInfo({
+          title: "Couldn't create the ticket",
+          message: err.response.data.message,
+        });
         onAlertOpen();
       });
   };
@@ -175,12 +188,7 @@ export default function NewTicket({ isModalOpen, onModalClose }) {
           </ModalFooter>
         </ModalContent>
       </Modal>
-      <Alert
-        isOpen={isAlertOpen}
-        onClose={onAlertClose}
-        errorMessage={errorMessage}
-      />
-      ;
+      <Alert isOpen={isAlertOpen} onClose={onAlertClose} info={alertInfo} />;
     </>
   );
 }

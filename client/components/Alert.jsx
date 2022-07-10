@@ -9,17 +9,17 @@ import {
   Button,
 } from "@chakra-ui/react";
 
-const Alert = ({ isOpen, onClose, errorMessage }) => {
+const Alert = ({ isOpen, onClose, info }) => {
   const closeBtnRef = useRef(null);
   return (
     <AlertDialog isOpen={isOpen} onClose={onClose}>
       <AlertDialogOverlay>
         <AlertDialogContent>
           <AlertDialogHeader fontSize="lg" fontWeight="bold">
-            Couldn't Create the Ticket
+            {info.title}
           </AlertDialogHeader>
 
-          <AlertDialogBody>{errorMessage}</AlertDialogBody>
+          <AlertDialogBody>{info.message}</AlertDialogBody>
 
           <AlertDialogFooter>
             <Button leastDestructiveRef={closeBtnRef} onClick={onClose}>

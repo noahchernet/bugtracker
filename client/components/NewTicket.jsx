@@ -36,6 +36,8 @@ export default function NewTicket({ isModalOpen, onModalClose }) {
     onClose: onAlertClose,
   } = useDisclosure();
   const [alertInfo, setAlertInfo] = useState({ title: "", message: "" });
+  // To show the ticket's info is sent to the server and being processed
+  const [addingTicket, setAddingTicket] = useState(false);
   const dispatch = useDispatch();
 
   const handleInputChange = ({ name, value }) => {
@@ -45,6 +47,7 @@ export default function NewTicket({ isModalOpen, onModalClose }) {
   };
 
   const addTicketToDB = async () => {
+    setAddingTicket(true);
     const token = await axios.get(
       `${process.env.NEXT_PUBLIC_CLIENT}/api/getToken`
     );
@@ -69,9 +72,10 @@ export default function NewTicket({ isModalOpen, onModalClose }) {
           title: "Ticket created successfully!",
           message: "You and your collaborators can now comment on it.",
         });
-        onAlertOpen();
+        setAddingTicket(false);
         dispatch(setLoading());
         onModalClose();
+        onAlertOpen();
       })
       .catch((err) => {
         console.log(err);
@@ -80,6 +84,7 @@ export default function NewTicket({ isModalOpen, onModalClose }) {
           title: "Couldn't create the ticket",
           message: err.response.data.message,
         });
+        setAddingTicket(false);
         onAlertOpen();
       });
   };
@@ -178,6 +183,7 @@ export default function NewTicket({ isModalOpen, onModalClose }) {
               colorScheme="green"
               mr={3}
               type="submit"
+              isLoading={addingTicket}
               onClick={() => {
                 addTicketToDB();
               }}

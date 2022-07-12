@@ -3,10 +3,14 @@ import axios from "axios";
 import { Box } from "@chakra-ui/react";
 import Comment from "./Comment";
 import { useRouter } from "next/router";
+import { useSelector, useDispatch } from "react-redux";
+import { finishReloadingComments } from "../features/newCommentAdded/newCommentAddedSlice";
 
 export default function CommentsList({ ticketId }) {
   const [comments, setComments] = useState([]);
   const router = useRouter();
+  const newCommentAdded = useSelector((state) => state.newCommentAdded.value);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     axios
@@ -14,7 +18,8 @@ export default function CommentsList({ ticketId }) {
       .then((res) => setComments(res.data))
       .catch((err) => {
         console.log("Error\n", err);
-      });
+      })
+      .finally(() => dispatch(finishReloadingComments()));
   }, [router.isReady, newCommentAdded]);
 
   return (

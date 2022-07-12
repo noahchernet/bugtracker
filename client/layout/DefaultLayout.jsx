@@ -7,7 +7,7 @@ export default function DefaultLayout(props) {
     <>
       <NavBar />
       {props.children}
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 }

@@ -6,15 +6,14 @@ import {
   Divider,
   HStack,
   Avatar,
-  VStack,
   Spacer,
-  Button,
   Menu,
   MenuButton,
   IconButton,
   MenuList,
   MenuItem,
-  Badge,
+  Image,
+  useDisclosure,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { EditIcon, DeleteIcon, HamburgerIcon } from "@chakra-ui/icons";
@@ -22,12 +21,17 @@ import { useRouter } from "next/router";
 import { useUser } from "@auth0/nextjs-auth0";
 import TicketStatusBadge from "./TicketStatusBadge";
 import TicketSeverityBadge from "./TicketSeverityBadge";
+import ImageInModal from "./ImageInModal";
 
 export default function TicketDetails({ id }) {
   const [ticket, setTicket] = useState({});
   const { user } = useUser();
-
   const router = useRouter();
+  const {
+    isOpen: isImageOpen,
+    onClose: onImageClosed,
+    onOpen: onImageOpen,
+  } = useDisclosure();
 
   useEffect(() => {
     console.log("Running useEffect...");
@@ -53,9 +57,30 @@ export default function TicketDetails({ id }) {
       >
         {ticket.title}
       </Heading>
+
       <Text>{ticket.description}</Text>
+
+      {/* Display the ticket's image if there's one */}
+      {ticket.attachments !== "" ? (
+        <>
+          <Image
+            boxSize="12rem"
+            src={ticket.attachments}
+            cursor="pointer"
+            onClick={() => onImageOpen()}
+          />
+          <ImageInModal
+            isOpen={isImageOpen}
+            onClose={onImageClosed}
+            imageSrc={ticket.attachments}
+          />
+        </>
+      ) : null}
+
       <Divider bg={"gray.700"} my={"2rem"} />
+
       {/* Render after the ticket is fetched from the server */}
+
       {ticket.postedByUser && (
         <HStack>
           <Avatar

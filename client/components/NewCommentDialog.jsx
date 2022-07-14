@@ -36,6 +36,7 @@ export default function NewCommentDialog({ ticketId }) {
         message: "You must be logged in to comment on this.",
       });
       onOpen();
+      setAddingComment(false);
       return;
     }
     const token = await axios.get(

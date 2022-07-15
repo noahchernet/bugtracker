@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import Alert from "./Alert";
-import { reloadComments } from "../features/newCommentAdded/newCommentAddedSlice";
+import { addOneComment } from "../features/commentListSlice/commentListSlice";
 import { useDispatch } from "react-redux";
 
 export default function NewCommentDialog({ ticketId }) {
@@ -55,16 +55,16 @@ export default function NewCommentDialog({ ticketId }) {
           headers: { Authorization: "Bearer " + token.data.token },
         }
       )
-      .then(() => {
+      .then((res) => {
         setComment({ description: "", attachments: "" });
-        dispatch(reloadComments());
+        dispatch(addOneComment(res.data.comment));
         // console.log("Comment added");
       })
       .catch((err) => {
         console.log("id:", ticketId);
         setAlertInfo({
           title: "Something went wrong",
-          message: err.response.data.message,
+          message: err.message,
         });
         onOpen();
       })

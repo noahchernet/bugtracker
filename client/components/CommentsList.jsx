@@ -4,7 +4,6 @@ import { Box } from "@chakra-ui/react";
 import Comment from "./Comment";
 import { useRouter } from "next/router";
 import { useSelector, useDispatch } from "react-redux";
-import { finishReloadingComments } from "../features/newCommentAdded/newCommentAddedSlice";
 import { updateAllComments } from "../features/commentListSlice/commentListSlice";
 
 export default function CommentsList({ ticketId }) {
@@ -20,8 +19,7 @@ export default function CommentsList({ ticketId }) {
       })
       .catch((err) => {
         console.log("Error\n", err);
-      })
-      .finally(() => dispatch(finishReloadingComments()));
+      });
   }, [router.isReady]);
 
   return (

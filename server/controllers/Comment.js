@@ -67,7 +67,7 @@ exports.addCommentToTicket = async (req, res) => {
     .then((allComments) => {
       return res.status(201).json({
         message: "Comment added",
-        comment: allComments[allComments.length - 1],
+        comment,
       });
     })
     .catch((error) => {

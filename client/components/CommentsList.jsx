@@ -5,17 +5,20 @@ import Comment from "./Comment";
 import { useRouter } from "next/router";
 import { useSelector, useDispatch } from "react-redux";
 import { finishReloadingComments } from "../features/newCommentAdded/newCommentAddedSlice";
+import { updateAllComments } from "../features/commentListSlice/commentListSlice";
 
 export default function CommentsList({ ticketId }) {
-  const [comments, setComments] = useState([]);
   const router = useRouter();
   const newCommentAdded = useSelector((state) => state.newCommentAdded.value);
+  const commentList = useSelector((state) => state.commentList.commentList);
   const dispatch = useDispatch();
 
   useEffect(() => {
     axios
       .get(`${process.env.NEXT_PUBLIC_WEB_SERVER}/comments/` + ticketId)
-      .then((res) => setComments(res.data))
+      .then((res) => {
+        dispatch(updateAllComments(res.data));
+      })
       .catch((err) => {
         console.log("Error\n", err);
       })
@@ -24,7 +27,7 @@ export default function CommentsList({ ticketId }) {
 
   return (
     <Box w="50%">
-      {comments.map((comment, index) => (
+      {commentList.map((comment, index) => (
         <Comment commentDetails={comment} key={index} />
       ))}
     </Box>

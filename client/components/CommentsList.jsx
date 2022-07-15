@@ -9,7 +9,6 @@ import { updateAllComments } from "../features/commentListSlice/commentListSlice
 
 export default function CommentsList({ ticketId }) {
   const router = useRouter();
-  const newCommentAdded = useSelector((state) => state.newCommentAdded.value);
   const commentList = useSelector((state) => state.commentList.commentList);
   const dispatch = useDispatch();
 
@@ -23,7 +22,7 @@ export default function CommentsList({ ticketId }) {
         console.log("Error\n", err);
       })
       .finally(() => dispatch(finishReloadingComments()));
-  }, [router.isReady, newCommentAdded]);
+  }, [router.isReady]);
 
   return (
     <Box w="50%">

@@ -3,6 +3,8 @@ import axios from "axios";
 import { CheckIcon } from "@chakra-ui/icons";
 import { Button, HStack, Spacer, Textarea } from "@chakra-ui/react";
 import { GiCancel } from "react-icons/gi";
+import { useDispatch } from "react-redux";
+import { updateOneComment } from "../features/commentListSlice/commentListSlice";
 
 const EditComment = ({ commentToEdit, setEditingComment }) => {
   const [updatedComment, setUpdatedComment] = useState({
@@ -10,6 +12,7 @@ const EditComment = ({ commentToEdit, setEditingComment }) => {
     attachments: commentToEdit.attachments,
   });
   const [savingComment, setSavingComment] = useState(false);
+  const dispatch = useDispatch();
 
   const saveComment = async () => {
     setSavingComment(true);
@@ -37,6 +40,7 @@ const EditComment = ({ commentToEdit, setEditingComment }) => {
       )
       .then((res) => {
         // setComment(res.data.comment);
+        dispatch(updateOneComment(res.data.comment));
         setEditingComment(false);
       })
       .catch((err) => alert(err.message))

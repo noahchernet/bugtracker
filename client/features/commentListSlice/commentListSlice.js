@@ -19,19 +19,23 @@ export const commentListSlice = createSlice({
     // Update one comment in the commentList
     // action.payload => modified comment to replace the old one
     updateOneComment: (state, action) => {
-      return state.commentList.map((comment) => {
-        if (comment._id !== action.payload._id) return comment;
+      return {
+        commentList: state.commentList.map((comment) => {
+          if (comment._id !== action.payload._id) return comment;
 
-        return { ...comment, ...action.payload };
-      });
+          return { ...comment, ...action.payload };
+        }),
+      };
     },
 
     // Delete one comment in the commentList
     // action.payload => id of comment to delete
     deleteOneComment: (state, action) => {
-      return state.commentList.filter((comment) => {
-        if (comment._id !== action.payload) return comment;
-      });
+      return {
+        commentList: state.commentList.filter((comment) => {
+          if (comment._id !== action.payload) return comment;
+        }),
+      };
     },
   },
 });

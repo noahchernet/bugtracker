@@ -22,6 +22,7 @@ import { useUser } from "@auth0/nextjs-auth0";
 import TicketStatusBadge from "./TicketStatusBadge";
 import TicketSeverityBadge from "./TicketSeverityBadge";
 import ImageInModal from "./ImageInModal";
+import readableDate from "../services/readableDate";
 
 export default function TicketDetails({ id }) {
   const [ticket, setTicket] = useState({});
@@ -82,7 +83,7 @@ export default function TicketDetails({ id }) {
       {/* Render after the ticket is fetched from the server */}
 
       {ticket.postedByUser && (
-        <HStack>
+        <HStack pb="1rem">
           <Avatar
             size={"lg"}
             name={
@@ -134,6 +135,12 @@ export default function TicketDetails({ id }) {
           ) : null}
         </HStack>
       )}
+
+      <Text as="i" fontSize="sm">
+        {`On ${readableDate(ticket.createdAt)}${
+          ticket.updatedAt ? ", edited " + readableDate(ticket.updatedAt) : ""
+        }`}
+      </Text>
     </Box>
   );
 }

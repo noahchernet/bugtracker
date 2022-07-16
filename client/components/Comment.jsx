@@ -20,6 +20,7 @@ import {
 import { useDispatch } from "react-redux";
 import axios from "axios";
 import ImageInModal from "./ImageInModal";
+import readableDate from "../services/readableDate";
 
 export default function Comment({ commentDetails }) {
   const { user } = useUser();
@@ -132,17 +133,15 @@ export default function Comment({ commentDetails }) {
             ) : null}
             <Text
               bg="gray.100"
-              borderColor="gray.200"
               borderWidth="0.1rem"
               py="1rem"
               px="0.5rem"
-              border={
-                commentDetails.solutionToTicket ? "0.1rem solid #3cab73" : ""
+              borderColor={
+                commentDetails.solutionToTicket ? "#3cab73" : "gray.200"
               }
               mb="1rem"
             >
               {commentDetails.description}
-
               {/* Display the ticket's image if there's one */}
               {commentDetails.attachments !== "" ? (
                 <>
@@ -160,6 +159,15 @@ export default function Comment({ commentDetails }) {
                   />
                 </>
               ) : null}
+              <p></p> {/**Empty element to render newline */}
+              {/** Displays comment added and edited date */}
+              <Text as="i" fontSize="sm">
+                {`On ${readableDate(commentDetails.createdAt)}${
+                  commentDetails.updatedAt
+                    ? ", edited " + readableDate(commentDetails.updatedAt)
+                    : ""
+                }`}
+              </Text>
             </Text>
             {
               // Condition will be updated to 'if the user logged in is the

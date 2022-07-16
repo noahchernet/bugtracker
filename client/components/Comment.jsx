@@ -12,6 +12,7 @@ import { useUser } from "@auth0/nextjs-auth0";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import EditComment from "./EditComment";
 import {
+  updateOneComment,
   deleteOneComment,
   markCommentAsSolution,
 } from "../features/commentListSlice/commentListSlice";
@@ -75,15 +76,17 @@ export default function Comment({ commentDetails }) {
     );
     axios
       .put(
-        `${process.env.NEXT_PUBLIC_WEB_SERVER}/tickets/` + ticket._id,
+        `${process.env.NEXT_PUBLIC_WEB_SERVER}/tickets/` +
+          commentDetails.ticketId,
         { solution: "" },
         {
           headers: { Authorization: "Bearer " + token.data.token },
         }
       )
-      .then((res) => {
-        console.log(res);
-        Router.reload(window.location.pathname);
+      .then(() => {
+        dispatch(
+          updateOneComment({ ...commentDetails, solutionToTicket: false })
+        );
       })
       .catch((err) => {
         console.log(err);
@@ -147,7 +150,7 @@ export default function Comment({ commentDetails }) {
               ) : (
                 <Button
                   display="inline-block"
-                  onCLick={unmarkCommentAsSolution}
+                  onClick={unmarkCommentAsSolution}
                 >
                   Unmark Solution
                 </Button>

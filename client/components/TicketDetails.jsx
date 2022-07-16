@@ -23,9 +23,13 @@ import TicketStatusBadge from "./TicketStatusBadge";
 import TicketSeverityBadge from "./TicketSeverityBadge";
 import ImageInModal from "./ImageInModal";
 import readableDate from "../services/readableDate";
+import EditTicket from "./EditTicket";
+import { useDispatch } from "react-redux";
+import { deleteOneTicket } from "../features/ticketListSlice/ticketListSlice";
 
 export default function TicketDetails({ id }) {
   const [ticket, setTicket] = useState({});
+  const [editingTicket, setEditingTicket] = useState(false);
   const { user } = useUser();
   const router = useRouter();
   const {
@@ -33,6 +37,35 @@ export default function TicketDetails({ id }) {
     onClose: onImageClosed,
     onOpen: onImageOpen,
   } = useDisclosure();
+  const dispatch = useDispatch();
+
+  const deleteTicket = async () => {
+    const token = await axios.get(
+      `${process.env.NEXT_PUBLIC_CLIENT}/api/getToken`
+    );
+    const confirmDelete = confirm(
+      "Are you sure you want to delete this ticket?"
+    );
+
+    if (confirmDelete) {
+      axios
+        .delete(
+          `${process.env.NEXT_PUBLIC_WEB_SERVER}/tickets/` + ticket._id,
+          {
+            headers: { Authorization: "Bearer " + token.data.token },
+          }
+        )
+        .then((res) => {
+          router.push("/");
+          dispatch(deleteOneTicket(ticket._id));
+          // console.log(res.data);
+        })
+        .catch((err) => {
+          alert(err.message);
+          router.push("/");
+        });
+    }
+  };
 
   useEffect(() => {
     axios
@@ -47,101 +80,112 @@ export default function TicketDetails({ id }) {
 
   return (
     <Box bg="gray.100" p="2rem" w={"50%"}>
-      <Heading
-        as={"h1"}
-        textDecoration={"underline"}
-        textUnderlineOffset={"1rem"}
-        pb={"2rem"}
-        size="lg"
-      >
-        {ticket.title}
-      </Heading>
-
-      <Text>{ticket.description}</Text>
-
-      {/* Display the ticket's image if there's one */}
-      {ticket.attachments !== "" ? (
+      {!editingTicket ? (
         <>
-          <Image
-            boxSize="5rem"
-            src={ticket.attachments}
-            cursor="pointer"
-            onClick={() => onImageOpen()}
-            borderRadius="1rem"
-          />
-          <ImageInModal
-            isOpen={isImageOpen}
-            onClose={onImageClosed}
-            imageSrc={ticket.attachments}
-          />
-        </>
-      ) : null}
+          <Heading
+            as={"h1"}
+            textDecoration={"underline"}
+            textUnderlineOffset={"1rem"}
+            pb={"2rem"}
+            size="lg"
+          >
+            {ticket.title}
+          </Heading>
 
-      <Divider bg={"gray.700"} my={"2rem"} />
+          <Text>{ticket.description}</Text>
 
-      {/* Render after the ticket is fetched from the server */}
-
-      {ticket.postedByUser && (
-        <HStack pb="1rem">
-          <Avatar
-            size={"lg"}
-            name={
-              ticket.postedByUser.firstName
-                ? ticket.postedByUser.firstName +
-                  " " +
-                  ticket.postedByUser.lastName
-                : ticket.postedByUser.email
-            }
-            src={ticket.postedByUser.picture}
-          />
-          <Text>
-            {ticket.postedByUser.firstName
-              ? ticket.postedByUser.firstName +
-                " " +
-                ticket.postedByUser.lastName
-              : ticket.postedByUser.email}
-          </Text>
-          <Spacer />
-
-          {/* Solved status and severity of the ticket*/}
-          <TicketStatusBadge solved={ticket.solved} />
-          <TicketSeverityBadge severity={ticket.severity} />
-
-          {/* Display edit and delete comment buttons if the currently logged in user is the one who posted this ticket*/}
-          {user && user.sub === ticket.postedByUser.sub ? (
-            <Menu>
-              <MenuButton
-                as={IconButton}
-                aria-label="Options"
-                icon={<HamburgerIcon />}
-                variant="outline"
+          {/* Display the ticket's image if there's one */}
+          {ticket.attachments !== "" ? (
+            <>
+              <Image
+                boxSize="5rem"
+                src={ticket.attachments}
+                cursor="pointer"
+                onClick={() => onImageOpen()}
+                borderRadius="1rem"
               />
-              <MenuList>
-                <MenuItem
-                  icon={<EditIcon />}
-                  _hover={{ bg: "blue.400", color: "white" }}
-                >
-                  Edit Ticket
-                </MenuItem>
-                <MenuItem
-                  icon={<DeleteIcon />}
-                  _hover={{ bg: "red.500", color: "white" }}
-                >
-                  Delete Ticket
-                </MenuItem>
-              </MenuList>
-            </Menu>
+              <ImageInModal
+                isOpen={isImageOpen}
+                onClose={onImageClosed}
+                imageSrc={ticket.attachments}
+              />
+            </>
           ) : null}
-        </HStack>
-      )}
 
-      <Text as="i" fontSize="sm">
-        {`On ${readableDate(ticket.createdAt)}${
-          ticket.updatedAt !== ticket.createdAt
-            ? ", edited " + readableDate(ticket.updatedAt)
-            : ""
-        }`}
-      </Text>
+          <Divider bg={"gray.700"} my={"2rem"} />
+
+          {/* Render after the ticket is fetched from the server */}
+
+          {ticket.postedByUser && (
+            <HStack pb="1rem">
+              <Avatar
+                size={"lg"}
+                name={
+                  ticket.postedByUser.firstName
+                    ? ticket.postedByUser.firstName +
+                      " " +
+                      ticket.postedByUser.lastName
+                    : ticket.postedByUser.email
+                }
+                src={ticket.postedByUser.picture}
+              />
+              <Text>
+                {ticket.postedByUser.firstName
+                  ? ticket.postedByUser.firstName +
+                    " " +
+                    ticket.postedByUser.lastName
+                  : ticket.postedByUser.email}
+              </Text>
+              <Spacer />
+
+              {/* Solved status and severity of the ticket*/}
+              <TicketStatusBadge solved={ticket.solved} />
+              <TicketSeverityBadge severity={ticket.severity} />
+
+              {/* Display edit and delete comment buttons if the currently logged in user is the one who posted this ticket*/}
+              {user && user.sub === ticket.postedByUser.sub ? (
+                <Menu>
+                  <MenuButton
+                    as={IconButton}
+                    aria-label="Options"
+                    icon={<HamburgerIcon />}
+                    variant="outline"
+                  />
+                  <MenuList>
+                    <MenuItem
+                      icon={<EditIcon />}
+                      _hover={{ bg: "blue.400", color: "white" }}
+                      onClick={() => setEditingTicket(true)}
+                    >
+                      Edit Ticket
+                    </MenuItem>
+                    <MenuItem
+                      icon={<DeleteIcon />}
+                      _hover={{ bg: "red.500", color: "white" }}
+                      onClick={deleteTicket}
+                    >
+                      Delete Ticket
+                    </MenuItem>
+                  </MenuList>
+                </Menu>
+              ) : null}
+            </HStack>
+          )}
+
+          <Text as="i" fontSize="sm">
+            {`On ${readableDate(ticket.createdAt)}${
+              ticket.updatedAt !== ticket.createdAt
+                ? ", edited " + readableDate(ticket.updatedAt)
+                : ""
+            }`}
+          </Text>
+        </>
+      ) : (
+        <EditTicket
+          ticketToEdit={ticket}
+          setEditingTicket={setEditingTicket}
+        />
+      )}
     </Box>
   );
 }

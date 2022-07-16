@@ -17,7 +17,7 @@ import {
   deleteOneComment,
   markCommentAsSolution,
 } from "../features/commentListSlice/commentListSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import ImageInModal from "./ImageInModal";
 import readableDate from "../services/readableDate";
@@ -31,6 +31,10 @@ export default function Comment({ commentDetails }) {
     onClose: onImageClosed,
     onOpen: onImageOpen,
   } = useDisclosure();
+  const allTickets = useSelector((state) => state.ticketList.ticketList);
+  const commentTicket = allTickets.filter(
+    (ticket) => ticket._id === commentDetails.ticketId
+  )[0]; // The ticket that this comment was added to
 
   const deleteComment = async () => {
     const token = await axios.get(
@@ -103,7 +107,7 @@ export default function Comment({ commentDetails }) {
 
   return (
     <HStack spacing="2.5rem" align="stretch" my="2rem" mb="6rem">
-      <VStack spacing="1rem">
+      <VStack spacing="1rem" minW="20%">
         <Avatar
           name={
             commentDetails.postedByUser.firstName
@@ -169,26 +173,31 @@ export default function Comment({ commentDetails }) {
                 }`}
               </Text>
             </Text>
-            {
-              // Condition will be updated to 'if the user logged in is the
-              // poster of the ticket, and the '
-              !commentDetails.solutionToTicket ? (
-                <Button
-                  colorScheme="green"
-                  onClick={markCommentAsSolutionToTicket}
-                  display="inline-block"
-                >
-                  Mark as Solution
-                </Button>
-              ) : (
-                <Button
-                  display="inline-block"
-                  onClick={unmarkCommentAsSolution}
-                >
-                  Unmark Solution
-                </Button>
-              )
-            }
+            {commentTicket && commentTicket.postedByUser.sub === user.sub ? (
+              <>
+                {
+                  // Condition will be updated to 'if the user logged in is the
+                  // poster of the ticket, and the '
+                  !commentDetails.solutionToTicket ? (
+                    <Button
+                      colorScheme="green"
+                      onClick={markCommentAsSolutionToTicket}
+                      display="inline-block"
+                    >
+                      Mark as Solution
+                    </Button>
+                  ) : (
+                    <Button
+                      display="inline-block"
+                      onClick={unmarkCommentAsSolution}
+                    >
+                      Unmark Solution
+                    </Button>
+                  )
+                }
+              </>
+            ) : null}
+
             {user && user.sub === commentDetails.postedByUser.sub ? (
               <HStack display="inline-block" float="right">
                 <Button

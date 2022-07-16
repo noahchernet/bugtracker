@@ -63,10 +63,11 @@ export default function TicketDetails({ id }) {
       {ticket.attachments !== "" ? (
         <>
           <Image
-            boxSize="12rem"
+            boxSize="5rem"
             src={ticket.attachments}
             cursor="pointer"
             onClick={() => onImageOpen()}
+            borderRadius="1rem"
           />
           <ImageInModal
             isOpen={isImageOpen}

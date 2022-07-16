@@ -163,7 +163,7 @@ export default function Comment({ commentDetails }) {
               {/** Displays comment added and edited date */}
               <Text as="i" fontSize="sm">
                 {`On ${readableDate(commentDetails.createdAt)}${
-                  commentDetails.updatedAt
+                  commentDetails.updatedAt !== commentDetails.createdAt
                     ? ", edited " + readableDate(commentDetails.updatedAt)
                     : ""
                 }`}

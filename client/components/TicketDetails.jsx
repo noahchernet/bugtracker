@@ -35,12 +35,10 @@ export default function TicketDetails({ id }) {
   } = useDisclosure();
 
   useEffect(() => {
-    console.log("Running useEffect...");
     axios
       .get(`${process.env.NEXT_PUBLIC_WEB_SERVER}/tickets/` + id)
       .then(async (res) => {
         setTicket(res.data);
-        console.log("Ticket processd:", ticket);
       })
       .catch((err) => {
         console.log("Error fetching data\n", err);
@@ -138,7 +136,9 @@ export default function TicketDetails({ id }) {
 
       <Text as="i" fontSize="sm">
         {`On ${readableDate(ticket.createdAt)}${
-          ticket.updatedAt ? ", edited " + readableDate(ticket.updatedAt) : ""
+          ticket.updatedAt !== ticket.createdAt
+            ? ", edited " + readableDate(ticket.updatedAt)
+            : ""
         }`}
       </Text>
     </Box>

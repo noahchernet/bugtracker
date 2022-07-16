@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { Box, VStack } from "@chakra-ui/react";
 import Loading from "../components/Loading";
 import axios from "axios";
@@ -7,8 +7,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { updateAllTickets } from "../features/ticketListSlice/ticketListSlice";
 
 export default function Home() {
-  // const [allTickets, setAllTickets] = useState([]);
-  // const [loading, setLoading] = useState(true);
   const allTickets = useSelector((state) => state.ticketList.ticketList);
   const dispatch = useDispatch();
 

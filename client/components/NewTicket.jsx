@@ -21,7 +21,7 @@ import {
 } from "@chakra-ui/react";
 import Alert from "./Alert";
 import { useDispatch } from "react-redux";
-import { setLoading } from "../features/ticketListLoading/ticketListLoadingSlice";
+import { addOneTicket } from "../features/ticketListSlice/ticketListSlice";
 
 export default function NewTicket({ isModalOpen, onModalClose }) {
   const initialRef = useRef(null);
@@ -67,13 +67,13 @@ export default function NewTicket({ isModalOpen, onModalClose }) {
       .post(`${process.env.NEXT_PUBLIC_WEB_SERVER}/tickets`, form, {
         headers: { Authorization: "Bearer " + token.data.token },
       })
-      .then(() => {
+      .then((res) => {
         setAlertInfo({
           title: "Ticket created successfully!",
           message: "You and your collaborators can now comment on it.",
         });
+        dispatch(addOneTicket(res.data));
         setAddingTicket(false);
-        dispatch(setLoading());
         onModalClose();
         onAlertOpen();
       })

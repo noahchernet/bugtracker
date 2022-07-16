@@ -65,7 +65,7 @@ const EditComment = ({ commentToEdit, setEditingComment }) => {
           onChange={(e) =>
             setUpdatedComment({
               ...updatedComment,
-              description: e.target.files[0],
+              attachments: e.target.files[0],
             })
           }
           className="mt-4 w-full text-sm text-slate-500

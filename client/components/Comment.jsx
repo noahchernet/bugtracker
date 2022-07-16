@@ -163,7 +163,7 @@ export default function Comment({ commentDetails }) {
                   />
                 </>
               ) : null}
-              <p></p> {/**Empty element to render newline */}
+              <br /> {/**Empty element to render newline */}
               {/** Displays comment added and edited date */}
               <Text as="i" fontSize="sm">
                 {`On ${readableDate(commentDetails.createdAt)}${

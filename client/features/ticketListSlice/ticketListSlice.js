@@ -9,7 +9,7 @@ export const ticketListSlice = createSlice({
 
   reducers: {
     addOneTicket: (state, action) => {
-      return { ticketList: [...state.ticketList, action.payload] };
+      return { ticketList: [action.payload, ...state.ticketList] };
     },
 
     updateAllTickets: (state, action) => {

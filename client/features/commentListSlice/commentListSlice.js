@@ -28,6 +28,20 @@ export const commentListSlice = createSlice({
       };
     },
 
+    markCommentAsSolution: (state, action) => {
+      return {
+        commentList: state.commentList.map((comment) => {
+          // Unmark any comment that isn't the payload as the solution
+          if (comment._id !== action.payload._id) {
+            return { ...comment, solutionToTicket: false };
+          }
+
+          // When the comment id matches the payload id, mark it as the solution
+          return { ...comment, solutionToTicket: true };
+        }),
+      };
+    },
+
     // Delete one comment in the commentList
     // action.payload => id of comment to delete
     deleteOneComment: (state, action) => {
@@ -44,6 +58,7 @@ export const {
   addOneComment,
   updateAllComments,
   updateOneComment,
+  markCommentAsSolution,
   deleteOneComment,
 } = commentListSlice.actions;
 

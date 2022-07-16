@@ -4,9 +4,10 @@ import {
   Box,
   Button,
   HStack,
-  Spacer,
+  useDisclosure,
   Text,
   VStack,
+  Image,
 } from "@chakra-ui/react";
 import { useUser } from "@auth0/nextjs-auth0";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
@@ -18,11 +19,17 @@ import {
 } from "../features/commentListSlice/commentListSlice";
 import { useDispatch } from "react-redux";
 import axios from "axios";
+import ImageInModal from "./ImageInModal";
 
 export default function Comment({ commentDetails }) {
   const { user } = useUser();
   const [editingComment, setEditingComment] = useState(false);
   const dispatch = useDispatch();
+  const {
+    isOpen: isImageOpen,
+    onClose: onImageClosed,
+    onOpen: onImageOpen,
+  } = useDisclosure();
 
   const deleteComment = async () => {
     const token = await axios.get(
@@ -135,6 +142,24 @@ export default function Comment({ commentDetails }) {
               mb="1rem"
             >
               {commentDetails.description}
+
+              {/* Display the ticket's image if there's one */}
+              {commentDetails.attachments !== "" ? (
+                <>
+                  <Image
+                    boxSize="5rem"
+                    src={commentDetails.attachments}
+                    cursor="pointer"
+                    onClick={() => onImageOpen()}
+                    borderRadius="1rem"
+                  />
+                  <ImageInModal
+                    isOpen={isImageOpen}
+                    onClose={onImageClosed}
+                    imageSrc={commentDetails.attachments}
+                  />
+                </>
+              ) : null}
             </Text>
             {
               // Condition will be updated to 'if the user logged in is the

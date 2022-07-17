@@ -14,17 +14,18 @@ export default function CommentsList({ ticket }) {
   useEffect(() => {
     // checking if ticket is defined so an axios error is not thrown
     // when fetching comments
-    if (router.isReady && ticket.id !== undefined) {
+    if (router.isReady && ticket._id !== undefined) {
       axios
         .get(`${process.env.NEXT_PUBLIC_WEB_SERVER}/comments/` + ticket._id)
         .then((res) => {
           dispatch(updateAllComments(res.data));
+          console.log("Comments updated successfully");
         })
         .catch((err) => {
           console.log("Error\n", err);
         });
     }
-  }, [router.isReady]);
+  }, [router.isReady, ticket]);
 
   return (
     <Box w="50%">

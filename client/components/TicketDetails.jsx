@@ -26,6 +26,7 @@ import readableDate from "../services/readableDate";
 import EditTicket from "./EditTicket";
 import { useDispatch } from "react-redux";
 import { deleteOneTicket } from "../features/ticketListSlice/ticketListSlice";
+import nameFromEmail from "../services/nameFromEmail";
 
 export default function TicketDetails({ ticket }) {
   const [editingTicket, setEditingTicket] = useState(false);
@@ -113,16 +114,18 @@ export default function TicketDetails({ ticket }) {
                     ? ticket.postedByUser.firstName +
                       " " +
                       ticket.postedByUser.lastName
-                    : ticket.postedByUser.email
+                    : nameFromEmail(ticket.postedByUser.email)
                 }
                 src={ticket.postedByUser.picture}
               />
               <Text>
-                {ticket.postedByUser.firstName
-                  ? ticket.postedByUser.firstName +
-                    " " +
-                    ticket.postedByUser.lastName
-                  : ticket.postedByUser.email}
+                {`By: ${
+                  ticket.postedByUser.firstName
+                    ? ticket.postedByUser.firstName +
+                      " " +
+                      ticket.postedByUser.lastName
+                    : nameFromEmail(ticket.postedByUser.email)
+                }`}
               </Text>
               <Spacer />
 

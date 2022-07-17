@@ -3,6 +3,7 @@ import { Box, Text, HStack, Badge } from "@chakra-ui/react";
 import readableDate from "../services/readableDate";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import nameFromEmail from "../services/nameFromEmail";
 
 export default function TicketBrief({ ticket }) {
   const [severity, setSeverity] = useState({});
@@ -46,7 +47,9 @@ export default function TicketBrief({ ticket }) {
         <HStack justify="space-between">
           <Text fontSize="xs">{readableDate(ticket.updatedAt)}</Text>
           <Text fontSize="xs">
-            By: {ticket.postedByUser.firstName || ticket.postedByUser.email}
+            By:{" "}
+            {ticket.postedByUser.firstName ||
+              nameFromEmail(ticket.postedByUser.email)}
           </Text>
         </HStack>
       </Box>

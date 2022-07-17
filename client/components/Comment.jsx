@@ -21,6 +21,7 @@ import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import ImageInModal from "./ImageInModal";
 import readableDate from "../services/readableDate";
+import nameFromEmail from "../services/nameFromEmail";
 
 export default function Comment({ commentDetails, commentTicket }) {
   const { user } = useUser();
@@ -115,7 +116,7 @@ export default function Comment({ commentDetails, commentTicket }) {
         <Text w="">
           {commentDetails.postedByUser.firstName
             ? `${commentDetails.postedByUser.firstName} ${commentDetails.postedByUser.lastName}`
-            : commentDetails.postedByUser.email}
+            : nameFromEmail(commentDetails.postedByUser.email)}
         </Text>
       </VStack>
       <Box width="100%" borderRadius="25%">

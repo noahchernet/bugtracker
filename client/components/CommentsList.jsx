@@ -19,7 +19,6 @@ export default function CommentsList({ ticket }) {
         .get(`${process.env.NEXT_PUBLIC_WEB_SERVER}/comments/` + ticket._id)
         .then((res) => {
           dispatch(updateAllComments(res.data));
-          console.log("Comments updated successfully");
         })
         .catch((err) => {
           console.log("Error\n", err);

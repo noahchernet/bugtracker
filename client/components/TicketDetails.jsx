@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Box,
   Heading,
@@ -27,8 +27,7 @@ import EditTicket from "./EditTicket";
 import { useDispatch } from "react-redux";
 import { deleteOneTicket } from "../features/ticketListSlice/ticketListSlice";
 
-export default function TicketDetails({ id }) {
-  const [ticket, setTicket] = useState({});
+export default function TicketDetails({ ticket }) {
   const [editingTicket, setEditingTicket] = useState(false);
   const { user } = useUser();
   const router = useRouter();
@@ -55,7 +54,7 @@ export default function TicketDetails({ id }) {
             headers: { Authorization: "Bearer " + token.data.token },
           }
         )
-        .then((res) => {
+        .then(() => {
           router.push("/");
           dispatch(deleteOneTicket(ticket._id));
           // console.log(res.data);
@@ -66,17 +65,6 @@ export default function TicketDetails({ id }) {
         });
     }
   };
-
-  useEffect(() => {
-    axios
-      .get(`${process.env.NEXT_PUBLIC_WEB_SERVER}/tickets/` + id)
-      .then(async (res) => {
-        setTicket(res.data);
-      })
-      .catch((err) => {
-        console.log("Error fetching data\n", err);
-      });
-  }, [router.isReady]);
 
   return (
     <Box bg="gray.100" p="2rem" w={"50%"}>

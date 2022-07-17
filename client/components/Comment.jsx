@@ -22,7 +22,7 @@ import axios from "axios";
 import ImageInModal from "./ImageInModal";
 import readableDate from "../services/readableDate";
 
-export default function Comment({ commentDetails }) {
+export default function Comment({ commentDetails, commentTicket }) {
   const { user } = useUser();
   const [editingComment, setEditingComment] = useState(false);
   const dispatch = useDispatch();
@@ -31,10 +31,6 @@ export default function Comment({ commentDetails }) {
     onClose: onImageClosed,
     onOpen: onImageOpen,
   } = useDisclosure();
-  const allTickets = useSelector((state) => state.ticketList.ticketList);
-  const commentTicket = allTickets.filter(
-    (ticket) => ticket._id === commentDetails.ticketId
-  )[0]; // The ticket that this comment was added to
 
   const deleteComment = async () => {
     const token = await axios.get(
@@ -53,7 +49,7 @@ export default function Comment({ commentDetails }) {
             headers: { Authorization: "Bearer " + token.data.token },
           }
         )
-        .then((res) => {
+        .then(() => {
           dispatch(deleteOneComment(commentDetails._id));
         })
         .catch((err) => alert(err.message));
@@ -173,7 +169,10 @@ export default function Comment({ commentDetails }) {
                 }`}
               </Text>
             </Text>
-            {commentTicket && commentTicket.postedByUser.sub === user.sub ? (
+            {/* Checking if postedByUser is undefined so it doesn't throw an error */}
+            {user &&
+            commentTicket.postedByUser !== undefined &&
+            commentTicket.postedByUser.sub === user.sub ? (
               <>
                 {
                   // Condition will be updated to 'if the user logged in is the

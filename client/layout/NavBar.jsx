@@ -96,7 +96,10 @@ export default function NavBar() {
             <NextLink href="/" passHref>
               <Link>
                 <HStack spacing={"1rem"}>
-                  <Image boxSize="3rem" src="android-chrome-192x192.png" />
+                  <Image
+                    boxSize="3rem"
+                    src="https://res.cloudinary.com/dwzav7iui/image/upload/v1658078371/android-chrome-192x192_fg0f07.png"
+                  />
                   <Heading as="h2" size="md">
                     Avalon Bugtracker
                   </Heading>

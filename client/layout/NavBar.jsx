@@ -11,6 +11,7 @@ import {
   Image,
   Heading,
   useDisclosure,
+  Spacer,
 } from "@chakra-ui/react";
 import { AddIcon, HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import { useUser } from "@auth0/nextjs-auth0";
@@ -52,7 +53,7 @@ const AuthButton = () => {
     );
   } else
     return (
-      <HStack>
+      <Stack direction={{ base: "column", lg: "row" }}>
         <Button
           rightIcon={<AddIcon />}
           color={"white"}
@@ -74,7 +75,7 @@ const AuthButton = () => {
         {isOpen ? (
           <NewTicket isModalOpen={isOpen} onModalClose={onClose} />
         ) : null}
-      </HStack>
+      </Stack>
     );
 };
 
@@ -84,15 +85,24 @@ export default function NavBar() {
   return (
     <>
       <Box bg={useColorModeValue("gray.100", "gray.900")} px={4}>
-        <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
+        <Flex
+          h={16}
+          alignItems={"center"}
+          justifyContent={{ base: "none", lg: "space-between" }}
+        >
           <IconButton
             size={"md"}
             icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
             aria-label={"Open Menu"}
-            display={{ md: "none" }}
+            display={{ lg: "none" }}
             onClick={isOpen ? onClose : onOpen}
           />
-          <HStack spacing={8} alignItems={"center"}>
+          <HStack
+            spacing={8}
+            alignItems={"center"}
+            textAlign={{base: 'center', lg: 'right'}}
+            mx={{base:'auto', lg: ''}}
+          >
             <NextLink href="/" passHref>
               <Link>
                 <HStack spacing={"1rem"}>
@@ -109,22 +119,30 @@ export default function NavBar() {
             <HStack
               as={"nav"}
               spacing={4}
-              display={{ base: "none", md: "flex" }}
+              display={{ base: "none", lg: "flex" }}
             >
               {Links.map((link) => (
                 <NavLink key={link}>{link}</NavLink>
               ))}
             </HStack>
           </HStack>
-          <AuthButton />
+          <Box display={{ base: "none", lg: "contents" }}>
+          <Spacer />
+            <AuthButton />
+          </Box>
         </Flex>
 
         {isOpen ? (
-          <Box pb={4} display={{ md: "none" }}>
-            <Stack as={"nav"} spacing={4}>
+          <Box pb={4} display={{ lg: "none" }} bg="gray.200" mx="-1rem" px="1rem">
+            <Stack as={"nav"} spacing={4} textAlign="center">
               {Links.map((link) => (
                 <NavLink key={link}>{link}</NavLink>
               ))}
+
+              <NextLink href="/" passHref>
+                <Link></Link>
+              </NextLink>
+              <AuthButton />
             </Stack>
           </Box>
         ) : null}

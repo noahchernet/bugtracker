@@ -40,7 +40,6 @@ export default function Footer() {
     <Box
       bg={useColorModeValue("gray.50", "gray.900")}
       color={useColorModeValue("gray.700", "gray.200")}
-      // mt="auto"
       position="absolute"
       bottom={0}
       width={"100%"}
@@ -65,12 +64,12 @@ export default function Footer() {
           >
             <FaTwitter />
           </SocialButton>
-          {/* <SocialButton
+          <SocialButton
             label={"LinkedIn"}
             href={"https://www.linkedin.com/in/noah-chernet-447a24232/"}
           >
             <AiFillLinkedin />
-          </SocialButton> */}
+          </SocialButton>
           <SocialButton
             label={"GitHub"}
             href={"https://github.com/noahchernet"}

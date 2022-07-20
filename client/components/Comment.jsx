@@ -8,7 +8,13 @@ import {
   Text,
   VStack,
   Image,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  IconButton,
 } from "@chakra-ui/react";
+import { HamburgerIcon, CheckIcon, CloseIcon } from "@chakra-ui/icons";
 import { useUser } from "@auth0/nextjs-auth0";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import EditComment from "./EditComment";
@@ -170,54 +176,122 @@ export default function Comment({ commentDetails, commentTicket }) {
                 }`}
               </Text>
             </Text>
-            {/* Checking if postedByUser is undefined so it doesn't throw an error */}
-            {user &&
-            commentTicket.postedByUser !== undefined &&
-            commentTicket.postedByUser.sub === user.sub ? (
-              <>
-                {
-                  // Condition will be updated to 'if the user logged in is the
-                  // poster of the ticket, and the '
-                  !commentDetails.solutionToTicket ? (
-                    <Button
-                      colorScheme="green"
-                      onClick={markCommentAsSolutionToTicket}
-                      display="inline-block"
-                    >
-                      Mark as Solution
-                    </Button>
-                  ) : (
-                    <Button
-                      display="inline-block"
-                      onClick={unmarkCommentAsSolution}
-                    >
-                      Unmark Solution
-                    </Button>
-                  )
-                }
-              </>
-            ) : null}
 
-            {user && user.sub === commentDetails.postedByUser.sub ? (
-              <HStack display="inline-block" float="right">
-                <Button
-                  leftIcon={<EditIcon />}
-                  colorScheme="blue"
-                  onClick={() => setEditingComment(true)}
-                >
-                  Edit
-                </Button>
-                <Button
-                  bg="red.500"
-                  color="white"
-                  leftIcon={<DeleteIcon />}
-                  _hover={{ bg: "red.600" }}
-                  onClick={deleteComment}
-                >
-                  Delete
-                </Button>
-              </HStack>
-            ) : null}
+            {user && (
+              <>
+                {/* List buttons horizontally for big screens (768px+) */}
+                <Box display={{ base: "none", md: "contents" }}>
+                  {/* Checking if postedByUser is undefined so it doesn't throw an error */}
+                  {commentTicket.postedByUser !== undefined &&
+                  // If the user that's logged in is the user that posted the ticket
+                  commentTicket.postedByUser.sub === user.sub ? (
+                    <>
+                      {
+                        // Condition will be updated to 'if the user logged in is the
+                        // poster of the ticket, and the '
+                        !commentDetails.solutionToTicket ? (
+                          <Button
+                            colorScheme="green"
+                            onClick={markCommentAsSolutionToTicket}
+                            display="inline-block"
+                          >
+                            Mark as Solution
+                          </Button>
+                        ) : (
+                          <Button
+                            display="inline-block"
+                            onClick={unmarkCommentAsSolution}
+                          >
+                            Unmark Solution
+                          </Button>
+                        )
+                      }
+                    </>
+                  ) : null}
+
+                  {user.sub === commentDetails.postedByUser.sub ? (
+                    <HStack display="inline-block" float="right">
+                      <Button
+                        leftIcon={<EditIcon />}
+                        colorScheme="blue"
+                        onClick={() => setEditingComment(true)}
+                      >
+                        Edit
+                      </Button>
+                      <Button
+                        bg="red.500"
+                        color="white"
+                        leftIcon={<DeleteIcon />}
+                        _hover={{ bg: "red.600" }}
+                        onClick={deleteComment}
+                      >
+                        Delete
+                      </Button>
+                    </HStack>
+                  ) : null}
+                </Box>
+                {/* Show menu for smaller screens (<768px), and display it only if the
+                    user logged in is this comment's author or the ticket's author */}
+                <Box display={{ base: "contents", md: "none" }}>
+                  {((commentTicket.postedByUser !== undefined &&
+                    commentTicket.postedByUser.sub === user.sub) ||
+                    user.sub === commentDetails.postedByUser.sub) && (
+                    <Menu>
+                      <MenuButton
+                        as={IconButton}
+                        aria-label="Options"
+                        icon={<HamburgerIcon />}
+                        variant="outline"
+                      />
+                      <MenuList>
+                        {commentTicket.postedByUser !== undefined &&
+                        commentTicket.postedByUser.sub === user.sub ? (
+                          // Condition will be updated to 'if the user logged in is the
+                          // poster of the ticket, and the '
+                          !commentDetails.solutionToTicket ? (
+                            <MenuItem
+                              icon={<CheckIcon />}
+                              onClick={markCommentAsSolutionToTicket}
+                              display="inline-block"
+                              _hover={{ bg: "red.600" }}
+                            >
+                              Mark as Solution
+                            </MenuItem>
+                          ) : (
+                            <MenuItem
+                              display="inline-block"
+                              icon={<CloseIcon />}
+                              onClick={unmarkCommentAsSolution}
+                            >
+                              Unmark Solution
+                            </MenuItem>
+                          )
+                        ) : null}
+
+                        {user.sub === commentDetails.postedByUser.sub ? (
+                          <>
+                            <MenuItem
+                              icon={<EditIcon />}
+                              _hover={{ bg: "blue.400", color: "white" }}
+                              onClick={() => setEditingComment(true)}
+                            >
+                              Edit
+                            </MenuItem>
+                            <MenuItem
+                              icon={<DeleteIcon />}
+                              _hover={{ bg: "red.600", color: "white" }}
+                              onClick={deleteComment}
+                            >
+                              Delete
+                            </MenuItem>
+                          </>
+                        ) : null}
+                      </MenuList>
+                    </Menu>
+                  )}
+                </Box>
+              </>
+            )}
           </>
         )}
       </Box>

@@ -5,8 +5,9 @@ import axios from "axios";
 import TicketBrief from "../components/TicketBrief";
 import { useSelector, useDispatch } from "react-redux";
 import { updateAllTickets } from "../features/ticketListSlice/ticketListSlice";
+import DefaultLayout from '../layout/DefaultLayout'
 
-export default function Home() {
+export default function Dashboard() {
   const allTickets = useSelector((state) => state.ticketList.ticketList);
   const dispatch = useDispatch();
 
@@ -21,16 +22,18 @@ export default function Home() {
   }, []);
 
   return (
-    <Box as="section" pt="2rem">
-      {allTickets === [] ? (
-        <Loading />
-      ) : (
-        <VStack spacing={"1em"}>
-          {allTickets.map((ticket, index) => (
-            <TicketBrief ticket={ticket} key={index} />
-          ))}
-        </VStack>
-      )}
-    </Box>
+    <DefaultLayout>
+      <Box as="section" pt="2rem">
+        {allTickets === [] ? (
+          <Loading />
+        ) : (
+          <VStack spacing={"1em"}>
+            {allTickets.map((ticket, index) => (
+              <TicketBrief ticket={ticket} key={index} />
+            ))}
+          </VStack>
+        )}
+      </Box>
+    </DefaultLayout>
   );
 }

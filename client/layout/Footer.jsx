@@ -53,7 +53,7 @@ export default function Footer() {
         justify={{ base: "center", md: "space-between" }}
         align={{ base: "center", md: "center" }}
       >
-        <Image boxSize="3rem" src="android-chrome-192x192.png" />
+        <Image boxSize="3rem" src="https://res.cloudinary.com/dwzav7iui/image/upload/v1658078371/android-chrome-192x192_fg0f07.png" />
         <Text>
           © 2022 Avalon Bugtracker made by Noah Chernet. All rights reserved
         </Text>

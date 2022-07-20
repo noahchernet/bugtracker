@@ -26,7 +26,7 @@ export default function TicketBrief({ ticket }) {
       <Box
         as={motion.div}
         borderWidth="0.1rem"
-        minWidth="40rem"
+        w={{ base: "85%", md: "", lg: "40rem" }}
         p="1rem"
         borderColor="gray.200"
         bg="gray.50"
@@ -35,7 +35,7 @@ export default function TicketBrief({ ticket }) {
         whileTap={{ scale: 1.009 }}
       >
         <HStack justify="space-between">
-          <Text as="h2" fontSize="2xl">
+          <Text as="h2" fontSize={{ base: "md", lg: "2xl" }}>
             {ticket.title}
           </Text>
           {ticket.solved ? (

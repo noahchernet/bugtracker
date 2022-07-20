@@ -27,7 +27,7 @@ export default function CommentsList({ ticket }) {
   }, [router.isReady, ticket]);
 
   return (
-    <Box w="50%">
+    <Box w={{ base: "90%", md: "75%" }}>
       {commentList.map((comment, index) => (
         <Comment commentDetails={comment} commentTicket={ticket} key={index} />
       ))}

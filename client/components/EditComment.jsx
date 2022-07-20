@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { CheckIcon } from "@chakra-ui/icons";
-import { Button, HStack, Spacer, Textarea } from "@chakra-ui/react";
-import { GiCancel } from "react-icons/gi";
+import { CheckIcon, CloseIcon } from "@chakra-ui/icons";
+import { Button, Stack, Spacer, Textarea } from "@chakra-ui/react";
 import { useDispatch } from "react-redux";
 import { updateOneComment } from "../features/commentListSlice/commentListSlice";
 
@@ -58,7 +57,7 @@ const EditComment = ({ commentToEdit, setEditingComment }) => {
         }
       />
 
-      <HStack pt="1rem">
+      <Stack direction={{ base: "column", md: "row" }} pt="1rem">
         <input
           type="file"
           name="attachments"
@@ -81,17 +80,19 @@ const EditComment = ({ commentToEdit, setEditingComment }) => {
           leftIcon={<CheckIcon />}
           colorScheme="green"
           isLoading={savingComment}
+          px={7}
           onClick={() => saveComment()}
         >
           Save
         </Button>
         <Button
-          leftIcon={<GiCancel />}
+          leftIcon={<CloseIcon />}
+          px={7}
           onClick={() => setEditingComment(false)}
         >
           Cancel
         </Button>
-      </HStack>
+      </Stack>
     </>
   );
 };

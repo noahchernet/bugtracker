@@ -5,7 +5,7 @@ import {
   FormControl,
   Textarea,
   Button,
-  HStack,
+  Stack,
   Spacer,
   useDisclosure,
 } from "@chakra-ui/react";
@@ -71,7 +71,7 @@ export default function NewCommentDialog({ ticketId }) {
       .finally(() => setAddingComment(false));
   };
   return (
-    <Box w="50%">
+    <Box w={{ base: "90%", md: "75%", lg: "75%" }}>
       <FormControl>
         <Textarea
           placeholder="Enter your comment to the ticket here..."
@@ -85,7 +85,7 @@ export default function NewCommentDialog({ ticketId }) {
           }
         />
       </FormControl>
-      <HStack mt="1rem">
+      <Stack direction={{ base: "column", md: "row" }} mt="1rem">
         <input
           type="file"
           name="attachments"
@@ -114,7 +114,7 @@ export default function NewCommentDialog({ ticketId }) {
         >
           Comment
         </Button>
-      </HStack>
+      </Stack>
       <Alert isOpen={isOpen} onClose={onClose} info={alertInfo} />
     </Box>
   );

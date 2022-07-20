@@ -97,7 +97,7 @@ export default function NewTicket({ isModalOpen, onModalClose }) {
     <>
       <Modal isOpen={isModalOpen} onClose={onModalClose} motionPreset="scale">
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent w={{ base: "90%", md: "full" }}>
           <ModalHeader>Add a Ticket</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
@@ -126,6 +126,7 @@ export default function NewTicket({ isModalOpen, onModalClose }) {
                       value: e.target.value,
                     })
                   }
+                  minH="14rem"
                 />
               </FormControl>
               <FormControl>

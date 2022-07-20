@@ -60,6 +60,7 @@ const AuthButton = () => {
           bg={"green.400"}
           _hover={{ bg: "green.300" }}
           onClick={onOpen}
+          mb={2}
         >
           New Ticket
         </Button>
@@ -100,8 +101,8 @@ export default function NavBar() {
           <HStack
             spacing={8}
             alignItems={"center"}
-            textAlign={{base: 'center', lg: 'right'}}
-            mx={{base:'auto', lg: ''}}
+            textAlign={{ base: "center", lg: "right" }}
+            mx={{ base: "auto", lg: "" }}
           >
             <NextLink href="/" passHref>
               <Link>
@@ -127,21 +128,27 @@ export default function NavBar() {
             </HStack>
           </HStack>
           <Box display={{ base: "none", lg: "contents" }}>
-          <Spacer />
+            <Spacer />
             <AuthButton />
           </Box>
         </Flex>
 
         {isOpen ? (
-          <Box pb={4} display={{ lg: "none" }} bg="gray.200" mx="-1rem" px="1rem">
+          <Box
+            pb={4}
+            display={{ lg: "none" }}
+            bg="gray.200"
+            mx="-1rem"
+            px="1rem"
+          >
             <Stack as={"nav"} spacing={4} textAlign="center">
               {Links.map((link) => (
                 <NavLink key={link}>{link}</NavLink>
               ))}
 
-              <NextLink href="/" passHref>
+              {/* <NextLink href="/" passHref>
                 <Link></Link>
-              </NextLink>
+              </NextLink> */}
               <AuthButton />
             </Stack>
           </Box>

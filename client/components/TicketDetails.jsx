@@ -14,7 +14,6 @@ import {
   MenuItem,
   Image,
   useDisclosure,
-  Flex,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { EditIcon, DeleteIcon, HamburgerIcon } from "@chakra-ui/icons";
@@ -69,15 +68,15 @@ export default function TicketDetails({ ticket }) {
   };
 
   return (
-    <Box bg="gray.100" p="2rem" w={{base: '90%', md:'75%'}}>
+    <Box bg="gray.100" p="2rem" w={{ base: "90%", md: "75%" }}>
       {!editingTicket ? (
         <>
           <Heading
             as={"h1"}
-            textDecoration={{base:'none', md:"underline"}}
-            textUnderlineOffset={{base:'0.25rem', lg:"1rem"}}
+            textDecoration={{ base: "none", md: "underline" }}
+            textUnderlineOffset={{ base: "0.25rem", lg: "1rem" }}
             pb={"2rem"}
-            size={{base: 'md', lg:"lg"}}
+            size={{ base: "md", lg: "lg" }}
           >
             {ticket.title}
           </Heading>
@@ -107,7 +106,11 @@ export default function TicketDetails({ ticket }) {
           {/* Render after the ticket is fetched from the server */}
 
           {ticket.postedByUser && (
-            <Stack direction={{base: 'column', md: 'row'}} pb="1rem" align={'center'}>
+            <Stack
+              direction={{ base: "column", md: "row" }}
+              pb="1rem"
+              align={"center"}
+            >
               <Avatar
                 size={"lg"}
                 name={

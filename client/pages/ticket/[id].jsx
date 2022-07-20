@@ -23,11 +23,12 @@ export default function DetailedTicket() {
     }
   }, [router.isReady]);
 
-  return loading && ticket === {} && router.query === {} ? (
+  return loading || ticket === {} || router.query === {} ? (
     <Loading />
   ) : (
     <VStack pt="3rem">
-      <TicketDetails ticket={ticket} />
+      {/* Sending Redux's state rather than useState's so TicketDetails updates whenever Redux's ticketList updates */}
+      <TicketDetails ticket={allTickets.filter((ticket) => ticket._id === router.query.id)[0]} />
       <Divider bg="gray.900" w="45%" />
       <CommentsList ticket={ticket} />
       <NewCommentDialog ticketId={router.query.id} />

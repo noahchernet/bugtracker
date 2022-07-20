@@ -6,6 +6,7 @@ import CommentsList from "../../components/CommentsList";
 import NewCommentDialog from "../../components/NewCommentDialog";
 import { useSelector } from "react-redux";
 import Loading from "../../components/Loading";
+import DefaultLayout from "../../layout/DefaultLayout";
 
 export default function DetailedTicket() {
   const allTickets = useSelector((state) => state.ticketList.ticketList);
@@ -23,15 +24,22 @@ export default function DetailedTicket() {
     }
   }, [router.isReady]);
 
-  return loading || ticket === {} || router.query === {} ? (
-    <Loading />
-  ) : (
-    <VStack pt="3rem">
-      {/* Sending Redux's state rather than useState's so TicketDetails updates whenever Redux's ticketList updates */}
-      <TicketDetails ticket={allTickets.filter((ticket) => ticket._id === router.query.id)[0]} />
-      <Divider bg="gray.900" w="45%" />
-      <CommentsList ticket={ticket} />
-      <NewCommentDialog ticketId={router.query.id} />
-    </VStack>
+  return (
+    <DefaultLayout>
+      loading || ticket === {} || router.query === {} ? (
+      <Loading />) : (
+      <VStack pt="3rem">
+        {/* Sending Redux's state rather than useState's so TicketDetails updates whenever Redux's ticketList updates */}
+        <TicketDetails
+          ticket={
+            allTickets.filter((ticket) => ticket._id === router.query.id)[0]
+          }
+        />
+        <Divider bg="gray.900" w="45%" />
+        <CommentsList ticket={ticket} />
+        <NewCommentDialog ticketId={router.query.id} />
+      </VStack>
+      )
+    </DefaultLayout>
   );
 }

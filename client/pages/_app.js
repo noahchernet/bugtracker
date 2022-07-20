@@ -2,7 +2,6 @@ import { UserProvider } from "@auth0/nextjs-auth0";
 import Head from "next/head";
 import { ChakraProvider } from "@chakra-ui/react";
 import "../styles/globals.css";
-import DefaultLayout from "../layout/DefaultLayout";
 import { persistor, store } from "../app/store";
 import { PersistGate } from "redux-persist/integration/react";
 import { Provider } from "react-redux";
@@ -15,7 +14,6 @@ function MyApp({ Component, pageProps }) {
         <Provider store={store}>
           <PersistGate loading={<Loading />} persistor={persistor}>
             <ChakraProvider>
-              <DefaultLayout>
                 <Head>
                   <title>Avalon Bugtracker </title>
                   <link
@@ -45,7 +43,6 @@ function MyApp({ Component, pageProps }) {
                 </Head>
 
                 <Component {...pageProps} />
-              </DefaultLayout>
             </ChakraProvider>
           </PersistGate>
         </Provider>

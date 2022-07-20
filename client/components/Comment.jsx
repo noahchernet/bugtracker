@@ -80,7 +80,14 @@ export default function Comment({ commentDetails, commentTicket }) {
       .then((res) => {
         dispatch(markCommentAsSolution(commentDetails));
         // console.log(res);
-        dispatch(updateOneTicket({...commentTicket, solved: true, solutionToTicket: commentDetails._id}))
+        // Updating ticket to mark it as solved
+        dispatch(
+          updateOneTicket({
+            ...commentTicket,
+            solved: true,
+            solutionToTicket: commentDetails._id,
+          })
+        );
       })
       .catch((err) => {
         console.log(err);
@@ -104,7 +111,14 @@ export default function Comment({ commentDetails, commentTicket }) {
         dispatch(
           updateOneComment({ ...commentDetails, solutionToTicket: false })
         );
-        dispatch(updateOneTicket({...commentTicket, solved: false, solutionToTicket: null}))
+        // Updating ticket to mark it as unsolved
+        dispatch(
+          updateOneTicket({
+            ...commentTicket,
+            solved: false,
+            solutionToTicket: null,
+          })
+        );
       })
       .catch((err) => {
         console.log(err);

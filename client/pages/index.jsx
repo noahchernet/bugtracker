@@ -17,6 +17,7 @@ import { FcCollaboration } from "react-icons/fc";
 import { FaCheckCircle, FaTwitter } from "react-icons/fa";
 import { AiFillLinkedin, AiFillGithub } from "react-icons/ai";
 import Footer from "../layout/Footer";
+import { useRouter } from "next/router";
 
 const HomePageNavBar = () => {
   return (
@@ -99,22 +100,27 @@ const Hero = () => {
 };
 
 const Features = () => {
+  const router = useRouter();
   return (
-    <Box py="2rem" bg="#f0f3f6" minH="100vh">
-      <Heading id="features" textAlign="center" py="2rem">
+    <Box py="2rem" bg="#f0f3f6" minH="80vh" position="relative">
+      <Heading id="features" textAlign="center" py="2rem" fontSize="4rem">
         Features
       </Heading>
       <Stack
-        direction={{ base: "column", md: "row" }}
+        direction={{ base: "column", lg: "row" }}
         justify="center"
+        align={{ base: "center", md: "" }}
         spacing={14}
+        w="100%"
+        h="auto"
+        position="relative"
       >
         <Box
           boxShadow="xl"
           w={{ md: "20rem" }}
           py="2rem"
           borderRadius="0.75rem"
-          px="1rem"
+          px={{ base: "3rem", md: "1rem" }}
           bg="white"
         >
           <Center>
@@ -124,7 +130,7 @@ const Features = () => {
             Create Tickets
           </Heading>
           <Center>
-            <Text pt="2.5rem" w="12rem">
+            <Text pt="2.5rem" w="12rem" fontSize="lg">
               Write tickets seamlessly, describe your issues and add pictures
               and screenshots.
             </Text>
@@ -135,7 +141,7 @@ const Features = () => {
           w={{ md: "20rem" }}
           py="2rem"
           borderRadius="0.75rem"
-          px="1rem"
+          px={{ base: "3rem", md: "1rem" }}
           bg="white"
         >
           <Center>
@@ -145,7 +151,7 @@ const Features = () => {
             Discuss
           </Heading>
           <Center>
-            <Text pt="2.5rem" w="12rem">
+            <Text pt="1.5rem" w="12rem" fontSize="lg">
               Discuss with your colleagues and teammates about the issue by
               commenting on the ticket
             </Text>
@@ -156,7 +162,7 @@ const Features = () => {
           w={{ md: "20rem" }}
           py="2rem"
           borderRadius="0.75rem"
-          px="1rem"
+          px={{ base: "3rem", md: "1rem" }}
           bg="white"
         >
           <Center>
@@ -166,13 +172,25 @@ const Features = () => {
             Solve
           </Heading>
           <Center>
-            <Text pt="2.5rem" w="12rem">
+            <Text pt="2.5rem" w="12rem" fontSize="lg">
               Once the solution is found, you can mark the comment that solved
               it.
             </Text>
           </Center>
         </Box>
       </Stack>
+
+      <Center>
+        <Button
+          colorScheme="blue"
+          onClick={() => router.push("/dashboard")}
+          my={{ base: "4rem", md: "8rem" }}
+          textAlign="center"
+          size="lg"
+        >
+          Get Started 🡲
+        </Button>
+      </Center>
     </Box>
   );
 };
@@ -181,7 +199,6 @@ const SocialButton = ({ children, label, href }) => {
   return (
     <Button
       bg={useColorModeValue("blackAlpha.100", "whiteAlpha.100")}
-      // rounded={"full"}
       borderRadius="50%"
       w={12}
       h={12}
@@ -204,7 +221,7 @@ const SocialButton = ({ children, label, href }) => {
 
 const ContactUs = () => {
   return (
-    <Center>
+    <Center id="contactus">
       <Stack
         direction={{ base: "column", md: "row" }}
         py="2rem"

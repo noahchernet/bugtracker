@@ -10,6 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { FaTwitter } from "react-icons/fa";
 import { AiFillLinkedin, AiFillGithub } from "react-icons/ai";
+import { SiUpwork } from "react-icons/si";
 
 const SocialButton = ({ children, label, href }) => {
   return (
@@ -53,12 +54,23 @@ export default function Footer() {
         justify={{ base: "center", md: "space-between" }}
         align={{ base: "center", md: "center" }}
       >
-        <Image boxSize="3rem" src="https://res.cloudinary.com/dwzav7iui/image/upload/v1658078371/android-chrome-192x192_fg0f07.png" />
+        <Image
+          boxSize="3rem"
+          src="https://res.cloudinary.com/dwzav7iui/image/upload/v1658078371/android-chrome-192x192_fg0f07.png"
+        />
         <Text>
           © 2022 Avalon Bugtracker made by Noah Chernet. All rights reserved
         </Text>
         <Stack direction={"row"} spacing={6}>
           <SocialButton
+            label={"Upwork"}
+            href={
+              "https://www.upwork.com/freelancers/~0177214f5016749536?viewMode=1"
+            }
+          >
+            <SiUpwork />
+          </SocialButton>
+          {/* <SocialButton
             label={"Twitter"}
             href={"https://twitter.com/noah_chernet"}
           >
@@ -75,7 +87,7 @@ export default function Footer() {
             href={"https://github.com/noahchernet"}
           >
             <AiFillGithub />
-          </SocialButton>
+          </SocialButton> */}
         </Stack>
       </Container>
     </Box>

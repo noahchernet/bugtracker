@@ -15,6 +15,7 @@ import { MdOutlineAddCircle } from "react-icons/md";
 import { FcCollaboration } from "react-icons/fc";
 import { FaCheckCircle, FaTwitter } from "react-icons/fa";
 import { AiFillLinkedin, AiFillGithub } from "react-icons/ai";
+import { SiUpwork } from "react-icons/si";
 import Footer from "../layout/Footer";
 import { useRouter } from "next/router";
 import { motion } from "framer-motion";
@@ -265,11 +266,11 @@ const ContactUs = () => {
           <Heading fontSize={{ base: "2xl" }}>Hi! I'm Noah Chernet</Heading>
           <Text>
             I'm the software engineer who built this site. You may reach me out
-            through
+            through Upwork
           </Text>
 
           <Stack direction={"row"} spacing={6} pt="1rem" justify="center">
-            <SocialButton
+            {/* <SocialButton
               label={"GitHub"}
               href={"https://github.com/noahchernet"}
             >
@@ -287,6 +288,14 @@ const ContactUs = () => {
               href={"https://www.linkedin.com/in/noah-chernet-447a24232/"}
             >
               <AiFillLinkedin />
+            </SocialButton> */}
+            <SocialButton
+              label={"Upwork"}
+              href={
+                "https://www.upwork.com/freelancers/~0177214f5016749536?viewMode=1"
+              }
+            >
+              <SiUpwork />
             </SocialButton>
           </Stack>
         </Box>

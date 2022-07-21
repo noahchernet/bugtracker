@@ -20,13 +20,13 @@ import Footer from "../layout/Footer";
 import { useRouter } from "next/router";
 
 const HomePageNavBar = () => {
+  const router = useRouter();
   return (
     <Stack
       direction={{ base: "column", md: "row" }}
       justify="space-around"
       py="1rem"
       align="center"
-      // bgGradient={"linear(to-tr, #89f7fe, #66a6ff)"}
       boxShadow="lg"
       zIndex={2}
     >
@@ -54,11 +54,20 @@ const HomePageNavBar = () => {
           Contact Us
         </Text>
       </Link>
-      <Link href="/dashboard">
+      {/* <Link href="/dashboard">
         <Text color="#1852a5" fontSize="lg" fontFamily="Helvetica">
           Get Started 🡲
         </Text>
-      </Link>
+      </Link> */}
+      <Button
+        colorScheme="blue"
+        onClick={() => router.push("/dashboard")}
+        my={{ base: "4rem", md: "8rem" }}
+        textAlign="center"
+        size="lg"
+      >
+        Get Started 🡲
+      </Button>
     </Stack>
   );
 };
@@ -219,7 +228,7 @@ const SocialButton = ({ children, label, href }) => {
 
 const ContactUs = () => {
   return (
-    <Center>
+    <Center id="contactus">
       <Stack
         direction={{ base: "column", md: "row" }}
         py="2rem"

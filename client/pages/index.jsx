@@ -7,11 +7,15 @@ import {
   Link,
   Text,
   Center,
+  Button,
+  VisuallyHidden,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import React from "react";
 import { MdOutlineAddCircle } from "react-icons/md";
 import { FcCollaboration } from "react-icons/fc";
-import { FaCheckCircle } from "react-icons/fa";
+import { FaCheckCircle, FaTwitter } from "react-icons/fa";
+import { AiFillLinkedin, AiFillGithub } from "react-icons/ai";
 
 const HomePageNavBar = () => {
   return (
@@ -95,7 +99,7 @@ const Hero = () => {
 
 const Features = () => {
   return (
-    <Box py="2rem">
+    <Box py="2rem" bg="#f0f3f6" minH="100vh">
       <Heading id="features" textAlign="center" py="2rem">
         Features
       </Heading>
@@ -110,6 +114,7 @@ const Features = () => {
           py="2rem"
           borderRadius="0.75rem"
           px="1rem"
+          bg="white"
         >
           <Center>
             <MdOutlineAddCircle size={80} color="#68d391" />
@@ -130,6 +135,7 @@ const Features = () => {
           py="2rem"
           borderRadius="0.75rem"
           px="1rem"
+          bg="white"
         >
           <Center>
             <FcCollaboration size={80} color="#68d391" />
@@ -150,9 +156,10 @@ const Features = () => {
           py="2rem"
           borderRadius="0.75rem"
           px="1rem"
+          bg="white"
         >
           <Center>
-            <FaCheckCircle size={80} color="#68d391" />
+            <FaCheckCircle size={80} color="#2196f3" />
           </Center>
           <Heading align="center" pt="0.75rem">
             Solve
@@ -169,6 +176,84 @@ const Features = () => {
   );
 };
 
+const SocialButton = ({ children, label, href }) => {
+  return (
+    <Button
+      bg={useColorModeValue("blackAlpha.100", "whiteAlpha.100")}
+      // rounded={"full"}
+      borderRadius="50%"
+      w={12}
+      h={12}
+      cursor={"pointer"}
+      as={"a"}
+      href={href}
+      display={"inline-flex"}
+      alignItems={"center"}
+      justifyContent={"center"}
+      transition={"background 0.3s ease"}
+      _hover={{
+        bg: useColorModeValue("blackAlpha.200", "whiteAlpha.200"),
+      }}
+    >
+      <VisuallyHidden>{label}</VisuallyHidden>
+      {children}
+    </Button>
+  );
+};
+
+const ContactUs = () => {
+  return (
+    <Center>
+      <Stack
+        direction={{ base: "column", md: "row" }}
+        py="2rem"
+        bg="#f5f5f"
+        mx="auto"
+        justify="center"
+        align="center"
+        spacing="3rem"
+      >
+        <Image
+          src="https://avatars.githubusercontent.com/u/86301024?v=4"
+          boxSize={{ base: "10rem", md: "12rem" }}
+          border="1.4rem"
+          borderColor="#f0f3f6"
+          borderRadius="50%"
+        />
+        <Box textAlign="left" px={{ base: "2rem", md: "" }}>
+          <Heading fontSize={{ base: "2xl" }}>Hi! I'm Noah Chernet</Heading>
+          <Text>
+            I'm the software engineer who built this site. You may reach me out
+            through:
+          </Text>
+
+          <Stack direction={"row"} spacing={6} pt="1rem" justify="center">
+            <SocialButton
+              label={"GitHub"}
+              href={"https://github.com/noahchernet"}
+            >
+              <AiFillGithub />
+            </SocialButton>
+
+            <SocialButton
+              label={"Twitter"}
+              href={"https://twitter.com/noah_chernet"}
+            >
+              <FaTwitter />
+            </SocialButton>
+            <SocialButton
+              label={"LinkedIn"}
+              href={"https://www.linkedin.com/in/noah-chernet-447a24232/"}
+            >
+              <AiFillLinkedin />
+            </SocialButton>
+          </Stack>
+        </Box>
+      </Stack>
+    </Center>
+  );
+};
+
 export default function Home() {
   return (
     <>
@@ -176,31 +261,7 @@ export default function Home() {
       {/* <Hero /> */}
       <Hero />
       <Features />
-      <Text fontSize="lg">
-        sunt in culpa qui officia deserunt mollit anim id est laborum. tempor
-        incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-        quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-        consequat. Duis aute irure dolor in reprehenderit in voluptate velit
-        esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-        cupidatat non proident, sunt in culpa qui officia deserunt mollit anim
-        id est laborum. tempor incididunt ut labore et dolore magna aliqua. Ut
-        enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-        aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit
-        in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-        Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
-        officia deserunt mollit anim id est laborum. tempor incididunt ut
-        labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-        exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-        Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
-        dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-        proident, sunt in culpa qui officia deserunt mollit anim id est
-        laborum. tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-        minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-        ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
-        voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
-        sint occaecat cupidatat non proident, sunt in culpa qui officia
-        deserunt mollit anim id est laborum.
-      </Text>
+      <ContactUs />
     </>
   );
 }

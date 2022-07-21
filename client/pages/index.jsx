@@ -16,6 +16,7 @@ import { MdOutlineAddCircle } from "react-icons/md";
 import { FcCollaboration } from "react-icons/fc";
 import { FaCheckCircle, FaTwitter } from "react-icons/fa";
 import { AiFillLinkedin, AiFillGithub } from "react-icons/ai";
+import Footer from "../layout/Footer";
 
 const HomePageNavBar = () => {
   return (
@@ -262,6 +263,8 @@ export default function Home() {
       <Hero />
       <Features />
       <ContactUs />
+      <Box py={{ base: "8rem", md: "2rem" }}></Box>
+      <Footer />
     </>
   );
 }

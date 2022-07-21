@@ -76,13 +76,14 @@ const Hero = () => {
       <Box py="12%">
         <Heading
           mt="12rem"
-          ml="5rem"
+          mx={{ base: "auto", md: "" }}
+          ml={{ base: "", md: "5rem" }}
           p="2.5rem"
-          size="xl"
-          w="40%"
+          size={{ base: "xl", md: "xl" }}
+          w={{ base: "80%", md: "40%" }}
           fontFamily="Helvetica"
           color="#192d51"
-          bgColor="rgba(244,244,244,0.8)"
+          bgColor="rgba(244,244,244,0.85)"
           // bgGradien="linear(to-r, rgba(244,244,244,0.8), rgba(244,244,244,0.8)"
           borderRadius="3rem"
         >
@@ -92,9 +93,6 @@ const Hero = () => {
           <br /> The best issue tracking tool used by developer teams
         </Heading>
       </Box>
-      {/* <Heading textAlign="center" fontSize="xl">
-        Parallax
-      </Heading> */}
     </Box>
   );
 };
@@ -102,7 +100,7 @@ const Hero = () => {
 const Features = () => {
   const router = useRouter();
   return (
-    <Box py="2rem" bg="#f0f3f6" minH="80vh" position="relative">
+    <Box py="2rem" bg="#f0f3f6" minH="00vh" position="relative">
       <Heading id="features" textAlign="center" py="2rem" fontSize="4rem">
         Features
       </Heading>
@@ -153,7 +151,7 @@ const Features = () => {
           <Center>
             <Text pt="1.5rem" w="12rem" fontSize="lg">
               Discuss with your colleagues and teammates about the issue by
-              commenting on the ticket
+              commenting on the ticket.
             </Text>
           </Center>
         </Box>
@@ -221,7 +219,7 @@ const SocialButton = ({ children, label, href }) => {
 
 const ContactUs = () => {
   return (
-    <Center id="contactus">
+    <Center>
       <Stack
         direction={{ base: "column", md: "row" }}
         py="2rem"
@@ -242,7 +240,7 @@ const ContactUs = () => {
           <Heading fontSize={{ base: "2xl" }}>Hi! I'm Noah Chernet</Heading>
           <Text>
             I'm the software engineer who built this site. You may reach me out
-            through:
+            through
           </Text>
 
           <Stack direction={"row"} spacing={6} pt="1rem" justify="center">

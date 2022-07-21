@@ -36,7 +36,12 @@ const HomePageNavBar = () => {
           boxSize="3rem"
           src="https://res.cloudinary.com/dwzav7iui/image/upload/v1658078371/android-chrome-192x192_fg0f07.png"
         />
-        <Heading as="h2" size="lg" fontWeight="light" fontFamily="Helvetica">
+        <Heading
+          as="h2"
+          size={{ base: "md", md: "lg" }}
+          fontWeight="light"
+          fontFamily="Helvetica"
+        >
           Avalon Bugtracker
         </Heading>
       </HStack>
@@ -56,13 +61,13 @@ const HomePageNavBar = () => {
         </Text>
       </Link> */}
 
-      <Box display={{ base: "none", md: "contents" }}>
+      <Box display={{ md: "contents" }}>
         <Button
           colorScheme="blue"
           onClick={() => router.push("/dashboard")}
           // my={{ base: "4rem", md: "8rem" }}
           textAlign="center"
-          size="lg"
+          size={{ base: "sm", md: "lg" }}
         >
           Get Started 🡲
         </Button>

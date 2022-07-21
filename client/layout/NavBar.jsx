@@ -29,7 +29,6 @@ const NavLink = ({ children }) => (
       textDecoration: "none",
       bg: useColorModeValue("gray.200", "gray.700"),
     }}
-    href={"#"}
   >
     {children}
   </Link>
@@ -104,7 +103,7 @@ export default function NavBar() {
             textAlign={{ base: "center", lg: "right" }}
             mx={{ base: "auto", lg: "" }}
           >
-            <NextLink href="/" passHref>
+            <NextLink href="/dashboard" passHref>
               <Link>
                 <HStack spacing={"1rem"}>
                   <Image
@@ -122,9 +121,17 @@ export default function NavBar() {
               spacing={4}
               display={{ base: "none", lg: "flex" }}
             >
-              {Links.map((link) => (
-                <NavLink key={link}>{link}</NavLink>
-              ))}
+              <NextLink href="/dashboard" passHref>
+                <NavLink>Dashboard</NavLink>
+              </NextLink>
+              <NavLink>
+                <NextLink href="/">About</NextLink>
+              </NavLink>
+              <NavLink>
+                <NextLink href="/#contactus" passHref>
+                  Contact Us
+                </NextLink>
+              </NavLink>
             </HStack>
           </HStack>
           <Box display={{ base: "none", lg: "contents" }}>
@@ -142,13 +149,17 @@ export default function NavBar() {
             px="1rem"
           >
             <Stack as={"nav"} spacing={4} textAlign="center">
-              {Links.map((link) => (
-                <NavLink key={link}>{link}</NavLink>
-              ))}
-
-              {/* <NextLink href="/" passHref>
-                <Link></Link>
-              </NextLink> */}
+              <NextLink href="/dashboard" passHref>
+                <NavLink>Dashboard</NavLink>
+              </NextLink>
+              <NavLink>
+                <NextLink href="/">About</NextLink>
+              </NavLink>
+              <NavLink>
+                <NextLink href="/#contactus" passHref>
+                  Contact Us
+                </NextLink>
+              </NavLink>
               <AuthButton />
             </Stack>
           </Box>

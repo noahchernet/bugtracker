@@ -4,7 +4,6 @@ import {
   Box,
   Stack,
   HStack,
-  Link,
   Text,
   Center,
   Button,
@@ -18,19 +17,21 @@ import { FaCheckCircle, FaTwitter } from "react-icons/fa";
 import { AiFillLinkedin, AiFillGithub } from "react-icons/ai";
 import Footer from "../layout/Footer";
 import { useRouter } from "next/router";
+import { motion } from "framer-motion";
 
 const HomePageNavBar = () => {
   const router = useRouter();
   return (
-    <Stack
-      direction={{ base: "column", md: "row" }}
+    <HStack
+      // direction={{ base: "column", md: "row" }}
       justify="space-around"
       py="1rem"
       align="center"
       boxShadow="lg"
       zIndex={2}
+      bg="#f7fafc"
     >
-      <HStack mr="-10rem">
+      <HStack>
         <Image
           boxSize="3rem"
           src="https://res.cloudinary.com/dwzav7iui/image/upload/v1658078371/android-chrome-192x192_fg0f07.png"
@@ -39,7 +40,7 @@ const HomePageNavBar = () => {
           Avalon Bugtracker
         </Heading>
       </HStack>
-      <Link href="#">
+      {/* <Link href="#">
         <Text color="#1852a5" fontSize="lg" fontFamily="Helvetica">
           Home
         </Text>
@@ -53,22 +54,20 @@ const HomePageNavBar = () => {
         <Text color="#1852a5" fontSize="lg" fontFamily="Helvetica">
           Contact Us
         </Text>
-      </Link>
-      {/* <Link href="/dashboard">
-        <Text color="#1852a5" fontSize="lg" fontFamily="Helvetica">
-          Get Started 🡲
-        </Text>
       </Link> */}
-      <Button
-        colorScheme="blue"
-        onClick={() => router.push("/dashboard")}
-        my={{ base: "4rem", md: "8rem" }}
-        textAlign="center"
-        size="lg"
-      >
-        Get Started 🡲
-      </Button>
-    </Stack>
+
+      <Box display={{ base: "none", md: "contents" }}>
+        <Button
+          colorScheme="blue"
+          onClick={() => router.push("/dashboard")}
+          // my={{ base: "4rem", md: "8rem" }}
+          textAlign="center"
+          size="lg"
+        >
+          Get Started 🡲
+        </Button>
+      </Box>
+    </HStack>
   );
 };
 
@@ -123,12 +122,16 @@ const Features = () => {
         position="relative"
       >
         <Box
+          as={motion.div}
           boxShadow="xl"
           w={{ md: "20rem" }}
           py="2rem"
           borderRadius="0.75rem"
           px={{ base: "3rem", md: "1rem" }}
           bg="white"
+          initial={{ opacity: 0, x: -50 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          transition={{ ease: "easeOut", duration: 5, delay: 1 }}
         >
           <Center>
             <MdOutlineAddCircle size={80} color="#68d391" />
@@ -144,12 +147,16 @@ const Features = () => {
           </Center>
         </Box>
         <Box
+          as={motion.div}
           boxShadow="xl"
           w={{ md: "20rem" }}
           py="2rem"
           borderRadius="0.75rem"
           px={{ base: "3rem", md: "1rem" }}
           bg="white"
+          initial={{ opacity: 0, y: -50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ ease: "easeOut", duration: 5, delay: 1 }}
         >
           <Center>
             <FcCollaboration size={80} color="#68d391" />
@@ -165,12 +172,16 @@ const Features = () => {
           </Center>
         </Box>
         <Box
+          as={motion.div}
           boxShadow="xl"
           w={{ md: "20rem" }}
           py="2rem"
           borderRadius="0.75rem"
           px={{ base: "3rem", md: "1rem" }}
           bg="white"
+          initial={{ opacity: 0, x: 50 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          transition={{ ease: "easeOut", duration: 5, delay: 1 }}
         >
           <Center>
             <FaCheckCircle size={80} color="#2196f3" />
@@ -228,7 +239,7 @@ const SocialButton = ({ children, label, href }) => {
 
 const ContactUs = () => {
   return (
-    <Center id="contactus">
+    <Center id="contactus" px="2rem">
       <Stack
         direction={{ base: "column", md: "row" }}
         py="2rem"

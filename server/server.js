@@ -29,6 +29,9 @@ app.use(formidableMiddleware());
 app.use("/users", userRouter);
 app.use("/tickets", ticketRouter);
 app.use("/comments", commentRouter);
+app.use("/", (req, res) => {
+  return res.status(200).json({ message: "Hello"})
+})
 
 const DB_CONNECTION_URL = process.env.DB_CONNECTION_URL;
 const PORT = process.env.PORT || 5000;

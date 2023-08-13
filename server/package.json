@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --testEnvironment=node --runInBand",
-    "dev": "nodemon -w server.js -w ./models -w ./middleware -w ./controllers -w ./routes server.js"
+    "dev": "nodemon -w server.js -w ./models -w ./middleware -w ./controllers -w ./routes server.js",
+    "vercel-build": "echo fake-building"
   },
   "repository": {
     "type": "git",

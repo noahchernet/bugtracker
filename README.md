@@ -1,5 +1,7 @@
-This is an issue tracking web app created with the MERN stack
-Visit the site here: https://bugtracker.noah.et/
+<div align="center">
+<img src="https://github.com/noahchernet/bugtracker/assets/86301024/21d97621-6846-444f-8ff4-6827d9c6c914" width='120px' />
+</div>
+This is an issue tracking web app created with the MERN stack. Visit the site here: https://bugtracker.noah.et/
 
 The bugtracker lets teams track issues they come across in the software they build. It enables the developers to:
 - ✅Track issues by creating tickets

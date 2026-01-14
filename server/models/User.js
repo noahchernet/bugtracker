@@ -1,10 +1,10 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 /**
  * Defines what a User's attributes are in the mongo database.
  * devType: junior, mid-level, senior, tech lead, etc.
  */
-const userSchema = mongoose.Schema(
+export const userSchema = mongoose.Schema(
   {
     email: String,
     firstName: String,
@@ -12,17 +12,17 @@ const userSchema = mongoose.Schema(
     picture: String, // url to image
     sub: String, // Unique identifier for each user
   },
-  { autoCreate: false }
+  { autoCreate: false },
 );
 
-const User = mongoose.model("User", userSchema);
+export const User = mongoose.model("User", userSchema);
 
 /**
  * Creates a user based on Auth0's auth header
  * @param {*} req contains email, full name and profile picture of user
  * @returns new User model based on Auth0's auth header
  */
-const userFromAuth = (req) => {
+export const userFromAuth = (req) => {
   return new User({
     email: req.auth.email,
     firstName: req.auth.given_name,
@@ -31,5 +31,3 @@ const userFromAuth = (req) => {
     sub: req.auth.sub,
   });
 };
-
-module.exports = { User, userSchema, userFromAuth };

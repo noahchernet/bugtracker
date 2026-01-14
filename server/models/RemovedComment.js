@@ -1,5 +1,6 @@
-const mongoose = require("mongoose");
-const commentSchema = require("./Comment").commentSchema;
+import mongoose from "mongoose";
+import { commentSchema } from "./Comment.js";
 
 const RemovedComment = mongoose.model("RemovedComment", commentSchema);
-module.exports = RemovedComment;
+
+export default RemovedComment;

@@ -1,6 +1,6 @@
-const express = require("express");
-const commentController = require("../controllers/Comment");
-const jwtCheck = require("../middleware/jwtCheck");
+import express from "express";
+import * as commentController from "../controllers/Comment.js";
+import jwtCheck from "../middleware/jwtCheck.js";
 
 const router = express.Router();
 
@@ -9,4 +9,4 @@ router.post("/:ticket_id", jwtCheck, commentController.addCommentToTicket);
 router.put("/:comment_id", jwtCheck, commentController.updateComment);
 router.delete("/:comment_id", jwtCheck, commentController.deleteComment);
 
-module.exports = router;
+export default router;

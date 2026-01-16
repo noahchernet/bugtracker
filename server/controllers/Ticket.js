@@ -1,17 +1,17 @@
-const Ticket = require("../models/Ticket");
-const Comment = require("../models/Comment").Comment;
-const RemovedTicket = require("../models/RemovedTicket");
-const userFromAuth = require("../models/User").userFromAuth;
-const mongoose = require("mongoose");
-const _ = require("lodash");
-const cloudinary = require("cloudinary");
+import Ticket from "../models/Ticket.js";
+import { Comment } from "../models/Comment.js";
+import RemovedTicket from "../models/RemovedTicket.js";
+import { userFromAuth } from "../models/User.js";
+import mongoose from "mongoose";
+import _ from "lodash";
+import { v2 as cloudinary } from "cloudinary";
 
 /**
  * Get all or some tickets based on the query parameters
  * @param {*} req Empty or contains title, severity and/or solved parameter values
  * @param {*} res List of all tickets in database or selected tickets based on query parameters
  */
-exports.getTickets = (req, res) => {
+export const getTickets = (req, res) => {
   const { title, severity, solved } = req.query;
   const conditions = {};
   if (title) {
@@ -26,19 +26,10 @@ exports.getTickets = (req, res) => {
 
   Ticket.find(conditions)
     .then((tickets) => {
-      if (!tickets)
-        return res
-          .status(404)
-          .json({ message: "No tickets found with the provided parameters." });
+      if (!tickets) return res.status(404).json({ message: "No tickets found with the provided parameters." });
       res.status(200).json(tickets);
     })
-    .catch((err) =>
-      res
-        .status(500)
-        .send(
-          err ?? "An error has occurred while searching for the ticket(s)."
-        )
-    );
+    .catch((err) => res.status(500).send(err ?? "An error has occurred while searching for the ticket(s)."));
 };
 
 /**
@@ -46,7 +37,7 @@ exports.getTickets = (req, res) => {
  * @param {*} req contains ticket
  * @param {*} res
  */
-exports.getTicketById = (req, res) => {
+export const getTicketById = (req, res) => {
   const { id } = req.params;
 
   // If the id is not a valid ObjectId, return 404
@@ -60,10 +51,7 @@ exports.getTicketById = (req, res) => {
 
   Ticket.findById(id)
     .then((ticket) => {
-      if (!ticket)
-        return res
-          .status(404)
-          .json({ message: `Ticket with id ${id} not found` });
+      if (!ticket) return res.status(404).json({ message: `Ticket with id ${id} not found` });
       return res.status(200).json(ticket);
     })
     .catch((err) => res.status(500).json(err));
@@ -75,20 +63,17 @@ exports.getTicketById = (req, res) => {
  * @param {*} res If the ticket is  created successfully, the body of res
  * contains the newly created ticket. If not, it'll have an error message.
  */
-exports.createTicket = async (req, res) => {
+export const createTicket = async (req, res) => {
   if (!req.auth) return res.status(401).json({ message: "Unauthorized." });
 
   if (!req.fields.title || !req.fields.description || !req.fields.severity) {
-    return res
-      .status(400)
-      .json({ message: "Full ticket information has to be provided." });
+    return res.status(400).json({ message: "Full ticket information has to be provided." });
   }
 
   // Don't add the ticket if there's another ticket with the same title
   if (await Ticket.findOne({ title: req.fields.title }))
     return res.status(400).json({
-      message:
-        "Post with the same title exists, please use a different title.",
+      message: "Post with the same title exists, please use a different title.",
     });
 
   // Configure cloudinary
@@ -102,9 +87,7 @@ exports.createTicket = async (req, res) => {
   // If an image is included in the request, post it to Cloudinary and get the
   // image's URL to put in attachments
   if (Object.keys(req.files).length !== 0) {
-    const result = await cloudinary.uploader.upload(
-      req.files.attachments.path
-    );
+    const result = await cloudinary.uploader.upload(req.files.attachments.path);
     imgUrl = result.url;
   }
 
@@ -126,9 +109,7 @@ exports.createTicket = async (req, res) => {
       res.status(201).send(newPost);
     })
     .catch((err) => {
-      res
-        .status(500)
-        .send(err ?? "An error has occurred when creating the ticket.");
+      res.status(500).send(err ?? "An error has occurred when creating the ticket.");
     });
 };
 
@@ -137,7 +118,7 @@ exports.createTicket = async (req, res) => {
  * @param {*} req Contains the new properties of the ticket
  * @param {*} res If updated successfully, returns the updated ticket.
  */
-exports.updateTicket = async (req, res) => {
+export const updateTicket = async (req, res) => {
   if (!req.auth) return res.status(401).json({ message: "Unauthorized." });
 
   const { id } = req.params;
@@ -163,8 +144,7 @@ exports.updateTicket = async (req, res) => {
   // If the ticket is using a title that exists in the database already, return 400
   if (ticketWithReqTitle && !_.isEqual(ticketWithReqTitle, ticketToUpdate))
     return res.status(400).json({
-      message:
-        "A ticket with the same title already exists, please change the title",
+      message: "A ticket with the same title already exists, please change the title",
     });
 
   // Configure cloudinary
@@ -178,9 +158,7 @@ exports.updateTicket = async (req, res) => {
   // If an image is included in the request, post it to Cloudinary and get the
   // image's URL to put in attachments
   if (Object.keys(req.files).length !== 0) {
-    const result = await cloudinary.uploader.upload(
-      req.files.attachments.path
-    );
+    const result = await cloudinary.uploader.upload(req.files.attachments.path);
     imgUrl = result.url;
   }
 
@@ -196,18 +174,12 @@ exports.updateTicket = async (req, res) => {
 
       // Flag all of the comments as not the solution to the ticket
       await Comment.updateMany({ tiketId: id }, { solutionToTicket: false });
-      await Comment.updateOne(
-        { _id: req.fields.solution },
-        { solutionToTicket: true }
-      );
+      await Comment.updateOne({ _id: req.fields.solution }, { solutionToTicket: true });
       req.fields.solved = true;
     } catch (err) {
       // Unmark any solution if solution is set empty or an invalid comment id
       // is set
-      await Comment.updateOne(
-        { _id: ticketToUpdate.solution },
-        { solutionToTicket: false }
-      );
+      await Comment.updateOne({ _id: ticketToUpdate.solution }, { solutionToTicket: false });
       req.fields.solved = false;
       req.fields.solution = null;
     }
@@ -221,9 +193,7 @@ exports.updateTicket = async (req, res) => {
       if (ticket) {
         return res.status(200).json(await Ticket.findById(id));
       }
-      return res
-        .status(404)
-        .json({ message: "Could not find ticket with id = " + id });
+      return res.status(404).json({ message: "Could not find ticket with id = " + id });
     })
     .catch((err) => {
       return res.status(500).json({
@@ -237,7 +207,7 @@ exports.updateTicket = async (req, res) => {
  * @param {*} req has the id of the ticket to be removed
  * @param {*} res upon successfull removal, 200 is returned, 400 otherwise
  */
-exports.delete = async (req, res) => {
+export const deleteTicket = async (req, res) => {
   if (!req.auth) return res.status(401).json({ message: "Unauthorized." });
 
   const { id } = req.params;
@@ -253,27 +223,18 @@ exports.delete = async (req, res) => {
 
   const ticketToRemove = await Ticket.findById(id);
   if (!ticketToRemove) {
-    return res
-      .status(404)
-      .json({ message: "Could not find ticket with id = " + id });
+    return res.status(404).json({ message: "Could not find ticket with id = " + id });
   }
 
   await Ticket.findByIdAndDelete(id);
 
-  const removedTicket = new RemovedTicket(
-    JSON.parse(JSON.stringify(ticketToRemove))
-  );
+  const removedTicket = new RemovedTicket(JSON.parse(JSON.stringify(ticketToRemove)));
   removedTicket
     .save()
     .then((removedTicket) => {
-      if (removedTicket)
-        return res
-          .status(200)
-          .json({ message: "Ticket " + id + " removed successfully" });
+      if (removedTicket) return res.status(200).json({ message: "Ticket " + id + " removed successfully" });
     })
     .catch((error) => {
-      return res
-        .status(500)
-        .json({ message: error.message ?? "Could not remove ticket" });
+      return res.status(500).json({ message: error.message ?? "Could not remove ticket" });
     });
 };

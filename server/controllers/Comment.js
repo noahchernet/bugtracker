@@ -1,9 +1,9 @@
-const Ticket = require("../models/Ticket");
-const Comment = require("../models/Comment").Comment;
-const RemovedComment = require("../models/RemovedComment");
-const userFromAuth = require("../models/User").userFromAuth;
-const mongoose = require("mongoose");
-const cloudinary = require("cloudinary");
+import Ticket from "../models/Ticket.js";
+import { Comment } from "../models/Comment.js";
+import RemovedComment from "../models/RemovedComment.js";
+import { userFromAuth } from "../models/User.js";
+import mongoose from "mongoose";
+import { v2 as cloudinary } from "cloudinary";
 
 /**
  * Add a comment to a ticket
@@ -12,7 +12,7 @@ const cloudinary = require("cloudinary");
  * @param {*} res the newly added comment
  * @returns the newly added comment or an error
  */
-exports.addCommentToTicket = async (req, res) => {
+export const addCommentToTicket = async (req, res) => {
   if (!req.auth) return res.status(401).json({ message: "Unauthorized." });
 
   const { ticket_id } = req.params;
@@ -31,8 +31,7 @@ exports.addCommentToTicket = async (req, res) => {
   }
 
   const ticket = await Ticket.findById(ticket_id);
-  if (!ticket)
-    return res.status(404).json({ message: "Ticket could not be found" });
+  if (!ticket) return res.status(404).json({ message: "Ticket could not be found" });
 
   // Configure cloudinary
   cloudinary.config({
@@ -45,9 +44,7 @@ exports.addCommentToTicket = async (req, res) => {
   // If an image is included in the request, post it to Cloudinary and get the
   // image's URL to put in attachments
   if (Object.keys(req.files).length !== 0) {
-    const result = await cloudinary.uploader.upload(
-      req.files.attachments.path
-    );
+    const result = await cloudinary.uploader.upload(req.files.attachments.path);
     imgUrl = result.url;
   }
 
@@ -80,7 +77,7 @@ exports.addCommentToTicket = async (req, res) => {
  * @param {*} req contains the id of the ticket
  * @param {*} res list of comments of the ticket
  */
-exports.getTicketComments = async (req, res) => {
+export const getTicketComments = async (req, res) => {
   const { ticket_id } = req.params;
 
   // If the id is not a valid ObjectId, return 404
@@ -93,8 +90,7 @@ exports.getTicketComments = async (req, res) => {
   }
 
   const ticket = await Ticket.findById(ticket_id);
-  if (!ticket)
-    return res.status(404).json({ message: "Ticket could not be found" });
+  if (!ticket) return res.status(404).json({ message: "Ticket could not be found" });
 
   const comments = [];
 
@@ -111,7 +107,7 @@ exports.getTicketComments = async (req, res) => {
  * @param {*} req has id of the comment to be updated
  * @param {*} res the new comment, or an error
  */
-exports.updateComment = async (req, res) => {
+export const updateComment = async (req, res) => {
   if (!req.auth) return res.status(401).json({ message: "Unauthorized." });
 
   const { comment_id } = req.params;
@@ -131,8 +127,7 @@ exports.updateComment = async (req, res) => {
     return res.status(404).json({ message: "Comment cannot be empty." });
 
   const comment = await Comment.findById(comment_id);
-  if (!comment)
-    return res.status(404).json({ message: "Comment could not be found" });
+  if (!comment) return res.status(404).json({ message: "Comment could not be found" });
 
   if (!removeImage && Object.keys(req.files).length !== 0) {
     // Configure cloudinary
@@ -145,9 +140,7 @@ exports.updateComment = async (req, res) => {
     // If an image is included in the request, post it to Cloudinary and get the
     // image's URL to put in attachments
     if (Object.keys(req.files).length !== 0) {
-      const result = await cloudinary.uploader.upload(
-        req.files.attachments.path
-      );
+      const result = await cloudinary.uploader.upload(req.files.attachments.path);
       comment.attachments = result.url;
     }
   }
@@ -157,9 +150,7 @@ exports.updateComment = async (req, res) => {
   comment
     .save()
     .then((updatedComment) => {
-      return res
-        .status(200)
-        .json({ message: "Comment updated", comment: updatedComment });
+      return res.status(200).json({ message: "Comment updated", comment: updatedComment });
     })
     .catch((err) => {
       return res.status(500).json(err);
@@ -171,7 +162,7 @@ exports.updateComment = async (req, res) => {
  * @param {*} req contains id of comment to be deleted
  * @param {*} res 200 if successfully deleted, an error otherwise
  */
-exports.deleteComment = async (req, res) => {
+export const deleteComment = async (req, res) => {
   const { comment_id } = req.params;
   // If the id is not a valid ObjectId, return 404
   try {
@@ -184,9 +175,7 @@ exports.deleteComment = async (req, res) => {
 
   const commentToRemove = await Comment.findById(comment_id);
   if (!commentToRemove) {
-    return res
-      .status(404)
-      .json({ message: "Could not find comment with id = " + comment_id });
+    return res.status(404).json({ message: "Could not find comment with id = " + comment_id });
   }
 
   // If the comment is the solution to the parent ticket,
@@ -201,16 +190,12 @@ exports.deleteComment = async (req, res) => {
   }
   await Comment.findByIdAndDelete(comment_id);
 
-  const removedComment = new RemovedComment(
-    JSON.parse(JSON.stringify(commentToRemove))
-  );
+  const removedComment = new RemovedComment(JSON.parse(JSON.stringify(commentToRemove)));
 
   removedComment
     .save()
     .then(() => {
-      return res
-        .status(200)
-        .json({ message: `Comment ${comment_id} removed successfully` });
+      return res.status(200).json({ message: `Comment ${comment_id} removed successfully` });
     })
     .catch((error) => {
       return res.status(500).json(error);

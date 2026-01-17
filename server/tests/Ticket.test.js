@@ -1,9 +1,9 @@
-const request = require("supertest");
-const app = require("../server");
-const db = require("./config/db");
-const Ticket = require("../models/Ticket");
-const RemovedTicket = require("../models/RemovedTicket");
-require("dotenv").config({ override: true });
+import { describe, test, expect, beforeAll, afterEach, afterAll } from "bun:test";
+import request from "supertest";
+import app from "../server";
+import * as db from "./config/db";
+import Ticket from "../models/Ticket";
+import RemovedTicket from "../models/RemovedTicket";
 
 const agent = request.agent(app);
 const auth = { Authorization: process.env.BEARER_TOKEN };
@@ -43,9 +43,7 @@ describe("Add Ticket", () => {
     // rather than strings, they will break the equality test since the response
     // of the post method's createdAt and updatedAt fields are strings. So, foundTicket
     // is converted to JSON string and back
-    const foundTicket = JSON.parse(
-      JSON.stringify(await Ticket.findById(res.body._id))
-    );
+    const foundTicket = JSON.parse(JSON.stringify(await Ticket.findById(res.body._id)));
 
     expect(res.body).toMatchObject(foundTicket);
   });
@@ -72,8 +70,7 @@ describe("Add Ticket", () => {
 
     expect(res.statusCode).toBe(400);
     expect(res.body).toStrictEqual({
-      message:
-        "Post with the same title exists, please use a different title.",
+      message: "Post with the same title exists, please use a different title.",
     });
   });
 
@@ -130,15 +127,10 @@ describe("Update ticket", () => {
     });
     expect(res.statusCode).toBe(200);
     expect(res.body.title).toBe("Test ticket updated title");
-    expect(res.body.description).toBe(
-      "The description of the test ticket has been updated"
-    );
+    expect(res.body.description).toBe("The description of the test ticket has been updated");
 
     expect(res.body).toHaveProperty("title", "Test ticket updated title");
-    expect(res.body).toHaveProperty(
-      "description",
-      "The description of the test ticket has been updated"
-    );
+    expect(res.body).toHaveProperty("description", "The description of the test ticket has been updated");
     expect(res.body.solved).toBeTruthy();
   });
 
@@ -217,8 +209,7 @@ describe("Update ticket", () => {
     });
 
     expect(res_update.body).toMatchObject({
-      message:
-        "A ticket with the same title already exists, please change the title",
+      message: "A ticket with the same title already exists, please change the title",
     });
     expect(res_update.statusCode).toBe(400);
   });

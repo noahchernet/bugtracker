@@ -1,0 +1,99 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans:
+    ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+
+  /* Light mode colors */
+  --color-background: oklch(100% 0 0);
+  --color-foreground: oklch(14.5% 0 0);
+  --color-card: oklch(100% 0 0);
+  --color-card-foreground: oklch(14.5% 0 0);
+  --color-popover: oklch(100% 0 0);
+  --color-popover-foreground: oklch(14.5% 0 0);
+  --color-primary: oklch(47.5% 0.2 260);
+  --color-primary-foreground: oklch(98.5% 0 0);
+  --color-secondary: oklch(96% 0.01 260);
+  --color-secondary-foreground: oklch(24% 0.02 260);
+  --color-muted: oklch(96% 0.01 260);
+  --color-muted-foreground: oklch(55% 0.02 260);
+  --color-accent: oklch(96% 0.01 260);
+  --color-accent-foreground: oklch(24% 0.02 260);
+  --color-destructive: oklch(57.7% 0.22 27.3);
+  --color-destructive-foreground: oklch(98.5% 0 0);
+  --color-border: oklch(91% 0.01 260);
+  --color-input: oklch(91% 0.01 260);
+  --color-ring: oklch(47.5% 0.2 260);
+
+  /* Severity colors */
+  --color-severity-low: oklch(74% 0.17 142);
+  --color-severity-medium: oklch(79.5% 0.16 70);
+  --color-severity-high: oklch(70.5% 0.18 27);
+  --color-severity-critical: oklch(57.7% 0.22 27.3);
+
+  --radius: 0.5rem;
+}
+
+.dark {
+  --color-background: oklch(14.5% 0.02 260);
+  --color-foreground: oklch(98.5% 0 0);
+  --color-card: oklch(18% 0.02 260);
+  --color-card-foreground: oklch(98.5% 0 0);
+  --color-popover: oklch(18% 0.02 260);
+  --color-popover-foreground: oklch(98.5% 0 0);
+  --color-primary: oklch(65% 0.18 260);
+  --color-primary-foreground: oklch(14.5% 0 0);
+  --color-secondary: oklch(24% 0.02 260);
+  --color-secondary-foreground: oklch(98.5% 0 0);
+  --color-muted: oklch(24% 0.02 260);
+  --color-muted-foreground: oklch(70% 0.02 260);
+  --color-accent: oklch(24% 0.02 260);
+  --color-accent-foreground: oklch(98.5% 0 0);
+  --color-destructive: oklch(62% 0.2 27.3);
+  --color-destructive-foreground: oklch(98.5% 0 0);
+  --color-border: oklch(28% 0.02 260);
+  --color-input: oklch(28% 0.02 260);
+  --color-ring: oklch(65% 0.18 260);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: oklch(70% 0.02 260 / 0.5);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: oklch(60% 0.02 260 / 0.7);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: oklch(40% 0.02 260 / 0.5);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: oklch(50% 0.02 260 / 0.7);
+}

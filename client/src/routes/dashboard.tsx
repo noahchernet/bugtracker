@@ -189,7 +189,7 @@ function DashboardPage() {
 
         {/* Tickets List */}
         {ticketsLoading ? (
-          <div className="space-y-4">
+          <div className="space-y-6">
             {[1, 2, 3].map((i) => (
               <Card key={i}>
                 <CardHeader>
@@ -203,7 +203,7 @@ function DashboardPage() {
             ))}
           </div>
         ) : tickets && tickets.length > 0 ? (
-          <div className="space-y-4">
+          <div className="space-y-6">
             {tickets.map((ticket) => (
               <Link key={ticket._id} to={`/ticket/${ticket._id}`}>
                 <Card className="cursor-pointer transition-all hover:shadow-md hover:-translate-y-0.5">

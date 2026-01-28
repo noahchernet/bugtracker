@@ -1,12 +1,13 @@
 import { Link } from "@tanstack/react-router";
-import { useAuth0 } from "@auth0/auth0-react";
+import { useSession, signOut } from "@/lib/auth-client";
 import { Bug, Moon, Sun, Menu, X } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/components/theme-provider";
 
 export function LandingNavbar() {
-  const { loginWithRedirect, isAuthenticated, logout } = useAuth0();
+  const { data: session, isPending } = useSession();
+  const isAuthenticated = !!session;
   const { theme, setTheme, resolvedTheme } = useTheme();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -16,6 +17,16 @@ export function LandingNavbar() {
     } else {
       setTheme(theme === "dark" ? "light" : "dark");
     }
+  };
+
+  const handleLogout = async () => {
+    await signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          window.location.href = "/";
+        },
+      },
+    });
   };
 
   return (
@@ -36,21 +47,23 @@ export function LandingNavbar() {
               {resolvedTheme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
             </Button>
 
-            {isAuthenticated ? (
+            {isPending ? null : isAuthenticated ? (
               <>
                 <Button variant="ghost" asChild>
                   <Link to="/dashboard">Dashboard</Link>
                 </Button>
-                <Button variant="outline" onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}>
+                <Button variant="outline" onClick={handleLogout}>
                   Log out
                 </Button>
               </>
             ) : (
               <>
-                <Button variant="ghost" onClick={() => loginWithRedirect()}>
-                  Sign in
+                <Button variant="ghost" asChild>
+                  <Link to="/login">Sign in</Link>
                 </Button>
-                <Button onClick={() => loginWithRedirect()}>Get Started</Button>
+                <Button asChild>
+                  <Link to="/login">Get Started</Link>
+                </Button>
               </>
             )}
           </div>
@@ -70,21 +83,23 @@ export function LandingNavbar() {
         {mobileMenuOpen && (
           <div className="border-t py-4 md:hidden">
             <div className="flex flex-col gap-2">
-              {isAuthenticated ? (
+              {isPending ? null : isAuthenticated ? (
                 <>
                   <Button variant="ghost" asChild className="justify-start">
                     <Link to="/dashboard">Dashboard</Link>
                   </Button>
-                  <Button variant="outline" onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}>
+                  <Button variant="outline" onClick={handleLogout}>
                     Log out
                   </Button>
                 </>
               ) : (
                 <>
-                  <Button variant="ghost" className="justify-start" onClick={() => loginWithRedirect()}>
-                    Sign in
+                  <Button variant="ghost" className="justify-start" asChild>
+                    <Link to="/login">Sign in</Link>
                   </Button>
-                  <Button onClick={() => loginWithRedirect()}>Get Started</Button>
+                  <Button asChild>
+                    <Link to="/login">Get Started</Link>
+                  </Button>
                 </>
               )}
             </div>

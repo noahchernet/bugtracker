@@ -1,10 +1,11 @@
-import { useAuth0 } from "@auth0/auth0-react";
+import { useSession } from "@/lib/auth-client";
 import { Link } from "@tanstack/react-router";
 import { ArrowRight, Bug, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export function Hero() {
-  const { loginWithRedirect, isAuthenticated } = useAuth0();
+  const { data: session } = useSession();
+  const isAuthenticated = !!session;
 
   return (
     <section className="relative overflow-hidden pt-32 pb-20 sm:pt-40 sm:pb-32">
@@ -46,9 +47,11 @@ export function Hero() {
               </Button>
             ) : (
               <>
-                <Button size="lg" onClick={() => loginWithRedirect()}>
-                  Get Started Free
-                  <ArrowRight className="ml-2 h-4 w-4" />
+                <Button size="lg" asChild>
+                  <Link to="/login">
+                    Get Started Free
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
                 </Button>
                 <Button size="lg" variant="outline" asChild>
                   <a href="#features">Learn More</a>

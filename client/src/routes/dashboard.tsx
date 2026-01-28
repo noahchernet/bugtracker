@@ -1,5 +1,5 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
-import { useAuth0 } from "@auth0/auth0-react";
+import { createFileRoute } from "@tanstack/react-router";
+import { useSession, signOut } from "@/lib/auth-client";
 import { useState } from "react";
 import { Plus, Search, Filter, Bug, LogOut, Moon, Sun, User } from "lucide-react";
 import { Link } from "@tanstack/react-router";
@@ -20,7 +20,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useTheme } from "@/components/theme-provider";
 import { useTickets } from "@/lib/queries/tickets";
-import { useAuthToken } from "@/lib/auth";
 import { formatDate, getInitials, nameFromEmail } from "@/lib/utils";
 import { NewTicketDialog } from "@/components/tickets/new-ticket-dialog";
 
@@ -29,27 +28,21 @@ export const Route = createFileRoute("/dashboard")({
 });
 
 function DashboardPage() {
-  const { user, isAuthenticated, isLoading: authLoading, logout, loginWithRedirect } = useAuth0();
+  const { data: session, isPending: authLoading } = useSession();
+  const user = session?.user;
+  const isAuthenticated = !!session;
   const { theme, setTheme, resolvedTheme } = useTheme();
   const [searchQuery, setSearchQuery] = useState("");
   const [severityFilter, setSeverityFilter] = useState<string>("all");
   const [solvedFilter, setSolvedFilter] = useState<string>("all");
   const [newTicketOpen, setNewTicketOpen] = useState(false);
 
-  // Set up auth token
-  useAuthToken();
-
-  // Fetch tickets
-  const { data: tickets, isLoading: ticketsLoading } = useTickets(
-    {
-      title: searchQuery || undefined,
-      severity: severityFilter !== "all" ? parseInt(severityFilter) : undefined,
-      solved: solvedFilter !== "all" ? solvedFilter === "true" : undefined,
-    },
-    {
-      enabled: isAuthenticated,
-    },
-  );
+  // Fetch tickets - public access, no auth required
+  const { data: tickets, isLoading: ticketsLoading } = useTickets({
+    title: searchQuery || undefined,
+    severity: severityFilter !== "all" ? parseInt(severityFilter) : undefined,
+    solved: solvedFilter !== "all" ? solvedFilter === "true" : undefined,
+  });
 
   const toggleTheme = () => {
     if (theme === "system") {
@@ -63,26 +56,15 @@ function DashboardPage() {
     return <DashboardSkeleton />;
   }
 
-  if (!isAuthenticated) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <Card className="w-full max-w-md">
-          <CardHeader className="text-center">
-            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-primary">
-              <Bug className="h-6 w-6 text-primary-foreground" />
-            </div>
-            <CardTitle>Authentication Required</CardTitle>
-            <CardDescription>Please sign in to access the dashboard</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button className="w-full" onClick={() => loginWithRedirect()}>
-              Sign In
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
+  const handleLogout = async () => {
+    await signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          window.location.href = "/";
+        },
+      },
+    });
+  };
 
   const getSeverityBadge = (severity: number) => {
     switch (severity) {
@@ -116,29 +98,35 @@ function DashboardPage() {
               {resolvedTheme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
             </Button>
 
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="relative h-9 w-9 rounded-full">
-                  <Avatar className="h-9 w-9">
-                    <AvatarImage src={user?.picture} alt={user?.name} />
-                    <AvatarFallback>{getInitials(user?.name || user?.email || "U")}</AvatarFallback>
-                  </Avatar>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56" align="end">
-                <DropdownMenuLabel>
-                  <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium">{user?.name}</p>
-                    <p className="text-xs text-muted-foreground">{user?.email}</p>
-                  </div>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}>
-                  <LogOut className="mr-2 h-4 w-4" />
-                  Log out
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            {isAuthenticated ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="relative h-9 w-9 rounded-full">
+                    <Avatar className="h-9 w-9">
+                      <AvatarImage src={user?.image || undefined} alt={user?.name} />
+                      <AvatarFallback>{getInitials(user?.name || user?.email || "U")}</AvatarFallback>
+                    </Avatar>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56" align="end">
+                  <DropdownMenuLabel>
+                    <div className="flex flex-col space-y-1">
+                      <p className="text-sm font-medium">{user?.name}</p>
+                      <p className="text-xs text-muted-foreground">{user?.email}</p>
+                    </div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleLogout}>
+                    <LogOut className="mr-2 h-4 w-4" />
+                    Log out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Button asChild>
+                <Link to="/login">Sign In</Link>
+              </Button>
+            )}
           </div>
         </div>
       </header>
@@ -151,10 +139,16 @@ function DashboardPage() {
             <h1 className="text-3xl font-bold">Dashboard</h1>
             <p className="text-muted-foreground">Manage and track your bug tickets</p>
           </div>
-          <Button onClick={() => setNewTicketOpen(true)}>
-            <Plus className="mr-2 h-4 w-4" />
-            New Ticket
-          </Button>
+          {isAuthenticated ? (
+            <Button onClick={() => setNewTicketOpen(true)}>
+              <Plus className="mr-2 h-4 w-4" />
+              New Ticket
+            </Button>
+          ) : (
+            <Button asChild>
+              <Link to="/login">Sign in to create ticket</Link>
+            </Button>
+          )}
         </div>
 
         {/* Filters */}
@@ -262,12 +256,19 @@ function DashboardPage() {
                   ? "Try adjusting your filters"
                   : "Create your first ticket to get started"}
               </p>
-              {!searchQuery && severityFilter === "all" && solvedFilter === "all" && (
-                <Button onClick={() => setNewTicketOpen(true)}>
-                  <Plus className="mr-2 h-4 w-4" />
-                  Create Ticket
-                </Button>
-              )}
+              {!searchQuery &&
+                severityFilter === "all" &&
+                solvedFilter === "all" &&
+                (isAuthenticated ? (
+                  <Button onClick={() => setNewTicketOpen(true)}>
+                    <Plus className="mr-2 h-4 w-4" />
+                    Create Ticket
+                  </Button>
+                ) : (
+                  <Button asChild>
+                    <Link to="/login">Sign in to create ticket</Link>
+                  </Button>
+                ))}
             </CardContent>
           </Card>
         )}

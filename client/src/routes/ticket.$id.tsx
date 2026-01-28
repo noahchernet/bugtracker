@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useAuth0 } from "@auth0/auth0-react";
+import { useSession } from "@/lib/auth-client";
 import { useState } from "react";
 import { ArrowLeft, Bug, Calendar, Edit, MessageSquare, Moon, Sun, Trash, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -10,7 +10,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useTheme } from "@/components/theme-provider";
 import { useTicket, useDeleteTicket } from "@/lib/queries/tickets";
 import { useComments } from "@/lib/queries/comments";
-import { useAuthToken } from "@/lib/auth";
 import { formatDate, getInitials, nameFromEmail } from "@/lib/utils";
 import { NewCommentDialog } from "@/components/tickets/new-comment-dialog";
 import { EditTicketDialog } from "@/components/tickets/edit-ticket-dialog";
@@ -24,20 +23,16 @@ export const Route = createFileRoute("/ticket/$id")({
 function TicketDetailPage() {
   const { id } = Route.useParams();
   const navigate = useNavigate();
-  const { isAuthenticated, isLoading: authLoading } = useAuth0();
+  const { data: session, isPending: authLoading } = useSession();
+  const isAuthenticated = !!session;
   const { resolvedTheme, setTheme, theme } = useTheme();
   const [commentDialogOpen, setCommentDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
 
-  // Set up auth token
-  useAuthToken();
-
-  // Fetch ticket and comments
-  const { data: ticket, isLoading: ticketLoading } = useTicket(id, {
-    enabled: isAuthenticated,
-  });
+  // Fetch ticket and comments - tickets are public, so always fetch them
+  const { data: ticket, isLoading: ticketLoading } = useTicket(id);
   const { data: comments, isLoading: commentsLoading } = useComments(id, {
-    enabled: isAuthenticated && !!ticket,
+    enabled: !!ticket,
   });
 
   const deleteTicket = useDeleteTicket();
@@ -152,17 +147,19 @@ function TicketDetailPage() {
           </div>
         </div>
 
-        {/* Ticket Actions */}
-        <div className="mb-6 flex gap-2">
-          <Button variant="outline" onClick={() => setEditDialogOpen(true)}>
-            <Edit className="mr-2 h-4 w-4" />
-            Edit
-          </Button>
-          <Button variant="destructive" onClick={handleDelete}>
-            <Trash className="mr-2 h-4 w-4" />
-            Delete
-          </Button>
-        </div>
+        {/* Ticket Actions - only show when authenticated */}
+        {isAuthenticated && (
+          <div className="mb-6 flex gap-2">
+            <Button variant="outline" onClick={() => setEditDialogOpen(true)}>
+              <Edit className="mr-2 h-4 w-4" />
+              Edit
+            </Button>
+            <Button variant="destructive" onClick={handleDelete}>
+              <Trash className="mr-2 h-4 w-4" />
+              Delete
+            </Button>
+          </div>
+        )}
 
         {/* Description */}
         <Card className="mb-8">
@@ -182,10 +179,16 @@ function TicketDetailPage() {
         {/* Comments Section */}
         <div className="mb-6 flex items-center justify-between">
           <h2 className="text-xl font-semibold">Comments ({comments?.length || 0})</h2>
-          <Button onClick={() => setCommentDialogOpen(true)}>
-            <MessageSquare className="mr-2 h-4 w-4" />
-            Add Comment
-          </Button>
+          {isAuthenticated ? (
+            <Button onClick={() => setCommentDialogOpen(true)}>
+              <MessageSquare className="mr-2 h-4 w-4" />
+              Add Comment
+            </Button>
+          ) : (
+            <Button asChild>
+              <Link to="/login">Sign in to comment</Link>
+            </Button>
+          )}
         </div>
 
         {commentsLoading ? (
@@ -241,7 +244,13 @@ function TicketDetailPage() {
               <MessageSquare className="mb-4 h-12 w-12 text-muted-foreground" />
               <h3 className="mb-2 text-lg font-semibold">No comments yet</h3>
               <p className="mb-4 text-center text-muted-foreground">Be the first to add a comment</p>
-              <Button onClick={() => setCommentDialogOpen(true)}>Add Comment</Button>
+              {isAuthenticated ? (
+                <Button onClick={() => setCommentDialogOpen(true)}>Add Comment</Button>
+              ) : (
+                <Button asChild>
+                  <Link to="/login">Sign in to comment</Link>
+                </Button>
+              )}
             </CardContent>
           </Card>
         )}

@@ -2,9 +2,7 @@
 import type { ReactNode } from "react";
 import { Outlet, createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Auth0Provider } from "@auth0/auth0-react";
 import { ThemeProvider } from "@/components/theme-provider";
-import { AuthTokenProvider } from "@/lib/auth";
 import { Toaster } from "@/components/ui/toaster";
 import "../styles.css";
 
@@ -59,21 +57,12 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
         <HeadContent />
       </head>
       <body className="min-h-screen bg-background font-sans antialiased">
-        <Auth0Provider
-          domain={import.meta.env.VITE_AUTH0_DOMAIN || ""}
-          clientId={import.meta.env.VITE_AUTH0_CLIENT_ID || ""}
-          authorizationParams={{
-            redirect_uri: typeof window !== "undefined" ? window.location.origin : "",
-            audience: import.meta.env.VITE_AUTH0_AUDIENCE || "",
-          }}
-        >
-          <QueryClientProvider client={queryClient}>
-            <ThemeProvider>
-              <AuthTokenProvider>{children}</AuthTokenProvider>
-              <Toaster />
-            </ThemeProvider>
-          </QueryClientProvider>
-        </Auth0Provider>
+        <QueryClientProvider client={queryClient}>
+          <ThemeProvider>
+            {children}
+            <Toaster />
+          </ThemeProvider>
+        </QueryClientProvider>
         <Scripts />
       </body>
     </html>

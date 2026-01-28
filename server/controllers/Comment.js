@@ -13,14 +13,12 @@ import { v2 as cloudinary } from "cloudinary";
  * @returns the newly added comment or an error
  */
 export const addCommentToTicket = async (req, res) => {
-  if (!req.auth) return res.status(401).json({ message: "Unauthorized." });
+  if (!req.user) return res.status(401).json({ message: "Unauthorized." });
 
   const { ticket_id } = req.params;
 
   // If the id is not a valid ObjectId, return 404
-  try {
-    mongoose.Types.ObjectId(ticket_id);
-  } catch (err) {
+  if (!mongoose.Types.ObjectId.isValid(ticket_id)) {
     return res.status(404).json({
       message: "id is invalid.",
     });
@@ -81,9 +79,7 @@ export const getTicketComments = async (req, res) => {
   const { ticket_id } = req.params;
 
   // If the id is not a valid ObjectId, return 404
-  try {
-    mongoose.Types.ObjectId(ticket_id);
-  } catch (err) {
+  if (!mongoose.Types.ObjectId.isValid(ticket_id)) {
     return res.status(404).json({
       message: "id is invalid.",
     });
@@ -108,15 +104,13 @@ export const getTicketComments = async (req, res) => {
  * @param {*} res the new comment, or an error
  */
 export const updateComment = async (req, res) => {
-  if (!req.auth) return res.status(401).json({ message: "Unauthorized." });
+  if (!req.user) return res.status(401).json({ message: "Unauthorized." });
 
   const { comment_id } = req.params;
   const { removeImage } = req.fields;
 
   // If the id is not a valid ObjectId, return 404
-  try {
-    mongoose.Types.ObjectId(comment_id);
-  } catch (err) {
+  if (!mongoose.Types.ObjectId.isValid(comment_id)) {
     return res.status(404).json({
       message: "id is invalid.",
     });
@@ -165,9 +159,7 @@ export const updateComment = async (req, res) => {
 export const deleteComment = async (req, res) => {
   const { comment_id } = req.params;
   // If the id is not a valid ObjectId, return 404
-  try {
-    mongoose.Types.ObjectId(comment_id);
-  } catch (err) {
+  if (!mongoose.Types.ObjectId.isValid(comment_id)) {
     return res.status(404).json({
       message: "id is invalid.",
     });

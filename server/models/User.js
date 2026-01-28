@@ -18,16 +18,17 @@ export const userSchema = mongoose.Schema(
 export const User = mongoose.model("User", userSchema);
 
 /**
- * Creates a user based on Auth0's auth header
- * @param {*} req contains email, full name and profile picture of user
- * @returns new User model based on Auth0's auth header
+ * Creates a user based on better-auth's session user
+ * @param {*} req contains email, name and image of user from better-auth session
+ * @returns new User model based on better-auth's session user
  */
 export const userFromAuth = (req) => {
+  const nameParts = req.user.name?.split(" ") || [""];
   return new User({
-    email: req.auth.email,
-    firstName: req.auth.given_name,
-    lastName: req.auth.family_name,
-    picture: req.auth.picture,
-    sub: req.auth.sub,
+    email: req.user.email,
+    firstName: nameParts[0] || "",
+    lastName: nameParts.slice(1).join(" ") || "",
+    picture: req.user.image,
+    sub: req.user.id,
   });
 };

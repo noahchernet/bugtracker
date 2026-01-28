@@ -41,9 +41,7 @@ export const getTicketById = (req, res) => {
   const { id } = req.params;
 
   // If the id is not a valid ObjectId, return 404
-  try {
-    mongoose.Types.ObjectId(id);
-  } catch (err) {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(404).json({
       message: "id is invalid.",
     });
@@ -64,7 +62,7 @@ export const getTicketById = (req, res) => {
  * contains the newly created ticket. If not, it'll have an error message.
  */
 export const createTicket = async (req, res) => {
-  if (!req.auth) return res.status(401).json({ message: "Unauthorized." });
+  if (!req.user) return res.status(401).json({ message: "Unauthorized." });
 
   if (!req.fields.title || !req.fields.description || !req.fields.severity) {
     return res.status(400).json({ message: "Full ticket information has to be provided." });
@@ -119,14 +117,12 @@ export const createTicket = async (req, res) => {
  * @param {*} res If updated successfully, returns the updated ticket.
  */
 export const updateTicket = async (req, res) => {
-  if (!req.auth) return res.status(401).json({ message: "Unauthorized." });
+  if (!req.user) return res.status(401).json({ message: "Unauthorized." });
 
   const { id } = req.params;
 
   // If the id is not a valid ObjectId, return 404
-  try {
-    mongoose.Types.ObjectId(id);
-  } catch (err) {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(404).json({
       message: "id is invalid.",
     });
@@ -208,14 +204,12 @@ export const updateTicket = async (req, res) => {
  * @param {*} res upon successfull removal, 200 is returned, 400 otherwise
  */
 export const deleteTicket = async (req, res) => {
-  if (!req.auth) return res.status(401).json({ message: "Unauthorized." });
+  if (!req.user) return res.status(401).json({ message: "Unauthorized." });
 
   const { id } = req.params;
 
   // If the id is not a valid ObjectId, return 404
-  try {
-    mongoose.Types.ObjectId(id);
-  } catch (err) {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(404).json({
       message: "id is invalid.",
     });

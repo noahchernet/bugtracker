@@ -9,3 +9,4 @@ server/tests/sometest
 testConnection.js
 
 .env
+.env.*

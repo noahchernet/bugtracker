@@ -15,10 +15,16 @@ export function Footer() {
   const socialRef = useRef<HTMLDivElement>(null);
   const copyrightRef = useRef<HTMLDivElement>(null);
 
+  const showSocial = import.meta.env.VITE_UPWORK !== "true";
+
   useGSAP(
     () => {
       // Set initial states
-      gsap.set([brandRef.current, linksRef.current, socialRef.current], {
+      const elementsToAnimate = [brandRef.current, linksRef.current];
+      if (showSocial && socialRef.current) {
+        elementsToAnimate.push(socialRef.current);
+      }
+      gsap.set(elementsToAnimate, {
         opacity: 0,
         y: 30,
       });
@@ -52,29 +58,31 @@ export function Footer() {
         "-=0.4",
       );
 
-      // Social section fades up
-      tl.to(
-        socialRef.current,
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.6,
-        },
-        "-=0.4",
-      );
+      // Social section fades up (only if visible)
+      if (showSocial && socialRef.current) {
+        tl.to(
+          socialRef.current,
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.6,
+          },
+          "-=0.4",
+        );
 
-      // Social icons stagger animation
-      tl.from(
-        ".social-icon",
-        {
-          scale: 0,
-          opacity: 0,
-          stagger: 0.1,
-          duration: 0.4,
-          ease: "back.out(1.7)",
-        },
-        "-=0.3",
-      );
+        // Social icons stagger animation
+        tl.from(
+          ".social-icon",
+          {
+            scale: 0,
+            opacity: 0,
+            stagger: 0.1,
+            duration: 0.4,
+            ease: "back.out(1.7)",
+          },
+          "-=0.3",
+        );
+      }
 
       // Copyright fades in
       tl.to(
@@ -99,7 +107,7 @@ export function Footer() {
         "-=0.6",
       );
     },
-    { scope: footerRef },
+    { scope: footerRef, dependencies: [showSocial] },
   );
 
   return (
@@ -141,39 +149,41 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Social */}
-          <div ref={socialRef} className="will-change-transform">
-            <h3 className="mb-4 font-semibold">Connect</h3>
-            <div className="flex gap-4">
-              <a
-                href="https://github.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="social-icon text-muted-foreground hover:text-foreground transition-colors"
-                aria-label="GitHub"
-              >
-                <Github className="h-5 w-5" />
-              </a>
-              <a
-                href="https://twitter.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="social-icon text-muted-foreground hover:text-foreground transition-colors"
-                aria-label="Twitter"
-              >
-                <Twitter className="h-5 w-5" />
-              </a>
-              <a
-                href="https://linkedin.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="social-icon text-muted-foreground hover:text-foreground transition-colors"
-                aria-label="LinkedIn"
-              >
-                <Linkedin className="h-5 w-5" />
-              </a>
+          {/* Social - hidden when VITE_UPWORK is true */}
+          {showSocial && (
+            <div ref={socialRef} className="will-change-transform">
+              <h3 className="mb-4 font-semibold">Connect</h3>
+              <div className="flex gap-4">
+                <a
+                  href="https://github.com/noahchernet"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="social-icon text-muted-foreground hover:text-foreground transition-colors"
+                  aria-label="GitHub"
+                >
+                  <Github className="h-5 w-5" />
+                </a>
+                <a
+                  href="https://twitter.com/noahchernet"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="social-icon text-muted-foreground hover:text-foreground transition-colors"
+                  aria-label="Twitter"
+                >
+                  <Twitter className="h-5 w-5" />
+                </a>
+                <a
+                  href="https://linkedin.com/in/noah-chernet"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="social-icon text-muted-foreground hover:text-foreground transition-colors"
+                  aria-label="LinkedIn"
+                >
+                  <Linkedin className="h-5 w-5" />
+                </a>
+              </div>
             </div>
-          </div>
+          )}
         </div>
 
         {/* Copyright */}

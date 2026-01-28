@@ -1,6 +1,8 @@
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
+import { toNodeHandler } from "better-auth/node";
+import { auth } from "./lib/auth.js";
 import userRouter from "./routes/User.js";
 import ticketRouter from "./routes/Ticket.js";
 import commentRouter from "./routes/Comment.js";
@@ -8,7 +10,21 @@ import formidableMiddleware from "express-formidable";
 
 const app = express();
 
-app.use(cors({ origin: "*", credentials: true }));
+// CORS configuration for credentials (cookies)
+const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:3000";
+app.use(
+  cors({
+    origin: CLIENT_URL,
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  }),
+);
+
+// Mount better-auth handler BEFORE formidable middleware
+// better-auth handles its own body parsing
+app.all("/api/auth/*", toNodeHandler(auth));
+
 app.use(formidableMiddleware());
 
 app.use("/users", userRouter);

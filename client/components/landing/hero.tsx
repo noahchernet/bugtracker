@@ -63,15 +63,15 @@ export function Hero() {
           {/* Hero illustration */}
           <div className="relative mt-16">
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="h-64 w-64 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 blur-2xl" />
+              <div className="h-64 w-64 rounded-full bg-linear-to-br from-primary/20 to-primary/5 blur-2xl" />
             </div>
             <div className="relative mx-auto max-w-2xl rounded-xl border bg-card p-6 shadow-2xl">
-              <div className="flex items-center gap-3 border-b pb-4">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
+              <div className="flex items-center gap-3 border-b pb-3">
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10">
                   <Bug className="h-5 w-5 text-primary" />
                 </div>
-                <div>
-                  <h3 className="font-semibold">Dashboard Overview</h3>
+                <div className="flex flex-col gap-1 items-start">
+                  <h3 className="-ml-px font-semibold">Dashboard Overview</h3>
                   <p className="text-sm text-muted-foreground">Track all your tickets in one place</p>
                 </div>
               </div>
@@ -85,7 +85,7 @@ export function Hero() {
                     <span className="text-sm font-medium">{ticket.title}</span>
                     <div className="flex items-center gap-2">
                       <span
-                        className={`rounded-full px-2 py-0.5 text-xs font-medium ${
+                        className={`inline-flex w-16 justify-center rounded-full px-2 py-0.5 text-xs font-medium ${
                           ticket.severity === "high"
                             ? "bg-severity-high/20 text-severity-high"
                             : ticket.severity === "medium"
@@ -95,7 +95,7 @@ export function Hero() {
                       >
                         {ticket.severity}
                       </span>
-                      <span className="text-xs text-muted-foreground">{ticket.status}</span>
+                      <span className="w-[4.25rem] text-left text-xs text-muted-foreground">{ticket.status}</span>
                     </div>
                   </div>
                 ))}

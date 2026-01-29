@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
-const commentSchema = require("./Comment").commentSchema;
-const userSchema = require("./User").userSchema;
+import mongoose from "mongoose";
+import { commentSchema } from "./Comment.js";
+import { userSchema } from "./User.js";
 
 const ticketSchema = mongoose.Schema(
   {
@@ -14,9 +14,9 @@ const ticketSchema = mongoose.Schema(
     solution: { type: mongoose.Types.ObjectId },
     due: { type: Date },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
-let Ticket = mongoose.model("Ticket", ticketSchema);
+const Ticket = mongoose.model("Ticket", ticketSchema);
 
-module.exports = Ticket;
+export default Ticket;

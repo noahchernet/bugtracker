@@ -1,15 +1,15 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
-exports.connect = async () => {
+export const connect = async () => {
   await mongoose.connect("mongodb://localhost:27017/test", {});
 };
 
-exports.close = async () => {
+export const close = async () => {
   await mongoose.connection.dropDatabase();
   await mongoose.connection.close();
 };
 
-exports.clear = async () => {
+export const clear = async () => {
   const collections = mongoose.connection.collections;
 
   for (const key in collections) {

@@ -1,10 +1,10 @@
-const request = require("supertest");
-const app = require("../server");
-const db = require("./config/db");
-const Comment = require("../models/Comment").Comment;
-const RemovedComment = require("../models/RemovedComment");
-const Ticket = require("../models/Ticket");
-require("dotenv").config({ override: true });
+import { describe, test, expect, beforeAll, afterAll } from "bun:test";
+import request from "supertest";
+import app from "../server";
+import * as db from "./config/db";
+import { Comment } from "../models/Comment";
+import RemovedComment from "../models/RemovedComment";
+import Ticket from "../models/Ticket";
 
 const agent = request.agent(app);
 
@@ -36,9 +36,7 @@ describe("Add comments to a ticket", () => {
     expect(res.statusCode).toBe(201);
     expect(res.body).toStrictEqual({ message: "Comment added" });
     // console.log("Ticket in comment: ", ticket);
-    expect((await Comment.findById(ticket.comments[0])).description).toBe(
-      "First comment in the ticket"
-    );
+    expect((await Comment.findById(ticket.comments[0])).description).toBe("First comment in the ticket");
   });
 
   test("Add comment without authorization", async () => {
@@ -97,9 +95,7 @@ describe("Get comments of a ticket", () => {
   test("Comments of a ticket", async () => {
     const ticket = await Ticket.findOne({});
 
-    expect((await Comment.findById(ticket.comments[0])).description).toBe(
-      "First comment in the ticket"
-    );
+    expect((await Comment.findById(ticket.comments[0])).description).toBe("First comment in the ticket");
   });
 });
 
@@ -107,9 +103,7 @@ describe("Update comment of a ticket", () => {
   test("Update an existing comment", async () => {
     const { id } = await Comment.findOne({});
 
-    const res = await agent
-      .put("/comments/" + id)
-      .send({ description: "This comment is updated" });
+    const res = await agent.put("/comments/" + id).send({ description: "This comment is updated" });
 
     expect(res.statusCode).toBe(200);
     expect(res.body).toStrictEqual({ message: "Comment updated" });
@@ -121,9 +115,7 @@ describe("Update comment of a ticket", () => {
     agent.set({ Authorization: "" });
     const { id } = await Comment.findOne({});
 
-    const res = await agent
-      .put("/comments/" + id)
-      .send({ description: "This comment is updated" });
+    const res = await agent.put("/comments/" + id).send({ description: "This comment is updated" });
 
     expect(res.statusCode).toBe(401);
     agent.set({ Authorization: process.env.BEARER_TOKEN });
@@ -132,9 +124,7 @@ describe("Update comment of a ticket", () => {
   test("Update comment with invalid id", async () => {
     const id = 12312314;
 
-    const res = await agent
-      .put("/comments/" + id)
-      .send({ description: "This comment is updated" });
+    const res = await agent.put("/comments/" + id).send({ description: "This comment is updated" });
 
     expect(res.statusCode).toBe(404);
     expect(res.body).toStrictEqual({ message: "id is invalid." });
@@ -143,9 +133,7 @@ describe("Update comment of a ticket", () => {
   test("Update a comment to non-existing ticket", async () => {
     const id = "127d4fc90cb4e91b8fb4536d";
 
-    const res = await agent
-      .put("/comments/" + id)
-      .send({ description: "This comment is updated" });
+    const res = await agent.put("/comments/" + id).send({ description: "This comment is updated" });
 
     expect(res.statusCode).toBe(404);
     expect(res.body).toStrictEqual({ message: "Comment could not be found" });

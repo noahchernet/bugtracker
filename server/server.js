@@ -1,52 +1,48 @@
-const express = require("express");
-const mongoose = require("mongoose");
-const cors = require("cors");
-const userRouter = require("./routes/User");
-const ticketRouter = require("./routes/Ticket");
-const commentRouter = require("./routes/Comment");
-const formidableMiddleware = require("express-formidable");
-require("dotenv").config({ override: true });
+import express from "express";
+import mongoose from "mongoose";
+import cors from "cors";
+import { toNodeHandler } from "better-auth/node";
+import { auth } from "./lib/auth.js";
+import userRouter from "./routes/User.js";
+import ticketRouter from "./routes/Ticket.js";
+import commentRouter from "./routes/Comment.js";
+import formidableMiddleware from "express-formidable";
 
 const app = express();
 
-// const whitelist = [
-//   "http://localhost:3000",
-//   "https://avalon-bugtracker.vercel.app/",
-//   "https://avalon-bugtracker-server.herokuapp.com/",
-// ];
+// CORS configuration for credentials (cookies)
+const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:3000";
+app.use(
+  cors({
+    origin: CLIENT_URL,
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  }),
+);
 
-// app.use(function (req, res, next) {
-//   res.header("Access-Control-Allow-Origin", "*");
-//   res.header(
-//     "Access-Control-Allow-Headers",
-//     "Origin, X-Requested-With, Content-Type, Accept"
-//   );
-//   next();
-// });
-app.use(cors({ origin: "*", credentials: true }));
+// Mount better-auth handler BEFORE formidable middleware
+// better-auth handles its own body parsing
+app.all("/api/auth/*", toNodeHandler(auth));
+
 app.use(formidableMiddleware());
 
 app.use("/users", userRouter);
 app.use("/tickets", ticketRouter);
 app.use("/comments", commentRouter);
 app.use("/", (req, res) => {
-  return res.status(200).json({ message: "Hello"})
-})
+  return res.status(200).json({ message: "Hello" });
+});
 
 const DB_CONNECTION_URL = process.env.DB_CONNECTION_URL;
 const PORT = process.env.PORT || 5000;
 
-// Check if Jest is running the server, if not
-// connect to the MongoDB server provided in the environment
-if (process.env.JEST_WORKER_ID === undefined) {
+// Check if running tests, if not connect to MongoDB
+if (!process.env.BUN_TEST) {
   mongoose
     .connect(DB_CONNECTION_URL)
-    .then(() =>
-      app.listen(PORT, () =>
-        console.log(`Server Running on Port: http://localhost:${PORT}`)
-      )
-    )
+    .then(() => app.listen(PORT, () => console.log(`Server Running on Port: http://localhost:${PORT}`)))
     .catch((err) => console.log(err));
 }
 
-module.exports = app;
+export default app;

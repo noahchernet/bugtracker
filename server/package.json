@@ -1,12 +1,12 @@
 {
   "name": "server",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Express server to process REST API requests for the Bugtracker",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "test": "jest --testEnvironment=node --runInBand",
-    "dev": "nodemon -w server.js -w ./models -w ./middleware -w ./controllers -w ./routes server.js",
-    "vercel-build": "echo fake-building"
+    "start": "bun run server.js",
+    "dev": "bun --watch server.js",
+    "test": "bun test"
   },
   "repository": {
     "type": "git",
@@ -19,20 +19,20 @@
   },
   "homepage": "https://github.com/noahchernet/bugtracker#readme",
   "dependencies": {
-    "cloudinary": "^1.30.0",
+    "better-auth": "^1.4.17",
+    "cloudinary": "^2.5.1",
     "cors": "^2.8.5",
-    "dotenv": "^16.0.1",
-    "express": "^4.18.1",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
     "express-formidable": "^1.2.0",
-    "express-jwt": "^7.7.0",
-    "jwks-rsa": "^2.1.2",
     "lodash": "^4.17.21",
-    "mongo": "^0.1.0",
-    "mongoose": "^6.3.2",
-    "nodemon": "^2.0.16"
+    "mongodb": "^7.0.0",
+    "mongoose": "^8.9.5"
   },
   "devDependencies": {
-    "jest": "^28.1.0",
-    "supertest": "^6.2.3"
+    "@types/bun": "^1.1.14",
+    "@types/express": "^5.0.0",
+    "@types/supertest": "^6.0.2",
+    "supertest": "^7.0.0"
   }
 }

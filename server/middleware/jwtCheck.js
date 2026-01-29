@@ -1,21 +1,19 @@
-const jwt = require("express-jwt");
-const jwksRsa = require("jwks-rsa");
-require("dotenv").config();
+import { auth } from "../lib/auth.js";
 
-const domain = process.env.AUTH0_ISSUER_BASE_URL;
-const audience = process.env.AUTH0_ISSUER_AUDIENCE;
+// Session-based authentication middleware
+const sessionMiddleware = async (req, res, next) => {
+  try {
+    const session = await auth.api.getSession({ headers: req.headers });
+    if (!session) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+    req.user = session.user;
+    req.session = session.session;
+    next();
+  } catch (error) {
+    console.error("Session middleware error:", error);
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+};
 
-// Create middleware for checking the JWT
-module.exports = jwt.expressjwt({
-  // Dynamically provide a signing key based on the kid in the header and the signing keys provided by the JWKS endpoint.
-  secret: jwksRsa.expressJwtSecret({
-    cache: true,
-    rateLimit: true,
-    jwksRequestsPerMinute: 5,
-    jwksUri: `${domain}/.well-known/jwks.json`,
-  }),
-  // Validate the audience and the issuer.
-  aud: audience,
-  issuer: `${domain}/`,
-  algorithms: ["RS256"],
-});
+export default sessionMiddleware;

@@ -1,16 +1,15 @@
-const mongoose = require("mongoose");
-const userSchema = require("../models/User").userSchema;
+import mongoose from "mongoose";
+import { userSchema } from "./User.js";
 
-const commentSchema = mongoose.Schema(
+export const commentSchema = mongoose.Schema(
   {
     ticketId: { type: mongoose.Types.ObjectId, required: true },
     postedByUser: { type: userSchema, required: true },
     description: { type: String, required: true },
     attachments: { type: String },
-    solutionToTicket: {type: Boolean}
+    solutionToTicket: { type: Boolean },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
-const Comment = mongoose.model("Comment", commentSchema);
-module.exports = { Comment, commentSchema };
+export const Comment = mongoose.model("Comment", commentSchema);

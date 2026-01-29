@@ -115,7 +115,7 @@ export function LandingNavbar() {
                   <Link to="/login">Sign in</Link>
                 </Button>
                 <Button asChild>
-                  <Link to="/login">Get Started</Link>
+                  <Link to="/dashboard">Get Started</Link>
                 </Button>
               </>
             )}
